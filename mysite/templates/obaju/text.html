@@ -1,0 +1,69 @@
+{% extends 'obaju/index.html' %}
+
+
+{% block content %}
+    <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>Πληροφοριες</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <!-- *** PAGES MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Pages</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a class="active" href="{% url 'info_page' %}">Πληροφορίες</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'contact_page' %}">Επικοινωνίστε μαζί μας</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'faq_page' %}">FAQ</a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <!-- *** PAGES MENU END *** -->
+                </div>
+                <div class="col-md-9">
+                    <div class="box" id="text-page">
+                        {{ info_data.info_text|safe }}
+                        <div class="row">
+                            {% for photo in gallery %}
+                            <div class="col-md-4">
+                                <p class="text-center">
+                                    <img src="{{ photo.image.url }}" class="img-circle img-responsive" alt="{{ photo.alt }}">
+                                </p>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.col-md-9 -->
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}
+
+
+
+
+
+
+

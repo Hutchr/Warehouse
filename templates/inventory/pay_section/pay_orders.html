@@ -1,0 +1,94 @@
+{% extends 'inventory/pay_section/pay_homepage.html' %}
+
+{% block down_menu %}
+<div class="ui  three item bottom fixed menu">
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/" class="active item">Τιμολόγια απλήρωτα.</a>
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/αποπληρωμένα/" class="item">Αποπληρωμένα Τιμολόγια</a>
+    <a href='/πληρωμές-εισπράξεις/'class="item">Επιστροφή</a>
+
+</div>
+{% endblock %}
+
+
+
+
+{% block center %}
+
+    <div class="one wide column"></div>
+    <div class="twelve wide column">
+        {% if messages %}
+        <div class="ui red message">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} style="text-decoration: none;" class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+
+
+    <table class="ui celled structured table">
+        <div class="ui left floated main menu">
+                <div class="header item">
+                    <h2>Τιμολόγια</h2>
+                </div>
+                <div class="item">
+                    <form method="get">
+                        <div class="ui search">
+                            <div class="ui icon input">
+                                <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                                <i class="search icon"></i>
+                            </div>
+                            <div class="results"></div>
+                        </div>
+                    </form>
+                </div>
+
+        </div>
+        <thead>
+            <tr>
+                <th>Ημερομηνία</th>
+                <th>Αριθμός Παραστατικού</th>
+                <th>Προμηθευτής</th>
+                <th>Υπόλοιπο Προκαταβολών</th>
+                <th>Κατάσταση</th>
+                <th>Αξία Τιμολογίου</th>
+                <th>Υπόλοιπο</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ele in orders %}
+            <tr>
+                <td>{{ ele.date }}</td>
+                <td>{{ ele.code }}</td>
+                <td>{{ ele.vendor.title }}</td>
+                <td> <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/προκαταβολές/{{ ele.id }}/"> {{ ele.vendor.remaining_deposit|floatformat:2 }} €</a></td>
+                {% if ele.status == 'p' %}
+                <td style="background-color:#ffb474;" class="right aligned">{{ ele.get_status_display }}</td>
+                {% else %}
+                <td style="background-color:#f8ffac;" class="right aligned">{{ ele.get_status_display }}</td>
+                {% endif %}
+
+                <td class="center aligned">{{ ele.total_price|floatformat:2 }} €</td>
+                <td style="background-color:#389c16;">{{ ele.ipoloipo_xreostiko|floatformat:2 }} €</td>
+
+                <td>
+
+                    <a class="popup icon item" data-content='Αποπληρωμή' href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/{{ ele.id }}">
+                        <i class=" green big angle double right icon"></i>
+                    </a>
+                </td>
+            </tr
+            {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+    <div class="three wide column">
+        {% block right_side %}
+
+        {% endblock %}
+    </div>
+{% endblock %}

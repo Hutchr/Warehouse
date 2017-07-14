@@ -1,0 +1,5 @@
+{% extends 'inventory/pay_section/pay_order_fullpayment_id.html' %}
+
+{% block contest %}
+ <p>Η εντολή{{ pay_order.receipt }} του τιμολογίου {{ pay_order.title.code }} αξίας   {{ pay_order.value }} ευρώ διαγράφηκε.Πατήστε <a href="/πληρωμές/αποπληρωμές-τιμολογίων/εξοφλημένα/"> εδώ</a> δια να επιστρέψετε. </p>
+{% endblock %}

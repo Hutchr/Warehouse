@@ -1,0 +1,178 @@
+{% extends 'inventory/pay_section/pay_homepage.html' %}
+
+{% block down_menu %}
+<div class="ui  three item bottom fixed menu">
+    <a href='/πληρωμές-εισπράξεις/'class="item">Homepage Εξόδων</a>
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/" class="item">Αποπληρωμή Τιμολογίων</a>
+    <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/" class="active item">Πάγια Έξοδα,Μισθοδοσία </a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="six wide column">
+
+    </div>
+    <div class="four wide column">
+        <h2 class="ui icon header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Όλες οι ληξηπρόθεσμες υποχρεώσεις</div>
+            </div>
+        </h2>
+
+    </div>
+    <div class="six wide column"></div>
+    <div class="three wide column">
+        <div class="ui pointing vertical menu">
+        <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/" class="active item">Πάγια Έξοδα</a>
+        <div class="item">
+            <b>Λογαριασμοί</b>
+            <div class="menu">
+                {% for ele in fixed_costs_log %}
+                    <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/λογαριασμοί/{{ ele.id }}/" class="item">{{ ele.title }},     <span style="color: #ff7d59">{{ ele.show_remain|floatformat:2 }} €</span>  </a>
+                {% endfor %}
+                <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/λογαριασμοί/κατηγορία/προσθήκη/" class=" green item">Προσθήκη Λογαριασμού.....</a>
+            </div>
+        </div>
+        <div class="item">
+            <b>Αγορές/Επισκευές</b>
+            <div class="menu">
+                {% for ele in fixed_costs_pag %}
+                    <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/{{ ele.id }}" class="item">{{ ele.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="item">
+            <b>Έξοδα Προσωπικού</b>
+            <div class="menu">
+                {% for ele in fixed_costs_ppl %}
+                    <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/{{ ele.id }}/" class="item">{{ ele.title }}</a>
+
+                {% endfor %}
+				<a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/προσθήκη-κατηγορίας/" class=" item">Προσθήκη Απασχόλησης.....</a>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="nine wide column">
+        {% block center %}
+        <div class="ui segments">
+            <div style="text-align: center;" class="ui blue header segment">Λογαριασμοί που λήγουν</div>
+            <div class="ui table segment">
+                 <table class="ui celled structured table">
+                     <thead>
+                            <tr>
+                                <th>Ημερομηνία Λήξης</th>
+                                <th>Λογαριασμός</th>
+                                <th>Τίτλος</th>
+                                <th>Αξία</th>
+                                <th>Κατάσταση</th>
+                            </tr>
+                     </thead>
+                     <tbody>
+                            {% for ele in log_warnings %}
+                            <tr>
+                                <td>{{ ele.date }}</td>
+                                <td>{{ ele.category.title }}</td>
+                                <td>{{ ele.title }}</td>
+                                <td>{{ ele.price|floatformat:2  }} €</td>
+                                <td><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/λογαριασμοί/πληρωμή/{{ ele.category.id }}/{{ ele.id }}/">{{ ele.get_active_display }}</a> </td>
+                            </tr>
+                        {%  endfor %}
+                     </tbody>
+                 </table>
+             </div>
+        <div class="ui divider segment "></div>
+
+        <div style="text-align: center;" class="ui blue header segment">Οφειλές σε Προσωπικό</div>
+             <div class="ui table segment">
+                 <table class="ui celled structured table">
+                     <thead>
+                            <tr>
+                                <th>Ημερομηνία</th>
+                                <th>Υπάλληλος</th>
+                                <th>Ειδικότητα</th>
+                                <th>Αξία</th>
+                                <th>Κατάσταση</th>
+                            </tr>
+                     </thead>
+                     <tbody>
+                            {% for ele in ppl_warnings %}
+                            <tr>
+                                <td>{{ ele.day_expire }}</td>
+                                <td>{{ ele.person.title }}</td>
+                                <td>{{ ele.person.occupation.title }}</td>
+                                <td>{{ ele.show_remain|floatformat:2  }} €</td>
+                                <td><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/{{ ele.person.id }}/{{ ele.id }}/">Πληρωμή</a> </td>
+                            </tr>
+                        {%  endfor %}
+                     </tbody>
+                 </table>
+             </div>
+	</div>
+        {% endblock %}
+    </div>
+
+
+    <div  class="four wide column">
+        {% block right_side %}
+        <div style="margin-right: 3%" class="ui segments">
+             <div class="ui red header segment">Λογαριασμοί που 'Εληξαν</div>
+             <div class="ui table segment">
+
+				<table class="ui celled structured table">
+					<thead>
+						<tr>
+							<th>Ημερομηνία Λήξης</th>
+                            <th>Λογαριασμός</th>
+							<th>Τίτλος</th>
+							<th>Αξία</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for ele in log_expired %}
+						<tr>
+                            <td style="background-color: red;"><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/λογαριασμοί/πληρωμή/{{ ele.category.id }}/{{ ele.id }}/">{{ ele.date }}</a></td>
+                            <td>{{ ele.category.title }}</td>
+							<td>{{ ele.title }}</td>
+							<td>{{ ele.price|floatformat:2  }} €</td>
+						</tr>
+					{%  endfor %}
+					</tbody>
+				</table>
+			</div>
+         </div>
+        <div style="margin-right: 3%" class="ui segments">
+		<div class="ui red header segment">Ληξηπρόθεσμη Μισθοδοσία</div>
+		 <div class="ui table segment">
+             <table class="ui celled structured table">
+					<thead>
+						<tr>
+							<th>Ημερομηνία Λήξης</th>
+                            <th>Λογαριασμός</th>
+							<th>Τίτλος</th>
+							<th>Αξία</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						{% for ele in ppl_expired %}
+						<tr>
+                            <td style="background-color: red;"><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/{{ ele.person.id }}/{{ ele.id }}/">{{ ele.day_expire }}</a></td>
+                            <td>{{ ele.person.title }}</td>
+							<td>{{ ele.person.occupation.title }}</td>
+							<td>{{ ele.show_remain|floatformat:2  }} €</td>
+						</tr>
+					{%  endfor %}
+					</tbody>
+				</table>
+         </div>
+	</div>
+        {% endblock %}
+    </div>
+
+
+{% endblock %}

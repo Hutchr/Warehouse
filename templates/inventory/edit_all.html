@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{% static 'inventory/edit_all.css' %}"/>
+</head>
+<body>
+
+<header>
+  <input type="checkbox" id="toggle"/>
+  <label for="toggle" id="toggle-btn"></label>
+  <div class="nav-icon"></div>
+  <nav data-state="close">
+    <ul>
+      <li><a href="/homepage/edit_all/orders/">Τιμολόγια</a></li>
+      <li><a href="/homepage/edit_all/products/">Προιόντα</a></li>
+      <li><a href="/homepage/edit_all/vendors/">Προμηθευτές</a></li>
+      <li><a href="/homepage">Αρχική Σελίδα</a></li>
+    </ul>
+  </nav>
+</header>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+
+{% block content %}
+   {% if user.is_authenticated %}
+
+    {% endif %}
+
+
+     {% if all_products.count > 0 %}
+     {% for product in all_products %}
+            {% if product.supply_status == "p" %}
+            {% else %}
+
+                <div class="col-md-3">
+                    <div class="section group" >
+
+                            <a href="/products/{{ product.id }}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" alt="" />
+                                {% endif %}
+                            </a>
+
+                             <h2>{{ product.title }} </h2>
+                            <div class="price-details">
+                               <div class="price-number">
+                                    <p><span class="rupees">${{ product.price }}</span></p>
+                               </div>
+                                <div class="add-cart">
+                                    <h4><a href="/products/{{ product.id }}">Add to Cart</a></h4>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                    </div>
+                </div>
+                    {% endif %}
+
+     {% endfor %}
+     {% else %}
+     <p>Nothing to show</p>
+     {% endif %}
+
+
+
+
+
+
+{# Pagination starts here #}
+<div class="pagination">
+    <span class="step-links">
+        {% if all_products.has_previous %}
+            <a href="?{{ page_request_var }}={{ all_products.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ all_products.number }} of {{ all_products.paginator.num_pages }}.
+        </span>
+
+        {% if all_products.has_next %}
+            <a href="?page={{ all_products.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

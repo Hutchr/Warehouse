@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head lang="el">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Warehouse</title>
+    <link rel="stylesheet" href="{% static 'semantic-ui-css-master/semantic.min.css' %}">
+    <link rel="stylesheet" href="{% static 'my_static/index.css' %}">
+</head>
+
+<body>
+<div class="ui six item top fixed menu">
+    <a href="/home/" class="active item">Home</a>
+    <a class="item" href="/αποθήκη">Αποθήκη</a>
+    <a class="item" href="/πληρωμές-εισπράξεις/">'Εξοδα</a>
+    <a class="item" href="/reports/">Reports</a>
+    <a class="item" href="/PoS/" class="item">PoS</a>
+    <a href="{% url 'site_admin' %}" class="item">Site</a>
+</div>
+{% block test %}
+
+{% endblock %}
+
+{% block down_menu %}
+<div class="ui  four item bottom fixed menu">
+    <a href="{% url 'welcome_page' %}" style="background-color: green" class="item">Πώλήσεις</a>
+    <a href="{% url 'welcome_page_warehouse' %}" class="item">Κινήσεις Αποθήκης</a>
+    <a href="{% url 'welcome_page_paid' %}" style="background-color: red" class="item">Πληρωμές</a>
+    <a class="item">Μηνύματα</a>
+</div>
+{% endblock %}
+
+
+
+<div style="margin-top: 2%" class ="ui stackable grid">
+    {% block content %}
+        <div class="six wide column"></div>
+        <div class="four wide column">
+            <h2 style="text-align: center" class="ui header">
+                <i class="cart green icon"></i>
+                <div class="content">
+                    Πωλήσεις
+                </div>
+            </h2>
+        </div>
+        <div class="six wide column"></div>
+        <div style="margin-left: 2%" class="three column row">
+        <div class="column">
+            <a href="{% url 'reports_income' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="red checked calendar icon"></i>
+                <div class="content">
+                    Πωλήσεις Λιανικής
+                    <div class="sub header">{{ retail_orders_last_two_days_date }}</div>
+                </div>
+            </h2>
+            <div style="margin-left: 25%" class="ui horizontal  statistics">
+                <div class="green statistic">
+                    <div class="value">
+                        {{ retail_orders_last_two_days_count }}
+                    </div>
+                    <div class="label">
+                        Πωλήσεις
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ retail_orders_last_two_days_incomes|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Έσοδα
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ retail_orders_last_two_days_avg|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Μέσο Έσοδο
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="column">
+            <a href="{% url 'orders_admin' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="red checked calendar icon"></i>
+                <div class="content">
+                    Πωλήσεις Eshop
+                    <div class="sub header">{{ retail_orders_last_two_days_date }}</div>
+                </div>
+            </h2>
+            <div style="margin-left: 25%" class="ui horizontal  statistics">
+                <div class="green statistic">
+                    <div class="value">
+                        {{ eshop_orders_last_two_days_count }}
+                    </div>
+                    <div class="label">
+                        Πωλήσεις
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ eshop_orders_last_two_days_incomes|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Έσοδα
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ eshop_orders_last_two_days_avg|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Μέσο Έσοδο
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+        <div class="column">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="red checked calendar icon"></i>
+                <div class="content">
+                    Τελευταίες 7 μέρες
+                    <div class="sub header">{{ last_seven_days }}</div>
+                </div>
+            </h2>
+            <div style="margin-left: 25%" class="ui horizontal  statistics">
+                <div class="green statistic">
+                    <div class="value">
+                        {{ retail_orders_count }}
+                    </div>
+                    <div class="label">
+                        Πωλήσεις Λιανικής
+                    </div>
+                </div>
+                <div class="green statistic">
+                    <div class="value">
+                        {{ eshop_orders_count }}
+                    </div>
+                    <div class="label">
+                        Πωλήσεις Eshop
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ retail_orders_incomes|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Έσοδα Λιανικής
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ eshop_orders_incomes|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Έσοδα Eshop
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ retail_orders_avg|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Μέσο Έσοδο Λιανικής
+                    </div>
+                </div>
+                <div class="statistic">
+                    <div class="value">
+                       {{ currency }} {{ eshop_orders_avg|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Μέσο Έσοδο Eshop
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% endblock %}
+</div>
+
+
+<script type="text/javascript" src="{% static 'jquery-1.12.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'semantic-ui-daterangepicker-master/moment.js' %}"></script>
+<script type="text/javascript" src="{% static 'semantic-ui-daterangepicker-master/daterangepicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'semantic-ui-daterangepicker-master/daterangepicker.css' %}" />
+<script type="text/javascript" src="{% static 'semantic-ui-css-master/semantic.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'my_static/index.js' %}"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('input[name="daterange"]').daterangepicker();
+});
+
+
+$(function() {
+
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('input[name="date_pick"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('input[name="date_pick"]').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+            "Προηγούμενο Τρίμηνο": [moment().subtract(3, 'month'), moment()],
+           'Today': [moment(), moment()],
+            "Τρέχων Χρονιά": [moment().startOf('year'), moment().endOf('year')],
+            "Επόμενο Τρίμηνο": [moment().startOf('month'), moment().subtract(-3, 'month').endOf('month')],
+            "Επόμενο Εξάμηνο": [moment().startOf('month'), moment().subtract(-6, 'month').endOf('month')],
+
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+});
+</script>
+{% block my_static %}
+
+{% endblock %}
+</body>
+
+
+</html>

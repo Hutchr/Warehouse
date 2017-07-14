@@ -1,0 +1,236 @@
+{% extends 'my_site/index.html' %}
+
+{% block upper_bar %}
+        <a href="{% url 'site_admin' %}" class=" item">Homepage</a>
+        <a href="{% url 'orders_admin' %}" class="active item">Παραγγελίες</a>
+        <a class="item">Πελάτες</a>
+        <a href="{% url 'site_control' %}" class="item">Διαχείρηση Site</a>
+        <a href="{% url 'blog_admin' %}" class="item">Διαχείρηση Blog</a>
+        <a href="/home" class="right item">Επιστοφή στην αποθήκη</a>
+{% endblock %}
+
+
+
+
+{% block bottom_menu %}
+    <div class="ui five item bottom fixed menu">
+    <a href="{% url 'orders_admin' %}" class="active item">Όλες οι Παραγγελίες</a>
+    <a href="{% url 'new_orders_admin' %}" style="background-color: teal" class="item">Νέες</a>
+    <a href="{% url 'in_progress_orders_admin' %}" style="background-color: #0076ad" class="item">Σε Εξέλιξη</a>
+    <a href="{% url 'done_orders_admin' %}" style="background-color: green" class="item">Ολοκληρωμένες</a>
+    <a href="{% url 'products_in_pro' %}"  class="item">Ροή Προϊόντων</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if products %}
+        <div class="sixteen wide column">
+            <h2 class="ui center aligned icon header">
+            <i class="circular product icon"></i>
+            {{ title }}
+        </h2>
+        </div>
+        <div class="fifteen wide column">
+            <table class="ui single line selectable table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Εικόνα</th>
+                    <th>Προϊόν</th>
+                    <th>Ποσότητα</th>
+                    <th>Παραγγελία</th>
+                    <th>Κατάσταση Παραγγελίας</th>
+                    <th>Πελάτης</th>
+                    <th>Κατάσταση Αποθήκης</th>
+                    <th>Νέο Υπόλοιπο</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                    <tr>
+                        <td>
+                            <div style="margin-top: 1%" class="ui toggle checkbox">
+                                <input type="checkbox"  name="shipping">
+                                <label>{{ ship }}</label>
+                            </div>
+                        </td>
+                        <td>tt</td>
+                        {% if item.title.size_color_chart %}
+                            <td>{{ item.size }}</td>
+                        {% else %}
+                        <td>{{ item.title }}</td>
+                        {% endif %}
+                        <td>{{ item.qty }} {{ item.title.measure_unit }}</td>
+                        <td><a href="{% url 'eshop_order' item.order.id %}" class="ui green button">{{ item.order.title }}</a></td>
+                        {% if item.order.status.id|stringformat:'s' == 1 %}
+                            <td class="warning">{{ item.order.status }}</td>
+                        {% else %}
+                            <td class="positive">{{ item.order.status }}</td>
+                        {% endif %}
+                        <td>{{ item.order.first_name }} {{ item.order.last_name }}</td>
+                        {% if item.is_find %}
+                            <td>
+                            <div class="ui teal buttons">
+                                <a href="{% url 'order_item_is_find' item.id item.id %}" class="ui button">Βρέθηκε</a>
+                                <div class="ui floating dropdown icon button">
+                                    <i class="dropdown icon"></i>
+                                </div>
+                            </div>
+                        </td>
+                        {% else %}
+                            <td>
+                            <div class="ui red buttons">
+                                <a href="{% url 'order_item_is_find' item.id item.id %}" class="ui button">Δε έχει βρεθεί</a>
+                                <div class="ui floating dropdown icon button">
+                                    <i class="dropdown icon"></i>
+                                </div>
+                            </div>
+                        </td>
+                        {% endif %}
+                        {% if item.title.size_color_chart %}
+                            <td>{{ item.size.qty }}</td>
+                        {% else %}
+                            <td>{{ item.title.qty }}  {{ item.title.measure_unit }}</td>
+                        {% endif %}
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    {% else %}
+    <div class="sixteen wide column">
+        <h2 class="ui center aligned icon header">
+            <i class="circular cart icon"></i>
+            {{ title }}
+        </h2>
+    </div>
+    <div class="one wide column"></div>
+    <div class="eleven wide column">
+        <table class="ui tiny selectable table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Ημερομηνία</th>
+                    <th>Παραγγελία</th>
+                    <th>Πελάτης</th>
+                    <th>Διευθυνση<br>Πολη ΤΚ</th>
+                    <th>Τρόπος Πληρωμής<br>Τρόπος Αποστολης</th>
+                    <th>Ποσό</th>
+                    <th>Κατάσταση</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>tt</td>
+                        <td>{{ order.day_added }}</td>
+                        <td>{{ order.title }}</td>
+                        <td>{{ order.last_name }} {{ order.first_name }}</td>
+                        <td>{{ order.address }}<br>{{ order.city }} {{ order.zip_code }}</td>
+                        <td>{{ order.payment_method.title }}<br>{{ order.shipping.title }}</td>
+                        <td>{{ order.template_tag_value }}</td>
+                        <td>
+                            {% if order.status.id == 1 %}
+                                <div class="ui teal buttons">
+                                    <a href="{% url 'eshop_order' order.id %}" class="ui button">{{ order.status.title }}</a>
+                                    <div class="ui floating dropdown icon button">
+                                        <i class="dropdown icon"></i>
+                                        <div class="menu">
+                                            <a class="item"><i class="blue edit icon"></i>Πληροφορίες Πελάτη</a>
+                                            <a href="{% url 'print_order' order.id %}" class="item"><i class="print icon"></i> Εκτύπωση</a>
+                                            <a class="item"><i class="red delete icon"></i> Ακυρωση</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% elif order.status.id == 7 %}
+                                <div class="ui green buttons">
+                                    <a href="{% url 'eshop_order' order.id %}" class="ui button">{{ order.status.title }}</a>
+                                    <div class="ui floating dropdown icon button">
+                                        <i class="dropdown icon"></i>
+                                        <div class="menu">
+                                            <a class="item"><i class="blue edit icon"></i>Πληροφορίες Πελάτη</a>
+                                            <a href="{% url 'print_order' order.id %}" class="item"><i class="print icon"></i> Εκτύπωση</a>
+                                            <a class="item"><i class="red delete icon"></i> Ακυρωση</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                            <div class="ui blue buttons">
+                                <a href="{% url 'eshop_order' order.id %}" class="ui button">{{ order.status.title }}</a>
+                                <div class="ui floating dropdown icon button">
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu">
+                                        <a class="item"><i class="blue edit icon"></i>Πληροφορίες Πελάτη</a>
+                                        <a href="{% url 'print_order' order.id %}" class="item"><i class="print icon"></i> Εκτύπωση</a>
+                                        <a class="item"><i class="red delete icon"></i> Ακυρωση</a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="four wide column">
+        <form style="margin-left: 5%" method="GET"  class="ui form">
+            <div class="field">
+                <div class="ui search">
+                    <input class="prompt" type="text" name="search_text" placeholder="Αναζήτηση...">
+                <div class="results"></div>
+                </div>
+            </div>
+
+            <div class="ui fields">
+                {% for ship in shipping %}
+                    {% if ship.id|stringformat:'s' in shipping_name %}
+                        <div  class="ui field">
+                            <div style="margin-top: 1%" class="ui toggle checkbox">
+                                <input checked type="checkbox" value="{{ ship.id }}" name="shipping" >
+                                <label>{{ ship }}</label>
+                            </div
+                        </div>
+                    {% else %}
+                    <div class="ui field">
+                        <div style="margin-top: 1%" class="ui toggle checkbox">
+                            <input type="checkbox" value="{{ ship.id }}" name="shipping">
+                            <label>{{ ship }}</label>
+                        </div
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+             <div class="ui fields">
+                {% for payment in payment_method %}
+                    {% if payment.id|stringformat:'s' in payment_name %}
+                        <div class="ui field">
+                            <div style="margin-top: 1%" class="ui toggle checkbox ">
+                                <input type="checkbox" value="{{ payment.id }}" name="payment_name" checked>
+                                <label>{{ payment }}</label>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="ui field">
+                            <div style="margin-top: 1%" class="ui toggle checkbox field">
+                                <input type="checkbox" value="{{ payment.id }}" name="payment_name">
+                                <label>{{ payment }}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <br>
+                {% endfor %}
+            </div>
+            <input style="margin-top: 5%;" class="ui green button" type="submit">
+        </form>
+        <a class="ui red button" href="{% url 'orders_admin' %}">Καθαρισμός Φόρμας</a>
+
+
+    </div>
+    {% endif %}
+
+
+{% endblock %}

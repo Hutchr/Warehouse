@@ -1,0 +1,23 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+    <style>
+        #id_month,#id_year {
+            display:none;
+        } 
+        label[for=id_month],label[for=id_year]{
+            display:none;
+            }    
+    
+    
+    </style>
+
+    <div class="ui segments">
+        <div class="ui segment header inverted blue">Δημιουργία Ήμέρας</div>
+        <form class="ui form segment" enctype="multipart/form-data" method="post">{% csrf_token %}
+            {{ form }}
+            <input style="margin-left: 70%" type="submit" name="submit" class="ui  green button" value="Δημιουργία "/>
+        </form>
+    </div>
+{% endblock %}

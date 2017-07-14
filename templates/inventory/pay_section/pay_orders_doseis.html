@@ -1,0 +1,65 @@
+{% extends 'inventory/pay_section/pay_orders.html' %}
+
+
+
+{% block center %}
+
+     <table class="ui celled structured table">
+        <div class="ui left floated main menu">
+                <div class="header item">
+                    <h2>'Ολα τα τιμολόγια</h2>
+                </div>
+                <div class="item">
+                    <form method="get">
+                        <div class="ui search">
+                            <div class="ui icon input">
+                                <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                                <i class="search icon"></i>
+                            </div>
+                            <div class="results"></div>
+                        </div>
+                    </form>
+                </div>
+                <a href="/αποθήκη/τιμολόγια/νέο" class="popup icon item" id="my_button" data-content="Προσθήκη Τιμολογίου">
+                    <i class="add square green icon"></i>
+                </a>
+        </div>
+        <thead>
+            <tr>
+                <th rowspan="2">Ημερομηνία</th>
+                <th rowspan="2">Αριθμός Παραστατικού</th>
+                <th rowspan="2">Προμηθευτής</th>
+                <th rowspan="2">Κατάσταση</th>
+                <th colspan="3">Αξία</th>
+                <th rowspan="1"></th>
+            </tr>
+            <tr>
+                <th> Αξία Τιμολογίου</th>
+                <th>Αποπληρωμένη Αξία</th>
+                <th>Υπόλοιπο</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ele in orders %}
+            <tr>
+                <td>{{ ele.date }}</td>
+                <td>{{ ele.code }}</td>
+                <td>{{ ele.vendor.title }}</td>
+                <td class="right aligned">{{ ele.get_status_display }}</td>
+                <td class="center aligned">{{ ele.total_price }}</td>
+                <td>{{ ele.credit_balance }}</td>
+                <td>{{ ele.ipoloipo_xreostiko }}</td>
+                <td>
+                    <a class="popup icon item" data-content='Αποπληρωμή' href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/δόσεις/{{ ele.id }}">
+                        <i class=" green big angle double right icon"></i>
+                    </a>
+                </td>
+            </tr
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+
+{% endblock %}

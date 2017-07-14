@@ -1,0 +1,73 @@
+{% extends 'PoS/add_products_main.html' %}
+
+
+{% block center %}
+
+    <div class="ui segments">
+        <div class="ui inverted blue segment">
+            <h2 style="text-align: center">Επέλεξε συνταγή για το τραπέζι {{ order.table.title }}</h2>
+        </div>
+        <div class="ui segments">
+            <div class="ui segment">
+
+                <a href="/PoS/επέλεξε-συνταγή/{{ order.id }}" class="ui massive green button"><i class="huge browser icon"></i><br>Επιστροφή</a>
+
+            </div>
+
+            <div class="ui divider segment">Επιλογή Ποσότητας</div>
+            <div class="ui segment">
+                <div class="ui form">
+
+                <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                    {{ form }}
+                    <input style="width: 100%" type="submit" name="submit" class="ui green button segment" value="Προσθήκη"/>
+                </form>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui inverted red segment">
+            Όδηγίες!
+        </div>
+        <div class="ui segment">
+            <h1>ΠΕΙΡΑΖΕΙΣ ΜΟΝΟ την Τιμή εαν θες να κάνεις έκπτωση, και την Ποσότητα ανάλογα την παραγγελία</h1>
+        </div>
+    </div>
+     <div class="ui segments">
+        <div style="text-align: center" class="ui inverted blue segment">
+            Οδηγίες Παρασκευής
+        </div>
+        <div class="ui horizontal  segments">
+            <table class="ui table segment">
+                <thead>
+                    <tr>
+                        <th>Συστατικά</th>
+                    </tr>
+
+                </thead>
+                    {% for ele in recipe.recipeitem_set.all %}
+                    <tr>
+                        <td>{{ ele.recipe_part }}</td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+            <div class="ui text-info segment">
+                {{ recipe.description }}
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+

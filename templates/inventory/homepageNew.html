@@ -1,0 +1,183 @@
+{% extends 'index.html' %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'my_static/index.css' %}"
+
+{% block down_menu %}
+<div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="active item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+
+
+
+
+{% block content %}
+        <div style="margin-left: 3%" class="fifteen wide column row">
+            <div class="ui right floated main menu">
+                <div class="header item">
+                    <h2>Τελευταίες Καταχωρήσεις σε Προιόντα</h2>
+                </div>
+                <div class="item"></div>
+                <a href="{% url 'create_product' %}" class="popup icon item" id="my_button" data-content="Προσθήκη Προϊόντος">
+                    <i class="add square green icon"></i>
+                </a>
+            </div>
+
+
+            <table class="ui red table">
+                <thead>
+                    <tr>
+                        <td>Ονομασία</td>
+                        <td>Κωδικός Τιμολογίου</td>
+                        <td>Προμηθευτής</td>
+                        <td>Τιμή Αγοράς</td>
+                        <td>Έκπτωση</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in products %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.order_code }}</td>
+                            <td>{{ ele.supplier }}</td>
+                            <td>{{ ele.price_buy }} {{ currency }}</td>
+                            {% if ele.order_discount == 0 %}
+                                <td> --- </td>
+                            {% else %}
+                                <td>{{ ele.order_discount }} {{ currency }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><a style="width:100%" href="{% url 'products' %}" class="ui button">Δες όλα τα  Προϊόντα</a></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            <div class="ui inverted divider"></div>
+        </div>
+        <div style="margin-left: 3%" class="fifteen wide column row">
+            
+            <div class="ui right floated main menu">
+                    <div class="header item">
+                        <h2>Τελευταίες Καταχωρήσεις,Προμηθευτές</h2>
+                    </div>
+                    <div class="item"></div>
+                    <a href="{% url 'create_vendor' %}" class="popup icon item" id="my_button" data-content="Προσθήκη Προμηθευτή">
+                        <i class=" add user green icon"></i>
+                    </a>
+                </div>
+            <table class="ui red table">
+                <thead>
+                    <tr>
+                        <td>Ονομασία</td>
+                        <td>Τηλέφωνο</td>
+                        <td>Τηλέφωνο</td>
+                        <td>Fax</td>
+                        <td>Email</td>
+                        <td>Υπόλοιπο</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in vendors %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.phone }}</td>
+                            <td>{{ ele.phone1 }}</td>
+                            <td>{{ ele.fax }}</td>
+                            <td>{{ ele.email }}</td>
+                            <td>{{ ele.balance }} {{ currency }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><a style="width:100%" href="{% url 'vendors' %}" class="ui button">Δες όλους τους Προμηθευτές</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="ui inverted divider"></div>
+        </div>
+        <div style="margin-left: 3%" class="fifteen wide column row">
+            <div style="margin-top: 2%;" class="header">
+                <div class="ui right floated main menu">
+                    <div class="header item">
+                        <h2>Τελευταίες Καταχωρήσεις σε Τιμολόγια</h2>
+                    </div>
+                    <div class="item"></div>
+                    <a href="{% url 'create_order' %}" class="popup icon item" id="my_button" data-content="Προσθήκη Τιμολογίου">
+                        <i class="file text outline green icon"></i>
+                    </a>
+                </div>
+            </div>
+
+            <table class="ui red table">
+                <thead>
+                    <tr>
+                        <th>Ημερομηνία</th>
+                        <th>Αριθμός Παραστατικού</th>
+                        <th>Προμηθευτής</th>
+                        <th>Καθαρή Αξία</th>
+                        <th>ΦΠΑ</th>
+                        <th>Τελική Αξία</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in orders %}
+                        <tr>
+                            <td>{{ ele.date }}</td>
+                            <td>{{ ele.code }}</td>
+                            <td>{{ ele.vendor }}</td>
+                            <td>{{ ele.total_price_after_discount }} {{ currency }}</td>
+                            <td>{{ ele.total_taxes }} {{ currency }}</td>
+                            <td>{{ ele.total_price }} {{ currency }}</td>
+                        </tr>
+                    {% endfor %}
+                        <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><a style="width:100%" href="{% url 'warehouse_order' %}" class="ui button">Δες όλα τα  Τιμολόγια</a></td>
+                    </tr>
+
+                </tbody>
+            </table>
+            <div class="ui inverted divider"></div>
+        </div>
+{% endblock %}
+
+
+
+
+{% block right_side %}
+
+
+    <div class="ui left floated main menu">
+        <div class="header item">
+            <h4>Τελευταίο Τιμολόγιο</h4>
+        </div>
+        <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ last_order.id }}/">
+            <div class="ui icon button">
+                <i class="file green big icon"></i>
+            </div>
+        </a>
+
+    </div>
+{% endblock %}
+
+

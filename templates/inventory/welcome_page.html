@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head lang="el">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Warehouse</title>
+    <link rel="stylesheet" href="{% static 'semantic-ui-css-master/semantic.min.css' %}">
+    <link rel="stylesheet" href="{% static 'my_static/index.css' %}">
+
+
+
+</head>
+<body>
+
+
+
+   <div class="ui sticky header" id="homepage">
+        <h2 style="text-align:center;" class="header ">{{ title }}</h2>
+   </div>
+
+   <div class="ui sticky blue menu" id="nav_menu_up">
+        <h3 class="header big">{{ title }}</h3>
+        <a href="/home/" class="active item">Home</a>
+
+		<div class="ui simple dropdown item">
+			<a href="/αποθήκη">Αποθήκη</a>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+			    <a style="width:100%" href="/αποθήκη/προιόντα/" class="item">Προϊόντα</a>
+                <a style="width:100%"  href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+                <a style="width:100%" href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+                <a style="width:100%" href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+                <a style="width:100%" href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+                <a style="width:100%" href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+			</div>
+		</div>
+        <!--
+        <div class="ui simple dropdown item">
+			<a href="/συνταγές/">Συνταγές</a>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+			  <div style="width:100%" class="item"><a href='/συνταγές/νέα/'>Δημιουργία</a></div>
+			  <div style="width:100%" class="item"><a href="/συνταγές/κατηγορίες/" >Κατηγορίες</a></div>
+			  <div style="width:100%" class="item">'Ολες οιΣυνταγές</div>
+			</div>
+		</div>
+        -->
+		<div class="ui simple dropdown item" id="main_menu_pay">
+			<a href="/πληρωμές-εισπράξεις/">'Εξοδα</a>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+			  <a style="width:100%" class="item" href ="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/">Αποπληρωμές Τιμολογίων</a>
+			  <a style="width:100%" class="item" href="/πληρωμές-εισπράξεις/πάγια-έξοδα/">Πάγια Έξοδα</a>
+			</div>
+		</div>
+
+		<div class="ui simple dropdown item">
+			Reports
+			<i class="dropdown icon"></i>
+			<div class="menu">
+                <a style="width:100%" href="/reports/warehouse/" class="item">Αποθήκη</a>
+               <!-- <a style="width:100%" href="/reports/restaurant-reports/" class="item">Εστιατόριο</a> -->
+                <a style="width:100%" href="/reports/outcome/" class="item">Έξοδα</a>
+                <a style="width:100%" href="/reports/income/" class="item">Έσοδα</a>
+                <a style="width:100%" href="/reports/isologismos/" class="item">Ισολογισμός</a>
+                <a style="width:100%" href="{% url 'report_settings' %}" class="icon item"><i class="setting icon"></i>Επιλογές</a>
+			</div>
+		</div>
+		<a href="/PoS/" class="item">PoS</a>
+        <a class="item">Pda</a>
+		<a class="right item">
+            <div class="content">
+                {% if user.is_authenticated %}
+                <div class="ui sub header">{{ user.username }}</div>
+                {% else %}
+                <div class="ui sub header">Login</div>
+                {% endif %}
+            </div>
+        </a>
+    </div>
+	<div class ="ui stackable grid">
+
+		<div class="three wide column">
+			{% block left_side %}
+                <div class="ui segments">
+                    <div class="ui red inverted header segment">
+                        Επιταγές που λήγουν ...... <a href="" class="ui label">Διαχείρηση Επιταγών</a>
+                    </div>
+                    <div class="ui  segments">
+                        {% for ele in check_orders %}
+                            <a style="margin: 3%" href="" class="ui large blue label segment">
+                                Προμηθευτής... {{ ele.debtor }},{{ ele.title }}, Τραπεζα... {{ ele.place.title }}<br> Ημερομηνία Λήξης... {{ ele.date_expire }} , Ποσό... {{ ele.value }} €.
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <div class="ui segments">
+                    <div class="ui red inverted header segment">
+                        Τιμολόγια που λήγουν ...... <a href="" class="ui label">Διαχείρηση Τιμολογίων</a>
+                    </div>
+                    <div class="ui  segments">
+                        {% for ele in warehouse_orders %}
+                            <a style="margin: 3%" href="" class="ui large blue label segment">
+                                Προμηθευτής... {{ ele.vendor.title }}, AΠ... {{ ele.code }},<br> Ημερομηνία...  {{ ele.date }} , Ποσό... {{ ele.total_price|floatformat }} €.
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+			{% endblock%}
+		</div>
+
+		
+
+		<div class="nine wide column">
+			{% block center %}
+                <div class="ui segments">
+                    <div style="text-align: center" class="ui blue inverted header segment ">Συνολική Εικόνα Επιχείρησης, Σήμερα είναι {{ day }}</div>
+                    <div class="ui horizontal segments">
+                        <div class="ui segments">
+                            <div style="text-align: center" class="ui red inverted header segment">Προιόντα Αποθήκης </div>
+
+                            <table class="ui table segment">
+                                <thead>
+                                    <tr>
+                                        <th>Προιόν</th>
+                                        <th>Stock Ασφαλείας</th>
+                                        <th>Υπόλοιπο Αποθήκης</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ele in products %}
+                                        <tr>
+                                            {% if ele.check_safe_stock == 'b' %}
+                                            <td>{{ ele.title }}</td>
+                                            <td>{{ ele.safe_stock|floatformat:1 }}</td>
+                                            <td>{{ ele.show_warehouse_remain|floatformat:1 }}</td>
+                                            {% else %}
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="ui segments">
+                            <div style="text-align: center" class="ui green inverted segment">Νέες αφίξεις στην αποθήκη</div>
+                            <table class="ui table segment">
+                                <thead>
+                                    <tr>
+                                        <th>Προιόν</th>
+                                        <th>Τεμάχια/Πόσοτητα που αφίκτηκαν</th>
+                                        <th>Υπόλοιπο Αποθήκης</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ele in products_arrive %}
+                                        <tr>
+                                            <td>{{ ele.product.title }}</td>
+                                            <td>{{ ele.qty|floatformat:1 }}</td>
+                                            <td>{{ ele.product.show_warehouse_remain|floatformat:1 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+			{% endblock%}
+		</div>
+
+
+
+		<div class="four wide column">
+		{% block right_side %}
+
+
+
+		{% endblock%}
+		</div>
+	</div>
+
+
+<script type="text/javascript" src="{% static 'jquery-1.12.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'semantic-ui-daterangepicker-master/moment.js' %}"></script>
+<script type="text/javascript" src="{% static 'semantic-ui-daterangepicker-master/daterangepicker.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'semantic-ui-daterangepicker-master/daterangepicker.css' %}" />
+
+
+<script type="text/javascript" src="{% static 'semantic-ui-css-master/semantic.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'my_static/index.js' %}"></script>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('input[name="daterange"]').daterangepicker();
+});
+
+
+$(function() {
+
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+
+    function cb(start, end) {
+        $('input[name="date_pick"]').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('input[name="date_pick"]').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+            "Προηγούμενο Τρίμηνο": [moment().subtract(3, 'month'), moment()],
+           'Today': [moment(), moment()],
+            "Τρέχων Χρονιά": [moment().startOf('year'), moment().endOf('year')],
+            "Επόμενο Τρίμηνο": [moment().startOf('month'), moment().subtract(-3, 'month').endOf('month')],
+            "Επόμενο Εξάμηνο": [moment().startOf('month'), moment().subtract(-6, 'month').endOf('month')],
+
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+});
+</script>
+{% block my_static %}
+
+{% endblock %}
+</body>
+
+
+</html>

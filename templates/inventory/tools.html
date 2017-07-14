@@ -1,0 +1,285 @@
+{% extends 'index.html' %}
+
+{% block down_menu %}
+<div class="ui five item bottom fixed menu">
+    <a href="{% url 'tools' %}" class="active blue item">Αποθήκη</a>
+    <a href="{% url 'tools_char' %}" class="active item">Χαρακτηριστικά</a>
+    <a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/δημιουργία/" class="item">Εισαγωγές Εξαγωγές</a>
+    <a href="{% url 'tools_discount' %}" class="item">Μαζικές Εκπτώσεις</a>
+    <a class="item">Site</a>
+</div>
+
+{% endblock %}
+
+{% block content %}
+        <div class="two wide column"></div>
+        <div class="twelve wide column">
+            {% if messages %}
+        <div class="ui  message">
+        <ul class="messages">
+            {% for message in messages %}
+
+            <li{% if message.tags %} style="text-decoration: none;" class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+
+    <div class="ui top attached tabular menu">
+        <a class="active item" data-tab="first">Κατηγορίες</a>
+        <a class="item" data-tab="second">Τιμολόγια</a>
+        <a class="item" data-tab="third">Χαρακτηριστικά</a>
+        <a class="item" data-tab="fourth">Brand</a>
+    </div>
+    <div class="ui bottom attached active tab segment" data-tab="first">
+     <div class="ui horizontal segments">
+
+        <div class="ui segments">
+            <div class="ui blue header inverted segment">
+             Κατηγορίες Αποθήκης
+            </div>
+            <a href="/αποθήκη/εργαλεία/category/" class="ui icon small button"><i class="add green icon"></i>Δημιουργία </a>
+            <div class="ui segment">
+                <table class="ui table">
+                    <thead>
+                        <tr>
+                            <th>Κατηγορία</th>
+                            <th>Περιγραφή</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                            <tr>
+                                <td><a href="/αποθήκη/εργαλεία/category/{{ category.id }}" class="ui blue large label">{{ category.title }}</a></td>
+                                <td>{{ category.description }}</td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="ui segments">
+            <div class="ui blue header inverted segment">
+                 Κατηγορίες Site
+             </div>
+            <a href="{% url 'tools_cat_site_new' %}" class="ui icon white button"><i class="add green icon"></i>Δημιουργία </a>
+            <div class="ui segment">
+                <table class="ui table">
+                    <thead>
+                        <tr>
+                            <th>Κατηγορία</th>
+                            <th>Μητρική Κατηγορία</th>
+                            <th>Κατάσταση</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in site_categories %}
+                            <tr>
+                                <td><a href="{% url 'tools_cat_site_edit' category.id %}" class="ui blue large label">{{ category.title }}</a></td>
+                                <td>{{ category.categoty.title }}</td>
+                                <td>{{ category.get_status_display }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+     </div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="second">
+        <div class="ui horizontal segments">
+                <div class="ui segment">
+                      <div class="ui card">
+                          <div class="content">
+                              <div class="header">Είδος Ομάδας Πληρωμών</div>
+                          </div>
+                          <div class="content">
+                            <h4 class="ui sub header">Υπάρχων Ομάδες</h4>
+                            <div class="ui small feed">
+                                {% for ele in payment_group %}
+                                <div class="event">
+                                    <div class="content">
+                                        <div class="summary">
+                                            <a href="/αποθήκη/εργαλεία/payment_group/{{ ele.id }}" class="ui blue edit icon button">{{ ele.title }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                          </div>
+                          <div class="extra content">
+                              <div class="ui blue header segment">
+                                    Πρόσθεσε νέα Ομάδα
+                                </div>
+                            <form class="ui form" method="post" id="color_name">{% csrf_token %}
+                                {{ payment_group_form }}
+                                <input class="ui green button" type="submit" name="group_submit" >
+                            </form>
+                          </div>
+                      </div>
+                </div>
+                <div class="ui segment">
+                      <div class="ui card">
+                          <div class="content">
+                              <div class="header">Είδη πληρωμών</div>
+                          </div>
+                          <div class="content">
+                              <h4 class="ui sub header">Υπάρχων Είδη</h4>
+                                    <div class="ui small feed">
+                                        {% for ele in payment_method %}
+                                        <div class="event">
+                                            <div class="content">
+                                                <div class="summary">
+                                                     <a href="/αποθήκη/εργαλεία/payment/{{ ele.id }}" class="ui blue edit icon button">{{ ele.title }} </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                          </div>
+                          <div class="extra content">
+                                <div class="ui blue header segment">
+                                    Πρόσθεσε νέο Τρόπο Πληρωμής
+                                </div>
+                                <form class="ui form" method="post" id="size_name">{% csrf_token %}
+                                    {{ payment_form }}
+                                    <input class="ui green button" type="submit" >
+                                </form>
+                          </div>
+                      </div>
+                  </div>
+            </div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="third">
+        <div class="ui segments">
+            <div class="ui blue inverted header segment">
+
+            </div>
+            <div class="ui horizontal segments">
+                <div class="ui segment">
+                      <div class="ui card">
+
+                          <div class="content">
+                              <div class="header">Χρώματα</div>
+                          </div>
+                          <div class="content">
+                            <h4 class="ui sub header">Υπάρχων Χρώματα</h4>
+                            <div class="ui small feed">
+                                {% for ele in color %}
+                                <div class="event">
+                                    <div class="content">
+                                        <div class="summary">
+                                            <a href="/αποθήκη/εργαλεία/edit/{{ ele.id }}" class="ui blue edit icon button">{{ ele.title }}</a>
+                                            {% if ele.status == 'a' %}
+                                                <a href="/αποθήκη/εργαλεία/{{ ele.id }}" class="ui red delete icon button">Απενεργοποίηση</a>
+                                            {% else %}
+                                                <a href="/αποθήκη/εργαλεία/{{ ele.id }}" class="ui green button">Ενεργοποίηση</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                          </div>
+                          <div class="extra content">
+                              <div class="ui blue header segment">
+                                    Πρόσθεσε νέο Χρώμα
+                                </div>
+                            <form class="ui form" method="post" id="color_name">{% csrf_token %}
+                                {{ color_form }}
+                                <input class="ui green button" type="submit" name="{{ color_form.prefix }}" >
+                            </form>
+                          </div>
+                      </div>
+                </div>
+                <div class="ui segment">
+                      <div class="ui card">
+                          <div class="content">
+                              <div class="header">Μεγέθη</div>
+                          </div>
+                          <div class="content">
+                              <h4 class="ui sub header">Υπάρχων Μεγέθη</h4>
+                                    <div class="ui small feed">
+                                        {% for ele in size %}
+                                        <div class="event">
+                                            <div class="content">
+                                                <div class="summary">
+                                                     <a href="/αποθήκη/εργαλεία/size/edit/{{ ele.id }}" class="ui blue edit icon button">{{ ele.title }} </a>
+                                                    {% if ele.status == 'a' %}
+                                                    <a href="/αποθήκη/εργαλεία/size/{{ ele.id }}" class="ui red delete icon button">Απενεργοποίηση</a>
+                                                    {% else %}
+                                                        <a href="/αποθήκη/εργαλεία/size/{{ ele.id }}" class="ui green button">Ενεργοποίηση</a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                          </div>
+                          <div class="extra content">
+                                <div class="ui blue header segment">
+                                    Πρόσθεσε νέο Μέγεθος
+                                </div>
+                                <form class="ui form" method="post" id="size_name">{% csrf_token %}
+                                    {{ size_form }}
+                                    <input class="ui green button" type="submit" name="size_submit" >
+                                </form>
+                          </div>
+                      </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="fourth">
+        <div class="ui segments">
+            <div class="ui blue inverted header segment">
+
+            </div>
+                <div class="ui segment">
+                      <div class="ui card">
+                          <div class="content">
+                              <div class="header">Brands</div>
+                          </div>
+                          <div class="content">
+                            <h4 class="ui sub header">Υπάρχων Brand</h4>
+                            <div class="ui small feed">
+                                {% for ele in brands %}
+                                <div class="event">
+                                    <div class="content">
+                                        <div class="summary">
+                                            <a href="{% url 'tools_edit_brand' ele.id %}" class="ui blue edit icon button">{{ ele.title }}</a>
+                                            {% if ele.image %}
+                                                <img src="{{ ele.image.url }}">
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                          </div>
+                          <div class="extra content">
+                              <a href="{% url 'tools_add_brand' %}" class="ui blue button icon segment">
+                                    <i class="add icon"></i> Πρόσθεσε νέο Brand
+                                </a>
+                          </div>
+                      </div>
+                </div>
+
+            </div>
+        </div>
+
+        </div>
+        <div class="two wide column"></div>
+
+
+    {% endblock %}
+
+

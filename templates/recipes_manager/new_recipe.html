@@ -1,0 +1,29 @@
+{% extends 'recipes_manager/homepage.html' %}
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui menu segment">
+            <div class="item">
+                <h3 class="ui orange header"> Προσθήκη Συνταγής</h3>
+            </div>
+        </div>
+
+        <div class="ui form segment">
+            <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                {{ form }}
+                <input type="submit" name="submit" class="ui green button" value="Προσθήκη"/>
+            </form>
+        </div>
+        <div class="ui divider segment"></div>
+
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

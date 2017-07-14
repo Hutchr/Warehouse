@@ -1,0 +1,115 @@
+{% extends 'obaju/index.html' %}
+
+
+
+
+ {% block content %}
+
+        <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>My account</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-3">
+                    <!-- *** CUSTOMER MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Σελ'ιδα Πελάτη</h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a href="{% url 'costumer_page_order' %}"><i class="fa fa-list"></i>Οι Παραγγελίες μου</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'costumer_ask_page' %}"><i class="fa fa-heart"></i>Λίστα επιμυθιών<br>Ερωτήσεις.</a>
+                                </li>
+                                <li class="active">
+                                    <a href={% url 'costumer_page' %}><i class="fa fa-user"></i> Επιλογές</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'log_out' %}"><i class="fa fa-sign-out"></i> Αποσύνδεση</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <!-- *** CUSTOMER MENU END *** -->
+                </div>
+
+                <div class="col-md-9">
+                    <div class="box">
+                        <h1>Επιλογές</h1>
+                        <p class="lead">Αλλάζεις όλες τις επιλογές του λογαριασμού σου εδώ.</p>
+                        <p class="text-muted">Username....{{ request.user.username }}, Τύπος πελάτη.... {{ costumer_account.is_retail }}.</p>
+
+                        <h3>Λεπτομέριες Αποστολής</h3>
+
+                        <form method="post">{% csrf_token %}
+                            {{ costumer_details }}
+
+                            <div class="col-sm-12 text-center">
+                                <button name="details" type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Αποθήκευση Κωδικού</button>
+                            </div>
+                        </form>
+
+                        <hr>
+
+                        <h3>Αποθήκευση</h3>
+
+                        <form>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_old">Παλιός Κωδικός</label>
+                                        <input type="password" class="form-control" id="password_old">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_1">Νέος Κωδικός</label>
+                                        <input type="password" class="form-control" id="password_1">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_2">Επανέλαβε τον Νέο Κωδικό</label>
+                                        <input type="password" class="form-control" id="password_2">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.row -->
+
+                            <div class="col-sm-12 text-center">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>Αποθήκευση Κωδικού</button>
+                            </div>
+                        </form>
+
+                        <hr>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+{% endblock %}
+

@@ -1,0 +1,123 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+
+    <div  class="ui segments">
+        <div class="ui inverted blue segment">
+            <h2 style="text-align: center">{{ order.table.title }}</h2>
+        </div>
+        <div class="ui segments">
+            <div class="ui segment">
+                {% for ele in categories %}
+                <a href="/PoS/επέλεξε-συνταγή/{{ order.id }}/κατηγορία/{{ ele.id }}" class="ui massive green button segment"><i class="huge browser icon"></i><br>{{ ele.title }}</a>
+                {% endfor %}
+            </div>
+
+            <div class="ui divider segment">Ολα τα Προιόντα</div>
+            <div class="ui segment">
+                {% for ele in recipes %}
+                    <a href="/PoS/επέλεξε-συνταγή/προσθήκη-συνταγής/{{ order.id }}/{{ ele.id }}" class="ui massive blue button segment"><i class="share square icon"></i>{{ ele.title }}</a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui inverted blue segment">
+        
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+               <h3>{{ order.table.title }}</h3>
+            </div>
+            <div class="ui segment"></div>
+            <div class="ui segment">
+                <h3 style="color: deepskyblue"> Αρχική Αξία  {{ order.value }}</h3>
+            </div>
+        </div>
+        <div class="ui segment">
+
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Συνταγή</th>
+                        <th>Ποσότητα</th>
+                        <th>Τιμή</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ele in order_items %}
+                    <tr>
+                        <td><a style="width: 100%" href="/PoS/επέλεξε-συνταγή/edit/{{ order.id }}/{{ ele.id }}" class="ui blue button"> <i class="edit icon"></i></a></td>
+                        <td>{{ ele.title }}</td>
+                        <td>{{ ele.qty }}</td>
+                        <td>{{ ele.total_price|floatformat:2 }} <a href="/PoS/επέλεξε-συνταγή/διαγραφή/{{ order.id }}/{{ ele.id }}" class="ui red button"> <i class="trash bin  icon"></i></a> </td>
+                    </tr>
+
+                {% endfor %}
+
+                <tr>
+
+                    <td>Αποπληρωμένο Ποσό, {{ order.paid_value|floatformat:2 }}</td>
+                    <td style="color: #00719b;font-size: large">Υπόλοιπο</td>
+                    <td style="color: #00719b;font-size: large"><span style="color: red; margin-left: 5%">{{ order.remaining_value }} €</span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="ui segment"></div>
+        <div class="ui segment">
+                 <a style="width: 100%" href="/PoS/εκτύπωση/" class="ui blue button"><i style="width: 100%" class="big print icon">Εκτύπωση Παραγγελίας στην Κουζίνα.</i> </a>
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                 <a href="" class="ui green button"><i class="options icon"></i> </a>
+            </div>
+            <div class="ui segment">
+                <a href="" class="ui green button"><i class="checkmark icon"></i> </a>
+            </div>
+
+
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                 <h3>Απόδειξη</h3>
+            </div>
+            <div class="ui segment">
+                <a href="" class="ui green button"><i class="toggle on icon"></i> Ενεργοποίηση</a>
+            </div>
+            <div class="ui segment">
+                 <a href="" class="ui blue button"><i class="big print icon"></i> </a>
+            </div>
+
+        </div>
+        <div class="ui divider segment"></div>
+        <div class="ui segment">
+
+            <a style="width: 100%;text-align: center" href="/PoS/επέλεξε-συνταγή/{{ order.id }}/πληρωμή" class="ui green button">
+                {% if order.remaining_value > 0 %}
+                        <i style="padding-right:20%;color: red" class="ui big red payment icon">Πληρωμή</i>
+                {%  else %}
+                        <i style="padding-right:20%" class="ui big  payment icon">Πληρωμή</i>
+                {% endif  %}
+            </a>
+            </div>
+        <div style="margin-bottom: 30%" class="ui divider segment"></div>
+
+        <div class="ui segment">
+            <a style="width: 100%" href="/PoS/πληρωμή/{{ order.id }}" class="ui big  red button">Κλείσιμο τραπεζιού</a>
+        </div>
+
+    </div>
+
+
+{% endblock %}

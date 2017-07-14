@@ -1,0 +1,34 @@
+{% extends 'inventory/add_color_and_size_to_order.html' %}
+
+
+{% block center %}
+<style>
+    #id_size, #id_color{
+        display: none;
+    }
+    label[for=id_size], label[for=id_color]{
+        display: none;
+    }
+</style>
+    <div class="ui segments">
+
+        <div class="ui segment">
+            <div class="ui blue inverted header segment">
+                {{ product.title }}, {{ product_color.title }}, {{ product_size.title }}
+            </div>
+            <form method="POST" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                {{ form_item_order }}
+                <input style="width: 100%" type="submit" class="ui green button">
+            </form>
+        </div>
+        <div class="ui segment">
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block right_side %}
+    <a href="/αποθήκη/τιμολόγια/check/{{ order.id }}/{{ product.id }}/{{ product_color.id }}/" class="ui blue button">Επιστροφή</a>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'obaju/index.html' %}
+
+
+{% block content %}
+    <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>New account / Sign in</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-6">
+                    <div class="box">
+                        <h1>Δημιουργία Νέου Λογαριασμού</h1>
+
+                        <p class="lead">Δεν έχτε ακόμα λογαριασμό;</p>
+                        <p>Με την Δημιουργία νέου λογαριασμού επωγελειθείτε από τα ενημερωτικά μας email κτλ</p>
+                        <p class="text-muted">Σε περίπτωση που είσται πέλατης Χονδρικής, τηλεφώνήστε μας στο  <a href="">{{ welcome_page.phone_number }}</a>, για να σας ενεργοποίησουμε τον λογαριασμό.</p>
+
+                        <hr>
+
+                        <form  method="post">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input name='username' type="text" class="form-control" id="username">
+                            </div>
+                             <div class="form-group">
+                                <label for="first_name">Όνομα</label>
+                                <input name='first_name' type="text" class="form-control" id="first_name">
+                            </div>
+                             <div class="form-group">
+                                <label for="last_name">Επίθετο</label>
+                                <input name='last_name' type="text" class="form-control" id="last_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input name="email" type="text" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input name="password" type="password" class="form-control" id="password">
+                            </div>
+                            <div class="text-center">
+                                <button name="register" type="submit" class="btn btn-primary"><i class="fa fa-user-md"></i>Δημιουργία</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="box">
+                        <h1>Σύνδεση</h1>
+
+                        <p class="lead">Είσται ήδη πελάτης μας;</p>
+                        <p class="text-muted">Χρησιμοποιήστε εδώ το username και to password σας για να δείτε το ιστορικό σας κτλ</p>
+
+                        <hr>
+
+                        <form method="post">{% csrf_token %}
+                            <div class="form-group">
+                                <label for="username">Όνομα Χρήστη</label>
+                                <input name="username" type="text" class="form-control" id="username">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Κωδικός</label>
+                                <input name="password" type="password" class="form-control" id="password">
+                            </div>
+                            <div class="text-center">
+                                <button name="login" type="submit" class="btn btn-primary"><i class="fa fa-sign-in"></i>Σύνδεση</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}

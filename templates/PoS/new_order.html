@@ -1,0 +1,30 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui black inverted header segment">
+            <h3>Επιβεβαίωση Παραγγελίας στο τραπέζι <section style="color: red; font-size: larger">{{ table_id.title }}</section></h3>
+        </div>
+         <form style="text-align: center;font-size: larger" class="ui form segment" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input style="width: 100%" type="submit" name="submit" class="ui huge green button" value="Επιβεβαίωση"/>
+        </form>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui inverted red segment">
+            Όδηγίες!
+        </div>
+        <div class="ui segment">
+            <p>Το μόνο που αλλάζεις εάν θες είναι ο τίτλος, και οι Σημειώσεις</p>
+        </div>
+    </div>
+
+{% endblock %}

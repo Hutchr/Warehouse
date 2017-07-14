@@ -1,0 +1,183 @@
+{% extends 'index.html' %}
+
+{% block down_menu %}
+<div class="ui four item bottom fixed menu">
+    <a href="{% url 'tools' %}" class=" item">Αποθήκη</a>
+    <a href="{% url 'tools_char' %}" class="active item">Χαρακτηριστικά</a>
+    <a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/δημιουργία/" class="active blue item">Εισαγωγές Εξαγωγές</a>
+    <a class="item">Site</a>
+</div>
+
+{% endblock %}
+
+{% block content %}
+    <div class="four wide column">
+    <div  class="ui segments">
+                <form class="ui form" method="post">{% csrf_token %}
+                    <div class="ui segment">
+                        <input style="width: 50%" type="search" class="ui button " name="search_name" placeholder="Αναζήτηση">
+                    </div>
+
+                    <div class="ui accordion segment">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            {% if category_name %}
+                                {% for ele in category_name %}
+                                    {{ ele.title }},
+                                {% endfor %}
+                            {% else %}
+                                Επέλεξε κατηγορία
+                            {% endif %}
+                        </div>
+                        <div style='height: 300px;overflow: scroll' class="content">
+                            {% for ele in categories %}
+                                {% if ele.title in category_name %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="category" value="{{ ele.title }}" checked>
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% else %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="category" value="{{ ele.title }}">
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="ui accordion segment">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            {% if vendor_name %}
+                                {% for ele in vendor_name %}
+                                    {{ ele.title }},
+                                {% endfor %}
+                            {% else %}
+                                Επέλεξε Προμηθευτή
+                            {% endif %}
+                        </div>
+                        <div style='height: 300px;overflow: scroll' class="content">
+
+                            {% for ele in vendors %}
+                                {% if ele.title in vendor_name %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% else %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <input  type="submit" class="ui green button" placeholder="Search">
+                </form>
+            </div>
+    </div>
+    <div class="eight wide column">
+    {% if messages %}
+        <div class="ui green message">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                    {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <div class="ui segments">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            Επιλογή Προϊόντων
+        </div>
+        <div class="ui segment">
+            <form  class="ui form">
+                <table class="ui table">
+                    <thead>
+                        <tr>
+                            <th>Κωδικός Τιμολογίου</th>
+                            <th>Ονομασία</th>
+                            <th>Προμηθευτής</th>
+                            <th>Υπόλοιπο Αποθήκης</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ele in products %}
+                            {% if ele.have_size %}
+                                {% for size in ele.sizeattribute_set.all %}
+                                     <tr>
+                                        <td>{{ size }} 1</td>
+                                        <td>{{ ele.title }} , {{ ele.color }}</td>
+                                        <td>{{ ele.supplier.title }}</td>
+                                        <td>{{ ele.qty|floatformat:2 }}</td>
+                                        <td><a href="{% url 'tools_change_qty_size' order.id size.id %}" name="submit" class="ui green button" type="submit">Επιλογή</a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td>{{ ele.order_code }} 2</td>
+                                    <td>{{ ele.title }} , {{ ele.color }}</td>
+                                    <td>{{ ele.supplier.title }}</td>
+                                    <td>{{ ele.qty|floatformat:2 }}</td>
+                                    <td><a href="{% url 'tools_change_grab_qty' order.id ele.id %}" name="submit" class="ui green button" type="submit">Επιλογή</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    </div>
+    <div class="four wide column">
+    {% block add_item %}
+    <div class="ui segments">
+        <div class="ui blue inverted header segment">
+            {{ order.title }}
+        </div>
+        <div class="ui segment">
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th>Προϊόν</th>
+                        <th>Ποσότητα</th>
+                        <th>Νέο Υπόλοιπο</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in order_item %}
+                        {% if ele.size %}
+                        <tr>
+                            <td>{{ ele.size }}</td>
+                            <td>{{ ele.qty }}</td>
+                            <td>{{ ele.size.qty }}</td>
+                        </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ ele.title.title }}</td>
+                                <td>{{ ele.qty }}</td>
+                                <td>{{ ele.title.qty }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endblock %}
+    </div>
+{% endblock %}
+

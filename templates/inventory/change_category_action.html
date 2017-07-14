@@ -1,0 +1,22 @@
+{% extends 'inventory/products_edit_section_NEW.html' %}
+
+
+
+{% block center %}
+    <div class="ui segments">
+        <div class="ui segment blue inverted header">
+            Αλλαγή Κατηγορίας
+        </div>
+    <div class="ui segment">
+        <form method="post" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+            {{ form }}
+            <input type="submit" class="ui blue button" >
+        </form>
+    </div>
+
+    </div>
+
+
+
+
+{% endblock %}

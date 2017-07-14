@@ -1,0 +1,27 @@
+{% extends 'PoS/add_products_main.html' %}
+
+
+{% block center %}
+    <div class="ui segments">
+        <div class="ui inverted blue segment">
+            <h2 style="text-align: center">{{ categories.title }}</h2>
+        </div>
+        <div class="ui segments">
+            <div class="ui segment">
+
+                <a href="/PoS/επέλεξε-συνταγή/{{ order.id }}" class="ui massive green button"><i class="huge browser icon"></i><br>Επιστροφή</a>
+
+            </div>
+
+            <div class="ui divider segment">Ολα τα Προιόντα</div>
+            <div class="ui segment">
+                {% for ele in recipes %}
+                    <a href="/PoS/επέλεξε-συνταγή/προσθήκη-συνταγής/{{ order.id }}/{{ categories.id }}/{{ ele.id }}" class="ui massive blue button"><i class="share square icon"></i>{{ ele.title }}</a>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

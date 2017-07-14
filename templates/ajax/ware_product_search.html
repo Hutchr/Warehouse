@@ -1,0 +1,105 @@
+{% if my_vendors %}
+    {% if my_vendors.count > 0 %}
+        {% for product in my_vendors %}
+            <li style="text-decoration: none"><div class="item">
+                <i class="large github middle aligned icon"></i>
+                <div class="content">
+                  <a href="/αποθήκη/προμηθευτές/επεξεργασία/{{ product.id }}">{{ product.title|truncatechars:30 }}</a>
+
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+        {% else %}
+            <li>Nothing to show!</li>
+    {% endif %}
+
+{% elif my_orders %}
+    {% if my_orders.count > 0 %}
+        {% for product in my_orders %}
+
+                <li style="text-decoration: none"><div class="item">
+                <i class="large github middle aligned icon"></i>
+                <div class="content">
+                  <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ product.id }}">{{ product.code|truncatechars:10 }},{{ product.vendor.title|truncatechars:20 }}</a>
+                </div>
+              </div>
+            </li>
+            {% endfor %}
+        {% else %}
+            <li>Nothing to show!</li>
+    {% endif %}
+
+{% elif report_products %}
+    {% if report_products.count > 0 %}
+        {% for product in report_products %}
+                <li style="text-decoration: none">
+                    <div class="item">
+                    <i class="large github middle aligned icon"></i>
+                    <div class="content">
+                        <a href="/reports/products/{{ product.id }}">{{ product.title|truncatechars:30 }}</a>
+                    </div>
+                    </div>
+                </li>
+        {% endfor %}
+    {% else %}
+            <li>Nothing to show!</li>
+    {% endif %}
+
+{% elif my_site %}
+     {% if my_products.count > 0 %}
+        {% for product in my_products %}
+            <li style="text-decoration: none;">
+                 <a style="background-color: #1a806c" href="{% url 'product_page' product.id %}" class="list-group-item active step-1-menu">
+                     <h4 class="list-group-item-heading">{{ product.title }} {{ product.sku }}</h4>
+                     <p class="list-group-item-text">{{ product.site_categoty.title }},</p>
+                 </a>
+            </li>
+        {% endfor %}
+     {% else %}
+     {% endif %}
+{% elif related_pro %}
+     {% if my_products.count > 0 %}
+        {% for prod in my_products %}
+            <li style="text-decoration: none;">
+                 <a style="background-color: #1a806c" href="{% url 'ajax_add_related' dk prod.id  %}" class="list-group-item active step-1-menu">
+                     <h4 class="list-group-item-heading">{{ prod.title }} {{ product.sku }}</h4>
+                     <p class="list-group-item-text">{{ prod.site_categoty.title }},</p>
+                 </a>
+            </li>
+        {% endfor %}
+     {% else %}
+
+     {% endif %}
+{% elif color_pro %}
+     {% if my_products.count > 0 %}
+        {% for prod in my_products %}
+            <li style="text-decoration: none;">
+                 <a style="background-color: #1a806c" href="{% url 'ajax_add_color' dk prod.id  %}" class="list-group-item active step-1-menu">
+                     <h4 class="list-group-item-heading">{{ prod.title }} {{ product.sku }}</h4>
+                     <p class="list-group-item-text">{{ prod.site_categoty.title }},</p>
+                 </a>
+            </li>
+        {% endfor %}
+     {% else %}
+     {% endif %}
+{% else %}
+
+    {% if my_products.count > 0 %}
+        {% for product in my_products %}
+            <li style="text-decoration: none"><div class="item">
+                <i class="large github middle aligned icon"></i>
+                <div class="content">
+                  <a href="/αποθήκη/προιόντα/επεξεργασία/{{ product.id }}" class="header">{{ product.title|truncatechars:30 }}</a>
+                  <div class="description">{{ product.supplier.title }}</div>
+                </div>
+              </div>
+            </li>
+        {% endfor %}
+    {% else %}
+    <li>Nothing to show!</li>
+{% endif %}
+
+
+
+{% endif %}

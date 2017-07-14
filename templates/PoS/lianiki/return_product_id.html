@@ -1,0 +1,62 @@
+{% extends 'PoS/lianiki/return_products.html' %}
+
+
+
+
+{% block right_side %}
+
+    {% if destroy %}
+        <style>
+            body{
+                text-align: center;
+            }
+            #id_title, label[for=id_title],#id_order, label[for=id_order]{
+                display: none;
+            }
+            #id_qty, label[for=id_qty],#id_cost, label[for=id_cost]{
+                font-size: x-large;
+                height: 15%;
+            }
+        </style>
+    <div class="ui header segment">
+        {{ product.title }}
+    </div>
+    <div class="ui segment">
+         <div class="ui form">
+             <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                 {{ form }}
+                 <input  style="width: 100%;height: 200px; font-size: 50px;" type="submit" name="submit" class="ui green button segment" value="Προσθήκη"/>
+             </form>
+         </div>
+    </div>
+
+    {% else %}
+         <style>
+            body{
+                text-align: center;
+            }
+            #id_title, label[for=id_title],#id_order, label[for=id_order]{
+                display: none;
+            }
+            #id_qty, label[for=id_qty],#id_cost, label[for=id_cost]{
+                font-size: x-large;
+                height: 15%;
+            }
+        </style>
+    <div class="ui header segment">
+        {{ product.title }}
+    </div>
+    <div class="ui segment">
+         <div class="ui form">
+             <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                 {{ form }}
+                 <input  style="width: 100%;height: 200px; font-size: 50px;" type="submit" name="submit" class="ui green button segment" value="Προσθήκη"/>
+             </form>
+         </div>
+    </div>
+
+
+    {% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'index.html' %}
+
+{% block down_menu %}
+<div class="ui four item bottom fixed menu">
+    <a href="{% url 'tools' %}" class=" item">Αποθήκη</a>
+    <a href="{% url 'tools_char' %}" class="active item">Χαρακτηριστικά</a>
+    <a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/δημιουργία/" class="active blue item">Εισαγωγές Εξαγωγές</a>
+    <a class="item">Site</a>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="row">
+        <h2 class="ui center aligned header">Παραστατικά Αποθήκης</h2>
+    </div>
+    <div class="row">
+        <div class="one wide column"></div>
+        <div class="ten wide column">
+            <table class="ui celled table">
+              <thead>
+                <tr>
+                  <th>Ημερομηνία</th>
+                  <th>Σχόλια</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                    <tr>
+                      <td>{{ order.day_added }}</td>
+                      <td>{{ order.title }}</td>
+                      <td class="negative"><a href="{% url 'tools_change_qty_id' order.id %}" class="ui green button">Επιλογή</a></td>
+                    </tr>
+                {% endfor %}
+
+              </tbody>
+            </table>
+        </div>
+        <div class="three wide column">
+            <h4 class="ui green header"> Δημιουργία Παραστατικού </h4>
+             <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input style="height:200px;width:100%;margin-top: 20%" type="submit" name="submit" class="ui green button" value="Επιβεβαίωση"/>
+        </form>
+        </div>
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block left_side %}
+         <div class="ui secondary vertical pointing menu segment">
+            <a href="/αποθήκη/εργαλεία/" class=" item">
+               Αποθήκη
+            </a>
+            <a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/δημιουργία/" class="active item">
+               Εισαγωγές Εξαγωγές
+            </a>
+            <a class="item">
+               Site
+            </a>
+        </div>
+{% endblock %}
+
+
+{% block center %}
+    <div class="ui segments">
+    <div class="ui segment blue inverted header">Αλλαγή Ποσότητας</div>
+    </div>
+     <div class="ui form segment">
+
+        <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input style="height:200px;width:100%;margin-top: 20%" type="submit" name="submit" class="ui green button" value="Επιβεβαίωση"/>
+        </form>
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui blue inverted header segment">
+            Προηγούμενες
+        </div>
+        <div class="ui segment">
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th>Σχολιασμος</th>
+                        <th>Ημερομηνία</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in orders %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.day_added }}</td>
+                            <td><a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/{{ ele.id }}/" class="ui green button">Επιλογή</a> </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

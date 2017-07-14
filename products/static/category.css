@@ -1,0 +1,13 @@
+#my_buttons p{
+    background-color: #080808;
+    font-size: large;
+    padding: 100px;
+
+}
+#my_buttons p:hover{
+    background-color: darkorange;
+}
+
+body{
+    background-color: #88d4ed;
+}

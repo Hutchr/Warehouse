@@ -1,0 +1,504 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+    {% if destroy %}
+        <div class="ui segments">
+            <div class="ui inverted red segment">
+            <h2 style="text-align: center"> {{ title }} {{ order.title|truncatechars:15 }}</h2>
+        </div>
+            <div class="ui horizontal segments">
+            <div class="ui header segment">Προιόντα</div>
+            <div class="ui segment">
+                <form method="get">
+                    <div class="ui search">
+                        <div class="ui icon input">
+                            <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση Προϊόντος..">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+            <div class="ui segment">
+                <table class="ui selectable single line table">
+                    <thead>
+                         <tr>
+                            <th>Κωδικός</th>
+                            <th>Προϊόν</th>
+                            <th>Κατηγορία</th>
+                            <th>Τιμή</th>
+                            <th></th>
+                         </tr>
+                         </thead>
+                    <tbody>
+                    {% for ele in products %}
+                        <tr>
+                            <td>{{ ele.description }}</td>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.category.title }}</td>
+                            <td>{{ ele.price }} € </td>
+                            {% if ele.have_size %}
+                                <td>
+                                    <div class="ui buttons">
+                                        <a href="/PoS/destroy-order/{{ order.id }}/{{ ele.id }}/" class="ui  button">Επιλογή Ποσότητας</a>
+                                    </div>
+                                </td>
+                            {% else %}
+                            <td>
+                                <div class="ui buttons">
+                                    <a href="{% url 'destroy_auto' order.id ele.id %}" class="ui  button">Add</a>
+                                    <div class="or"></div>
+                                    <a href="{% url 'destroy_item' order.id ele.id %}" class="ui red button">Επιλογή</a>
+                                </div>
+                            </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="ui red divider segment"></div>
+        </div>
+
+    {% elif return %}
+        <div class="ui segments">
+                <div class="ui inverted blue segment">
+                    <h2 style="text-align: center"> {{ title }} {{ order.title|truncatechars:15 }}</h2>
+                </div>
+                <div class="ui horizontal segments">
+                    <div class="ui header segment">Προιόντα</div>
+                    <div class="ui segment">
+                        <form method="get">
+                            <div class="ui search">
+                                <div class="ui icon input">
+                                    <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση Προϊόντος..">
+                                    <i class="search icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="ui segment">
+                     <table class="ui selectable single line table">
+                         <thead>
+                         <tr>
+                            <th>Κωδικός</th>
+                            <th>Προϊόν</th>
+                            <th>Κατηγορία</th>
+                            <th>Τιμή</th>
+                            <th></th>
+                        </tr>
+
+
+                         </thead>
+                         <tbody>
+                        {% for ele in products %}
+                            {% if ele.color == 'a' %}
+                                {% for color in ele.colorattribute_set.all %}
+                                     <tr>
+                                         <td>{{ ele.description }}aa</td>
+                                         <td>{{ ele.title }}, {{ color.title.title }}</td>
+                                         <td>{{ ele.category.title }}</td>
+                                         <td>{{ ele.price }} € </td>
+                                         <td>
+                                             <a href="{% url 'return_order_item_id_with_color' order.id color.id %}" class="ui  button">Επιλογή</a>
+                                         </td>
+                                     </tr>
+                                {% endfor %}
+                            {% else %}
+                            <tr>
+                                <td>{{ ele.description }}</td>
+                                <td>{{ ele.title }}</td>
+                                <td>{{ ele.category.title }}</td>
+                                <td>{{ ele.price }} € </td>
+                                <td>
+                                    <div class="ui buttons">
+                                        <a href="/PoS/return-order/{{ order.id }}/{{ ele.id }}/" class="ui  button">Επιλογή</a>
+                                        <div class="or"></div>
+                                        <a href="" class="ui positive button">Προσθήκη</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+
+
+                      </tbody>
+                     </table>
+                </div>
+                <div class="ui red divider segment"></div>
+
+         </div>
+
+    {% else %}
+        <div class="ui segments">
+            <div class="ui inverted red segment">
+            <h2 style="text-align: center"> {{ title }} {{ order.title|truncatechars:15 }}</h2>
+        </div>
+            <div class="ui horizontal segments">
+            <div class="ui header segment">Προιόντα</div>
+            <div class="ui segment">
+                <form method="get">
+                    <div class="ui search">
+                        <div class="ui icon input">
+                            <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση Προϊόντος..">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+            <div class="ui segment">
+                <table class="ui small single line selectable table">
+                <thead>
+                    <tr>
+                        <th>Ονομασία <br>Κωδικός Προιόντος</th>
+                        <th>Πελάτης</th>
+                        <th>Ποσότητα</th>
+                        <th>Τιμή</th>
+                        <th>Ημερομηνία</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in products %}
+                        {% if ele.color == 'a' %}
+                            {% for item in ele.colorattribute_set.all %}
+                                <tr>
+                                    <td>{{ ele.title }}<br>{{ ele.title.description }}</td>
+                                    <td>{{ ele.category.title }}</td>
+                                    <td>{{ ele.price }} € </td>
+                                    <td>
+                                        <div class="ui label">{{ item.title }}</div> <a href="{% url 'add_product_with_size' order.id item.id %}" class="ui green button">Επιλογή Νούμερο.</a>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            {% if ele.is_return %}
+                                <tr style="background-color: red">
+                                    <td class="negative">{{ ele.title }}<br>{{ ele.title.description }}</td>
+                                    <td>{{ ele.order.costumer_account }}</td>
+                                    <td>{{ ele.qty }}</td>
+                                    <td>{{ ele.price }} € </td>
+                                    <td>{{ ele.day_added }}</td>
+                                    <td>
+                                        <div class="ui buttons">
+                                            <a href="{% url 'return_qty' ele.id %}" class="ui button">Επιλογή Ποσότητας</a>
+                                            <div class="or"></div>
+                                            <a href="{% url 'return_auto' ele.id %}" class="ui negative button">Επιστροφή</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td class="positive">{{ ele.title }}<br>{{ ele.title.description }}</td>
+                                    <td>{{ ele.order.costumer_account }}</td>
+                                    <td>{{ ele.qty }}</td>
+                                    <td>{{ ele.price }} € </td>
+                                    <td>{{ ele.day_added }}</td>
+                                    <td>
+                                        <div class="ui buttons">
+                                            <a href="{% url 'return_qty' ele.id %}" class="ui button">Επιλογή Ποσότητας</a>
+                                            <div class="or"></div>
+                                            <a href="{% url 'return_auto' ele.id %}" class="ui negative button">Επιστροφή</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endif %}
+
+
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+            <div class="ui red divider segment"></div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+
+{% block right_side %}
+    {% if destroy %}
+    <div class="ui segments">
+        <div class="ui inverted red segment">
+
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+               <h3>{{ order.title }}</h3>
+            </div>
+            <div class="ui segment"></div>
+            <div class="ui segment">
+                <h3 style="color: indianred"> Αξία Επιστροφών  {{ order.total_cost }} €</h3>
+            </div>
+        </div>
+        <div class="ui segment">
+
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Κωδικός</th>
+                        <th>Barcode</th>
+                        <th>Προίον</th>
+                        <th>Ποσότητα-Τιμή</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ele in order_items %}
+                    <tr>
+                        <td><a style="width: 100%" href="/PoS/destroy-order/{{ order.id }}/{{ ele.id }}/edit/" class="ui blue button"> <i class="edit icon"></i></a></td>
+                        <td>{{ ele.title.description }}</td>
+                        <td>{{ ele.title.product_id }}</td>
+                        <td>{{ ele.title }}</td>
+                        <td>{{ ele.qty }} - {{ ele.total_price|floatformat:2 }}</td>
+                        <td> <a href="/PoS/destroy-order/{{ order.id }}/{{ ele.id }}/delete/" class="ui red button"> <i class="trash bin  icon"></i></a> </td>
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="ui segment"></div>
+        <div class="ui segment">
+             <a style="width: 100%;text-align: center;height:150px" href="/PoS/lianiki/" class="ui blue button">
+
+                        <i style="padding-right:20%;" class="ui big  payment icon"><br>Επιβεβαίωση Επιστροφών</i>
+             </a>
+
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                 <a href="" class="ui green button"><i class="options icon"></i> </a>
+            </div>
+            <div class="ui segment">
+                <a href="" class="ui green button"><i class="checkmark icon"></i> </a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div  class="ui segments">
+        <form class="ui form" method="post">{% csrf_token %}
+            <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if category_name %}
+                        {% for ele in category_name %}
+                            {{ ele.title }},
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε κατηγορία
+                    {% endif %}
+
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+                    {% for ele in categories %}
+                        {% if ele.title in category_name %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category" value="{{ ele.title }}" checked>
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category" value="{{ ele.title }}">
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if vendor_name %}
+                        {% for ele in vendor_name %}
+                            {{ ele.title }},
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε Προμηθευτή
+                    {% endif %}
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+
+                    {% for ele in vendors %}
+                        {% if ele.title in vendor_name %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        <input  type="submit" class="ui green button" placeholder="Search">
+        </form>
+    </div>
+
+    {% elif return %}
+        <div class="ui segments">
+            <div class="ui inverted blue segment">
+
+            </div>
+            <div class="ui horizontal segments">
+                <div class="ui segment">
+                   <h3>{{ order.title }}</h3>
+                </div>
+                <div class="ui segment"></div>
+                <div class="ui segment">
+                    <h3 style="color: indianred"> Αξία Επιστροφών  {{ order.value }} €</h3>
+                </div>
+            </div>
+            <div class="ui segment">
+
+                <table class="ui table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Κωδικός</th>
+                            <th>Barcode</th>
+                            <th>Προίον</th>
+                            <th>Ποσότητα-Τιμή</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for ele in order_items %}
+                        <tr>
+                            <td><a style="width: 100%" href="/PoS/return-order/{{ order.id }}/{{ ele.id }}/edit/" class="ui blue button"> <i class="edit icon"></i></a></td>
+                            <td>{{ ele.title.description }}</td>
+                            <td>{{ ele.title.product_id }}</td>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.qty }} - {{ ele.total_price|floatformat:2 }}</td>
+                            <td> <a href="/PoS/return-order/{{ order.id }}/{{ ele.id }}/delete/" class="ui red button"> <i class="trash bin  icon"></i></a> </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="ui segment"></div>
+            <div class="ui segment">
+                 <a style="width: 100%;text-align: center;height:150px" href="/PoS/lianiki/" class="ui blue button">
+
+                            <i style="padding-right:20%;" class="ui big  payment icon"><br>Επιβεβαίωση Επιστροφών</i>
+                 </a>
+
+            </div>
+            <div class="ui horizontal segments">
+                <div class="ui segment">
+                     <a href="" class="ui green button"><i class="options icon"></i> </a>
+                </div>
+                <div class="ui segment">
+                    <a href="" class="ui green button"><i class="checkmark icon"></i> </a>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div  class="ui segments">
+            <form class="ui form" method="post">{% csrf_token %}
+                <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if category_name %}
+                            {% for ele in category_name %}
+                                {{ ele.title }},
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε κατηγορία
+                        {% endif %}
+
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+                        {% for ele in categories %}
+                            {% if ele.title in category_name %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category" value="{{ ele.title }}" checked>
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category" value="{{ ele.title }}">
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if vendor_name %}
+                            {% for ele in vendor_name %}
+                                {{ ele.title }},
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε Προμηθευτή
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+
+                        {% for ele in vendors %}
+                            {% if ele.title in vendor_name %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+            <input  type="submit" class="ui green button" placeholder="Search">
+            </form>
+        </div>
+
+
+    {% endif %}
+
+
+
+{% endblock %}

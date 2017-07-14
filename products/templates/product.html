@@ -1,0 +1,81 @@
+{% extends 'index.html' %}
+
+
+{% block main_block %}
+
+
+     <div class="main" style="padding-bottom: 25%">
+        <div class="content">
+            <div class="content_top">
+                <div class="back-links">
+                <p><a href="index.html">Home</a> >>>> <a href="#">{{ product.category }}</a></p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="section group">
+				<div class="cont-desc span_1_of_2">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" width="500px" height=500px">
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="desc span_3_of_2">
+				<h2>{{ product.title }} </h2>
+				<p>{{ product.description }}</p>
+				<div class="price">
+					<p><span class="rupees"> €{{ product.price }}</span></p>
+                           <p><span class="rupees"> Χονδρική €{{ product.price_internet }}</span></p>
+				</div>
+				<div class="available">
+					{% if product.status  == "a" %}
+                <p>Σε απόθεμα</p>
+                {% elif product.status == 'o' %}
+            <p>Διαθέσιμο με παραγγελία</p>
+                {% else %}
+                <p>Προσωρινά μη διαθέσιμο</p>
+
+
+            {% endif %}
+                    <ul>
+                        <li>Color:
+							<select>
+							<option>Silver</option>
+							<option>Black</option>
+							<option>Dark Black</option>
+							<option>Red</option>
+						</select></li>
+						<li>Size:<select>
+							<option>Large</option>
+							<option>Medium</option>
+							<option>small</option>
+							<option>Large</option>
+							<option>small</option>
+						</select></li>
+						<li>Quality:<select>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+							<option>5</option>
+						</select></li>
+					</ul>
+				</div>
+                </div>
+        </div>
+     </div>
+
+
+<div>
+    <ul class="list-group">
+        <li class="list-group-item">Προμηθευτής  {{ product.supplier }}</li>
+        <li class="list-group-item">Τιμή Αγοράς  {{ product.price_buy }}</li>
+        <li class="list-group-item">Απόθεμα </li>
+    </ul>
+</div>
+
+
+
+{% endblock %}

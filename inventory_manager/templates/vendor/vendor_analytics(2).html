@@ -1,0 +1,80 @@
+{% extends "vendor/vendors.html" %}
+
+{% block context %}
+    <style>
+    body { background: #e7eef3; }
+.container { width: 460px; margin: 50px auto; }
+
+.circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 200px;
+  padding: 54px 20px;
+  opacity: 0.85;
+  margin-left: -18px;
+  float: left;
+  box-sizing: border-box;
+
+  text-align: center;
+  color: #fff;
+  font-family: sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.green { background: #16a085; }
+.blue { background: #3498db; }
+.red { background: #e74c3c; }
+
+span { font-size: 12px; font-weight: normal; color: #000000 }
+p { margin: 0; padding: 0; font-size: 12px; font-weight: bold; text-transform: uppercase; opacity: .6; color: #000000 }
+    </style>
+
+
+    <div class="container">
+     <h3>{{ vendor.title }}</h3>
+  <div class="circle green">
+    <div class="inner">
+      <span>{{ vendor.phone }}</span>
+      <p>Phone</p>
+    </div>
+  </div>
+  <div class="circle blue">
+    <div class="inner">
+      <span>{{ vendor.phone1 }}</span>
+      <p>Phone</p>
+    </div>
+  </div>
+  <div class="circle red">
+    <div class="inner">
+      <span>{{ vendor.email }}</span>
+      <p>Email</p>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+  <div class="circle green">
+    <div class="inner">
+      <span>{{ vendor.fax }}</span>
+      <p>Fax</p>
+    </div>
+  </div>
+  <div class="circle blue">
+    <div class="inner">
+      <span>{{ vendor.afm }}</span>
+      <p>ΑΦΜ</p>
+    </div>
+  </div>
+  <div class="circle red">
+    <div class="inner">
+      <span>{{ vendor.balance }}</span>
+      <p>Υπόλοιπο</p>
+    </div>
+  </div>
+  </div>
+    <p> Notes: {{ vendor.description }}</p>
+{% endblock %}
+
+
+

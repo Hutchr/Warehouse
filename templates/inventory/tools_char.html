@@ -1,0 +1,76 @@
+{% extends 'index.html' %}
+
+{% block down_menu %}
+<div class="ui four item bottom fixed menu">
+    <a href="{% url 'tools' %}" class=" item">Αποθήκη</a>
+    <a href="{% url 'tools_char' %}" class="active blue item">Χαρακτηριστικά</a>
+    <a href="/αποθήκη/εργαλεία/αλλαγή-ποσότητας/δημιουργία/" class="item">Εισαγωγές Εξαγωγές</a>
+    <a class="item">Site</a>
+</div>
+
+{% endblock %}
+
+{% block content %}
+        <div class="row">
+            <form method="post" style="text-align: center" class="ui form">{% csrf_token %}
+                <label>Αναζήτηση</label>
+                <input name="search_pro" type="text">
+                <input class="ui green button" type="submit">
+            </form>
+        </div>
+        <div class="two wide column"></div>
+        <div class="six wide column">
+            <div class="ui header">Χαρακτηριστικα</div>
+            <table  class="ui selectable table">
+                <thead>
+                    <tr>
+                        <th>Χαρακτηριστικό</th>
+                        <th>Κατάσταση</th>
+                        <th></th>
+                        <th><a href="{% url 'tools_char_create' %}" class="ui green button">Δημιουργία</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in char %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.status }}</td>
+                            <td><a href="{% url 'tools_char_edit' ele.id %}" class="ui button">Επεξεργασία</a> </td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+        </div>
+        <div class="six wide column">
+            <div class="ui header">Αξίες Χαρακτηριστικών</div>
+            <table  class="ui selectable table">
+                <thead>
+                    <tr>
+                        <th>Χαρακτηριστικό</th>
+                        <th>Κατάσταση</th>
+                        <th></th>
+                        <th><a href="{% url 'tools_char_val_create' %}" class="ui green button">Δημιουργία</a> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in char_value %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.status }}</td>
+                            <td><a href="{% url 'tools_char_val_edit' ele.id %}" class="ui button">Επεξεργασία</a> </td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <div class="two wide column"></div>
+
+
+    {% endblock %}
+
+

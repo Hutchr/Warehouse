@@ -1,0 +1,470 @@
+{% extends 'inventory/homepageNew.html' %}
+{% block my_static %}
+    <script type="text/javascript">
+        function checkAll(ele) {
+            var checkboxes = document.getElementById('main_table').getElementsByTagName('input');
+            if (ele.checked) {
+                    for (var i = 0; i < checkboxes.length; i++) {
+                            if (checkboxes[i].type == 'checkbox') {
+                            checkboxes[i].checked = true;
+                            }
+                        }
+            } else {
+                 for (var i = 0; i < checkboxes.length; i++) {
+                     console.log(i)
+                     if (checkboxes[i].type == 'checkbox') {
+                         checkboxes[i].checked = false;
+                     }
+                 }
+             }
+         }
+
+    </script>
+    <script xmlns="http://www.w3.org/1999/html">
+            $(function(){
+        $('#search_pro').keyup(function() {
+
+            $.ajax({
+                type: "POST",
+                url: "/αποθήκη/προιόντα/ajax-search/",
+                data: {
+                    'search_text' : $('#search_pro').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: searchSuccess,
+                dataType: 'html'
+            });
+        });
+    });
+    function searchSuccess(data, textStatus, jqXHR)
+    {
+        $('#results_ul').html(data);
+    }
+    </script>
+
+{% endblock %}
+
+{% block down_menu %}
+<div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="active item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column">
+
+    </div>
+    <div class="two wide column">
+     <ul class="result" id="results_ul">
+        </ul>
+    </div>
+    <div class="eleven wide column">
+        <div class="row">
+        {% if messages %}
+            <div class="ui green message">
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+        <div  class="ui segments">
+            <div class="ui horizontal segments">
+                <div  class="ui blue inverted header item segment">
+                <h2>'Ολα τα Προϊόντα</h2>
+            </div>
+                <div class="ui segment">
+                    <form method="POST">{% csrf_token %}
+                        <div  class="ui search">
+                            <div style="width: 100%" class="ui icon input">
+                                <input  class="prompt" id="search_pro" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                                <i class="search icon"></i>
+                            </div>
+                        </div>
+                    </form>
+            </div>
+                <div class="ui segment">
+                 <a href="/αποθήκη/προιόντα/δημιουργία/"  class="ui right labeled icon button">
+                    Νέο Προϊόν
+                     <i class="right chevron icon"></i>
+                 </a>
+            </div>
+            </div>
+            <div class="ui segment">
+                <form class='ui form' method="post">{% csrf_token %}
+                <div class=" inline fields">
+                    <label>Ενέργεια</label>
+                    <div class="field">
+                            <div class="ui radio checkbox">
+                                <input id='1' type="radio" name="action" value="activate" checked="checked">
+                                <label for="1">Eνεργοποίηση</label>
+                            </div>
+                        </div>
+                    <div class="field">
+                              <div class="ui radio checkbox">
+                                <input id='2' type="radio" name="action" value="deactivate" >
+                                <label for="2">Απενεργοποίηση</label>
+                              </div>
+                        </div>
+                    <div class="field">
+                              <div class="ui radio checkbox">
+                                <input id=3 type="radio" name="action" value="change_category">
+                                <label for="3"l>Αλλαγή Κατηγορίας</label>
+                              </div>
+                        </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input id='4' type="radio" name="action" value="change_vendor">
+                            <label for="4">Αλλαγή Προμηθευτή</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="ui radio checkbox">
+                            <input id='5' type="radio" name="action" value="activate_site">
+                            <label for="5">Ενεργοποίηση/Απενεργοποίηση Site</label>
+                        </div>
+                    </div>
+                    <input class="ui right labeled icon button" type="submit" name="product_button" id="product_button" placeholder="Go!" >
+                </div>
+            </div>
+            <div style="overflow:auto; " class="ui segment">
+                <div class="pagination">
+                <span class="step-links">
+                    {% if products.has_previous %}
+                        <a href="?page={{ products.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}.
+                    </span>
+                    {% if products.has_next %}
+                        <a href="?page={{ products.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+                <table id="main_table" class="ui small selectable  table">
+                 <thead >
+                    <tr>
+                        <th><input type="checkbox" onchange="checkAll(this)"  /><a href="/αποθήκη/εργαλεία/table-order-by/edit/{{ tools_table.id }}/">Edit</a></th>
+                        <th>Εικόνα</th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/description/{{ tools_table.id }}/" >Κωδικός Τιμ.</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/title/{{ tools_table.id }}/">Προϊόν</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/reserve/{{ tools_table.id }}/">Απόθεμα</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/supplier/{{ tools_table.id }}/">Προμηθευτής</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/category/{{ tools_table.id }}/">Κατηγορία</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/price_buy/{{ tools_table.id }}/" >Τιμή Αγοράς</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/price/{{ tools_table.id }}/">Τελική Τιμή<br>Αρχική Τιμή</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/edit/{{ tools_table.id }}/">Κατάσταση<br> Site</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/day_added/{{ tools_table.id }}/" >Ημερομηνία Δημιουργίας</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/category/{{ tools_table.id }}/">Κατηγορία Site</a></th>
+                        <th><a href="/αποθήκη/εργαλεία/table-order-by/edit/{{ tools_table.id }}/">Κατάσταση<br> Αποθήκης</a></th>
+                    </tr>
+                </thead>
+                {% load staticfiles %}
+                <tbody style=" height:{{ tools_table.height }}px; overflow:auto;">
+                    {% for ele in products %}
+                        <tr>
+                            <td>
+                               {{ forloop.counter }}. <input style="display: inline" type="checkbox" id="choose_product" name="choose_product" value="{{ ele.id }}" class="checkbox_delete">
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_product' ele.id %}">
+                                {% if ele.image %}
+                                    <img class="ui tiny image" src="{{ ele.image.url }}">
+                                {% else %}
+                                    <img class="ui tiny image" src="{% static 'obaju/img/no-photo.jpg' %}">
+                                {% endif %}
+                                </a>
+                            </td>
+                            <td>{{ ele.order_code }}</td>
+                            <td>
+                                <a style="display: inline;" class="popup item" data-content='{{ ele.title }}' href="{% url 'edit_product' ele.id %}">
+                                    {{ ele.title|truncatechars:25 }}, {{ ele.color }}
+                                </a>
+                            </td>
+                            <td style="width: 10%">{{ ele.show_warehouse_remain|floatformat:2 }}</td>
+                            <td style="width: 10%">
+                                {% if ele.supplier %}
+                                <a href='{% url 'edit_vendor' ele.supplier.id %}' class='popup item' data-content='{{ ele.supplier.title }}'>
+                                    {{ ele.supplier.title|truncatechars:20 }}
+                                </a>
+                                {% endif %}
+                            </td >
+                            <td>{{ ele.category.title|truncatechars:20 }}</td>
+                            <td>{{ ele.category_site }}</td>
+                            <td class="negative" style="width: 5%">{{ ele.final_price_warehouse|floatformat:2 }} {{ currency }}</td>
+                            <td class="positive" style="width: 5%">{{ ele.site_price|floatformat:2 }} {{ currency }}
+                                {% if ele.check_discount %},{{ ele.price|floatformat:2 }} {{ currency }}</td>{% else %}{% endif %}
+                            <td style="width: 10%">{{ ele.day_added }}</td>
+                            {% if ele.status %}<td class="positive" style="width: 10%">Eνεργοποιημένο </td>{% else %}<td class="negative" style="width: 10%">Aνεργοποιημένο </td>{% endif %}
+                            {% if ele.ware_active  %}
+                                <td class="positive">
+                                    <a class="popup icon item" data-content='Απενεργοποίηση' href="/αποθήκη/προιόντα/activate/{{ ele.id }}/">
+                                        <i style='background-color:#7a8023;' class=" big remove red icon"></i>
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td class="negative">
+                                    <a class="popup icon item" data-content='Ενεργοποίηση' href="/αποθήκη/προιόντα/activate/{{ ele.id }}/">
+                                        <i style='background-color:#ff9956;width: 10%;' class="big  add green  icon"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+                    <span class="step-links">
+                        {% if products.has_previous %}
+                            <a href="?page={{ products.previous_page_number }}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{ products.number }} of {{ products.paginator.num_pages }}.
+                        </span>
+
+                        {% if products.has_next %}
+                            <a href="?page={{ products.next_page_number }}">next</a>
+                        {% endif %}
+                    </span>
+            </div>
+
+            </div>
+        </div>
+        </form>
+
+    </div>
+    <div class="three wide column">
+    <div  class="ui segments">
+    <form class="ui form" method="post">{% csrf_token %}
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if request.session.pro_cat_fi %}
+                        {% for ele in request.session.pro_cat_fi %}
+                            <label class="ui blue label">{{ ele.title }}</label>
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε κατηγορία
+                    {% endif %}
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+                    {% for ele in categories %}
+                        {% if ele.title in request.session.pro_cat_fi %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category" value="{{ ele.title }}" checked>
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category" value="{{ ele.title }}">
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if request.session.pro_cat_site %}
+                        {% for ele in request.session.pro_cat_site %}
+                            <label class="ui blue label">{{ ele.title }}</label>
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε κατηγορία Site
+                    {% endif %}
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+                    {% for ele in categories_sites %}
+                        {% if ele.title in request.session.pro_cat_site %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category_site" value="{{ ele.title }}" checked>
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="category_site" value="{{ ele.title }}">
+                                <label>{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if request.session.pro_ven_fi %}
+                        {% for ele in request.session.pro_ven_fi %}
+                            <label class="ui blue label">{{ ele.title }}</label>
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε Προμηθευτή
+                    {% endif %}
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+
+                    {% for ele in vendors %}
+                        {% if ele.title in request.session.pro_ven_fi %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                <label >{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                <label >{{ ele.title }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                        Κατάσταση Site
+                </div>
+                <div  class="content">
+                    <div class="field">
+                        {% if site_status_name == 'a' %}
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="site_status" value="a" checked>
+                                <label >Ενεργοποιημένα</label>
+                            </div>
+                        {% else %}
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="site_status" value="a">
+                                <label>Ενεργοποιημένα</label>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="field">
+                        {% if site_status_name == 'i' %}
+                            <div class="ui radio checkbox">
+                            <input type="radio" name="site_status" value="i" checked>
+                            <label>Απενεργοποιημένα</label>
+                        </div>
+                        {% else %}
+                            <div class="ui radio checkbox">
+                            <input type="radio" name="site_status" value="i">
+                            <label>Απενεργοποιημένα</label>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if ware_status_name %}
+                        {% if ware_status_name == 'a' %}
+                            <label class="ui green label">Ενεργοποιημένο</label>
+                        {% else %}
+                            <label class="ui red label">Απενεργοποιημένο</label>
+                        {% endif %}
+                    {% else %}
+                        Κατάσταση Αποθήκης
+                    {% endif %}
+                </div>
+                <div  class="content">
+                <div class="field">
+                    {% if ware_status_name == 'a' %}
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="ware_status" value="a" checked>
+                            <label>Ενεργοποιημένο</label>
+                        </div>
+                    {% else %}
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="ware_status" value="a">
+                            <label>Ενεργοποιημένο</label>
+                        </div>
+
+                    {% endif %}
+                </div>
+                <div class="field">
+                    {% if ware_status_name == 'b' %}
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="ware_status" value="b" checked>
+                            <label>Απενεργοποιημένο</label>
+                        </div>
+                    {% else %}
+                        <div class="ui radio checkbox">
+                            <input type="radio" name="ware_status" value="b">
+                            <label>Απενεργοποιημένο</label>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                </div>
+            </div>
+        <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Χονδρική
+                </div>
+                <div  class="content">
+                    <div class="ui checkbox">
+                        <input  type="checkbox" name="b2b_status" value="a">
+                        <label>Ναι</label>
+                    </div>
+                    <br>
+                     <div class="ui checkbox">
+                        <input  type="checkbox" name="b2b_status" value="n">
+                        <label>Όχι</label>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        <input type="submit" id="filter_s" name="filter_s" class="ui green button" placeholder="Search">
+    </form>
+    <a href="/clear-sessions/" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui red button">
+            <i class="trash icon"></i>
+            Καθαρισμός Φίλτρων
+
+    </a>
+    <div class="ui divider"></div>
+    <div class="ui blue inverted header segment">
+        Order by {{ tools_table.table_order_by  }},<br>Ανακατασκευή Τραπεζιου
+    </div>
+    <div class="ui segment">
+        <form method="post" class="ui form">{% csrf_token %}
+            {{ form }}
+            <input type="submit" id="table_form" name="table_form" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui green button">
+
+        </form>
+    </div>
+    </div>
+    </div>
+    <div style="margin-bottom: 5%" class="ui row"></div>
+{% endblock %}
+
+
+

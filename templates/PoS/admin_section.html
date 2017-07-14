@@ -1,0 +1,220 @@
+{% extends 'PoS/homepage.html' %}
+
+{% block left_side %}
+
+<div style="margin-left: 7%;margin-top: 3%" class='ui grid'>
+
+    <div class="row">
+        <div class='ui blue center header'>
+            <h2 style="text-align: center">Admin Menu</h2>
+        </div>
+    </div>
+    <div class="ui divider row"></div>
+
+    <div class=' row'>
+        <div class="ui vertical menu">
+            <a href="/PoS/admin/" class="active teal item">
+                Λιανική
+                <div class="ui teal left pointing label">{{ orders.count }}</div>
+            </a>
+            <a class="item">
+                Eshop/Παραγγελίες
+                <div class="ui label">51</div>
+            </a>
+            <a class="item">
+                 Στατιστικά Στοιχεία
+                 <div class="ui label">1</div>
+            </a>
+            <div class="item">
+                <div class="ui transparent icon input">
+                    <input type="text" placeholder="Αναζήτηση.">
+                    <i class="search icon"></i>
+                </div>
+            </div>
+            <a href="/PoS/" class="item">
+                Επιστροφή PoS
+            </a>
+            <a href="/home" class="item">
+             Επιστροφή Site
+            </a>
+        </div>
+    </div>
+    <div class='row'>
+        <form class="ui form" method="post">{% csrf_token %}
+            <div class="field">
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="costumer_name">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Έπελεξε Πελάτη</div>
+                    <div class="menu">
+                        {% for ele in costumer_accounts %}
+                             <div class="item" data-value="{{ ele.id }}" data-text="{{ ele.full_name }}">
+                                <i class="male icon"></i>
+                                {{ ele.full_name }}
+                             </div>
+                        {% endfor %}
+                     </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="order_type_name">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Τρόπος Πληρωμής</div>
+                    <div class="menu">
+                        {% for ele in payment_method %}
+                            <div class="item" data-value="{{ ele.id }}" data-text="{{ ele.title }}">
+                                <i class="male icon"></i>
+                                {{ ele.title }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <input  name="date_pick" placeholder="Ημερομηνία" >
+            <input style="width: 100%;margin-top: 3%;" class="ui green inverted button" type="submit">
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block center %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui blue  header inverted segment">Πληροφορίες</div>
+        <div class ='ui segment'>
+            <table class="ui small celled table">
+                <thead>
+                    <tr>
+                      <th>Ημερομηνία</th>
+                      <th>Αρ.Παρ.</th>
+                      <th>'Εσοδα</th>
+                      <th>Υπόλοιπο</th>
+                      <th>Πελάτης</th>
+                      <th>Τρόπος Πληρωμής</th>
+                      <th>Κατάσταση</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in orders %}
+                            <tr>
+                                <td>{{ ele.day_created }} </td>
+                                {% if ele.order_type == 'b' %}
+                                    <td class="warning">{{ ele.title|truncatechars:20 }}</td>
+                                {% elif ele.order_type == 'd' %}
+                                    <td class="negative">{{ ele.title|truncatechars:20 }}</td>
+                                {% else %}
+                                    <td class="positive">{{ ele.title|truncatechars:20 }}</td>
+                                {% endif %}
+                                <td class="positive">{{ ele.tag_paid_value }}</td>
+                                <td class="selectable warning">{{ ele.discount }}</td>
+                                <td>{{ ele.costumer_account.full_name }}</td>
+                                <td>{{ ele.payment_method.title }}</td>
+                                <td>
+                                    {% if ele.status.id == 7 %}
+                                    <div class="ui green floating labeled icon dropdown button">
+                                        <i class="edit icon"></i>
+                                        <span class="text">{{ ele.status.title }}</span>
+                                        <div class="menu">
+                                            <div class="header">
+                                            Επιλογές
+                                        </div>
+                                        <a href="{% url 'retail_order_section' ele.id %}" target="_parent" class="item">
+                                            Επεξεργασία
+                                        </a>
+                                        <div class="item">
+                                            Διαγραφή
+                                        </div>
+                                    </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="ui  floating labeled icon dropdown button">
+                                    <i class="edit icon"></i>
+                                        <span class="text">{{ ele.status.title }}</span>
+                                    <div class="menu">
+                                        <div class="header">
+                                            Επιλογές
+                                        </div>
+                                        <a href="{% url 'retail_order_section' ele.id %}" target="_parent" class="item">
+                                            Επεξεργασία
+                                        </a>
+                                        <div class="item">
+                                            Διαγραφή
+                                        </div>
+                                    </div>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="ui divider segment"></div>
+        <div class="ui divider segment"></div>
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block right_side %}
+    <div class="ui inverted blue header segment">
+            Τραπέζια
+    </div>
+    <div class="ui header segment">Filters</div>
+    <div  class="ui segments">
+        <form class="ui form" method="post">{% csrf_token %}
+
+
+            <div class="ui accordion segment">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {% if vendor_name %}
+                        {% for ele in vendor_name %}
+                            <a style="margin-top: 1%" class="ui blue label">
+                                {{ ele.title }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        Επέλεξε Υπάλληλο
+                    {% endif %}
+                </div>
+                <div style='height: 300px;overflow: scroll' class="content">
+                    {% for ele in users %}
+                        {% if ele.title in users %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                <label>{{ ele.username }}</label>
+                            </div>
+                            <br>
+                        {% else %}
+                            <div class="ui checkbox">
+                                <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                <label>{{ ele.username }}</label>
+                            </div>
+                            <br>
+                        {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+            <input name="date_pick" placeholder="{{ request.session.date }}" value="{{ request.session.date }}">
+            <input style="width: 100%;" class="ui green inverted button" type="submit">
+
+
+
+
+
+        </form>
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}

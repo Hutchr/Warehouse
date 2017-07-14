@@ -1,0 +1,16 @@
+{% extends 'inventory/edit_order.html' %}
+
+{% block order_item %}
+<div class="col-md-6">
+<form enctype="multipart/form-data" method="post">{% csrf_token %}
+		<ul>
+            {{ form_order.as_ul }}
+        </ul>
+    <input name="submit" class="btn" type="submit" value="Send" />
+</form>
+    </div>
+{% endblock %}
+
+{% block table %}
+ <a href="/homepage/edit_all/order/{{ order.id }}/"><button class="btn">Back</button></a>
+{% endblock %}

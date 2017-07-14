@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+
+
+{% block main_block %}
+    <table class="table table-bordered" style="margin-top: 5%; margin-bottom: 5%">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>ΠρομηΘευτής</th>
+      <th>Τηλέφωνο</th>
+        <th>Υπόλοιπο</th>
+
+    </tr>
+  </thead>
+  <tbody>
+  {% for supply in all_supply %}
+    <tr>
+      <th scope="row">{{ supply.id }}</th>
+      <td><a href="/products/supply_admin/{{ supply.id }}" >{{ supply.title }}</a></td>
+      <td>{{ supply.phone }}</td>
+      <td>{{ supply.balance }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+

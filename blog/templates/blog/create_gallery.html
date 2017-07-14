@@ -1,0 +1,112 @@
+{% extends 'my_site/index.html' %}
+{% load static %}
+{% block upper_bar %}
+    <a href="{% url 'site_admin' %}" class="item">Homepage</a>
+    <a class="item">Παραγγελίες</a>
+    <a class="item">Πελάτες</a>
+    <a class="item">Διαχείρηση Site</a>
+    <a href="{% url 'blog_admin' %}" class="active item">Διαχείρηση Blog</a>
+    <a class="right item">Επιστοφή στην αποθήκη</a>
+{% endblock %}
+
+{% block bottom_menu %}
+<div class="ui three item bottom fixed menu">
+    <a href="{% url 'blog_admin' %}" class="active inverted blue item">Blog homepage</a>
+    <a href="{% url 'blog_admin_create' %}" class="item">Create Blog</a>
+</div>
+{% endblock %}
+
+{% block my_static %}
+    <script src="{% static 'js/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+    <script src="{% static 'js/jquery.fileupload.js' %}"></script>
+    <script>
+        $(function () {
+          $(".js-upload-photos").click(function () {
+            $("#fileupload").click();
+          });
+          $("#fileupload").fileupload({
+            dataType: 'json',
+            sequentialUploads: true,  /* 1. SEND THE FILES ONE BY ONE */
+            start: function (e) {  /* 2. WHEN THE UPLOADING PROCESS STARTS, SHOW THE MODAL */
+              $("#modal-progress").modal("show");
+            },
+            stop: function (e) {  /* 3. WHEN THE UPLOADING PROCESS FINALIZE, HIDE THE MODAL */
+              $("#modal-progress").modal("hide");
+            },
+            progressall: function (e, data) {  /* 4. UPDATE THE PROGRESS BAR */
+              var progress = parseInt(data.loaded / data.total * 100, 10);
+              var strProgress = progress + "%";
+              $(".progress-bar").css({"width": strProgress});
+              $(".progress-bar").text(strProgress);
+            },
+            done: function (e, data) {
+              if (data.result.is_valid) {
+                $("#gallery tbody").prepend(
+                  "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+                )
+              }
+            }
+
+          });
+
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="one wide column">
+            <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Uploading...</h4>
+              </div>
+              <div class="modal-body">
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="nine wide column">
+            <h2 class="ui header">Gallery</h2>
+            <table id="'gallery" class="ui table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Title</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for image in images %}
+                        <tr>
+                            <td><img src="{{ image.file.url }}" class="ui tiny image"></td>
+                            <td>{{ image }}</td>
+                            <td>{{ image.file.url }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="six wide column">
+            <div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
+              <span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
+              <h3>Drop Photos Here to Upload</h3>
+            </div>
+            <button class="ui green button js-upload-photos" type="button">
+                <p>Upload Photo</p>
+            </button>
+            <input id="fileupload" type="file" name="file" style="display: none;"
+                   multiple data-url="{% url 'create_gallery_image' %}"
+                   data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'PoS/lianiki/show_categories_lianiki.html' %}
+
+{% block my_static %}
+<script type="text/javascript">
+
+   $('.modal')
+  .modal('setting', 'closable', false)
+  .modal('show')
+;
+
+</script>
+{% endblock %}
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+
+                <div class="header">
+                    Δημιουργία Πελάτη
+                </div>
+                <div class="image content">
+                    <div class="ui medium image">
+                        <img src="http://semantic-ui.com/images/avatar2/large/rachel.png">
+                    </div>
+                    <div class="description">
+                        <form method="post" class="ui form">{% csrf_token %}
+                            {{ form }}
+                            <div class="actions">
+                                <a href="/PoS/lianiki/order/{{ order.id }}/" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

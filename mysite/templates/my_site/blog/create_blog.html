@@ -1,0 +1,129 @@
+{% extends 'my_site/blog/blog_admin.html' %}
+
+{% block my_static %}
+     {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="robots" content="all,follow">
+    <meta name="googlebot" content="index,follow,snippet,archive">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Obaju e-commerce template">
+    <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">
+    <meta name="keywords" content="">
+
+
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
+
+    <!-- styles -->
+    <link href="{% static 'obaju/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/owl.theme.css' %}" rel="stylesheet">
+
+    <!-- theme stylesheet -->
+    <link href="{% static 'obaju/css/style.default.css' %}" rel="stylesheet" id="theme-stylesheet">
+
+    <!-- your stylesheet with modifications -->
+    <link href="{% static 'obaju/css/custom.css' %}" rel="stylesheet">
+
+    <script src="{% static 'obaju/js/respond.min.js' %}"></script>
+
+    <link rel="shortcut icon" href="favicon.png">
+
+<script>
+
+
+
+    function myTitle() {
+        var x = document.getElementById('id_title').value;
+        console.log(x)
+        document.getElementById('title_show').innerHTML = x
+
+    }
+    function myLeadCon() {
+        var x = document.getElementById('id_lead_content').value;
+        console.log(x)
+        document.getElementById('lead_con').innerHTML = x
+
+    }
+    function myCon() {
+        var x = document.getElementById('id_content').value;
+        console.log(x)
+        document.getElementById('post-content').innerHTML = x
+
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+    <div class="eight wide column">
+        <div id="content">
+
+            <div class="container">
+                <div class="col-sm-9" id="blog-post">
+                    <div class="box">
+                        <h1 id="title_show"></h1>
+                        <p class="author-date">By <a href="#">{{ user.username }}</a> | {{ post.publish }}</p>
+                        <p id="lead_con" class="lead">{{ post.lead_content }}</p>
+
+                        <div id="post-content">
+                            {{ post.content }}
+                        </div>
+                        <!-- /#post-content -->
+
+
+
+                        <div id="comment-form" data-animate="fadeInUp">
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i> Post comment</button>
+                                    </div>
+                                </div>
+
+
+
+                        </div>
+                        <!-- /#comment-form -->
+
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /#blog-post -->
+
+
+
+
+            </div>
+            <!-- /.container -->
+        </div>
+    </div>
+    <div class="eight wide column">
+        <h2 class="ui header">
+            <i class="plug icon"></i>
+            <div class="content">
+                Δημιουργία Post
+            </div>
+        </h2>
+        <form class="ui form" method="post" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <button type="submit" class="ui green button">Αποθήκευση</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+
+{% block bottom_menu %}
+    <a href="{% url 'blog_admin' %}" class=" item">Blog homepage</a>
+    <a href="{% url 'blog_admin_create' %}" class="active item">Create Blog</a>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'obaju/index.html' %}
+
+
+{% block content %}
+    <div id="content">
+            <div class="container">
+
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+
+                        <li><a href="index.html">Home</a>
+                        </li>
+                        <li>Blog listing</li>
+                    </ul>
+                </div>
+
+                <!-- *** LEFT COLUMN ***
+		     _________________________________________________________ -->
+
+                <div class="col-sm-9" id="blog-listing">
+
+                    <ul class="breadcrumb">
+
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>Blog listing</li>
+                    </ul>
+
+
+                    <div class="box">
+                        {% if choosed_category %}
+                            <h1>{{ choosed_category.title }}</h1>
+                            <p>{{ choosed_category.content }}</p>
+                        {% else %}
+                            <h1>Όλα μας τα Posts.</h1>
+                            <p>Δείτε όλες τις προσφορές, τα νέα μας κτλ.</p>
+                        {% endif %}
+                    </div>
+                    {% for post in posts %}
+                        <div class="post">
+                        <h2><a href="post.html">{{ post.title }}</a></h2>
+                        <p class="author-category">By <a href="#">{{ post.user.username }}</a> in <a href="{% url 'blog_category' post.category.slug  %}">{{ post.category.title }}</a>
+                        </p>
+                        <hr>
+                        <p class="date-comments">
+                            <a href="post.html"><i class="fa fa-calendar-o"></i> {{ post.timestamp }}</a>
+                            <a href="post.html"><i class="fa fa-comment-o"></i> 8 Comments</a>
+                        </p>
+                        <div class="image">
+                            <a href="post.html">
+                                {% if post.image  %}
+                                <img src="{{ post.image.url }}" class="img-responsive" alt="Example blog post alt">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <p class="intro">{{ post.content|truncatechars:20 }}</p>
+                        <p class="read-more"><a href="{% url 'blog_detail' post.slug %}" class="btn btn-primary">Συνεχίστε</a>
+                        </p>
+                    </div>
+                    {% endfor %}
+
+
+
+
+                    <ul class="pager">
+                        <li class="previous"><a href="#">&larr; Προηγούμενο</a>
+                        </li>
+                        <li class="next disabled"><a href="#">Επόμενο &rarr;</a>
+                        </li>
+                    </ul>
+
+
+
+                </div>
+                <!-- /.col-md-9 -->
+
+                <!-- *** LEFT COLUMN END *** -->
+
+
+                <div class="col-md-3">
+                    <!-- *** BLOG MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Blog</h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <ul class="nav nav-pills nav-stacked">
+                                {% for cat in post_cat %}
+                                <li>
+                                    <a href="{% url 'blog_category' cat.slug %}">{{ cat.title }}</a>
+                                </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <!-- *** BLOG MENU END *** -->
+
+                    <div class="banner">
+                        <a href="#">
+                            <img src="img/banner.jpg" alt="sales 2014" class="img-responsive">
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}

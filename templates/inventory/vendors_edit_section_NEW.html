@@ -1,0 +1,179 @@
+{% extends 'inventory/homepageNew.html' %}
+{% block my_static %}
+<script xmlns="http://www.w3.org/1999/html">
+        $(function(){
+
+    $('#search_pro').keyup(function() {
+
+        $.ajax({
+            type: "POST",
+            url: "/αποθήκη/προμηθευτές/ajax-search/",
+            data: {
+                'search_text' : $('#search_pro').val(),
+                'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+            },
+            success: searchSuccess,
+            dataType: 'html'
+        });
+
+    });
+
+});
+
+function searchSuccess(data, textStatus, jqXHR)
+{
+    $('#results_ul').html(data);
+}</script>
+
+{% endblock %}
+
+{% block down_menu %}
+<div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="active item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column">
+
+    </div>
+    <div class="two wide column">
+    <a href="{% url 'check_order_management' %}" class="ui blue button">
+        Επιταγες
+    </a>
+     <ul class="result" id="results_ul">
+        </ul>
+    </div>
+    <div class="eleven wide column">
+        {% if messages %}
+            <div class="ui green message">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} style="text-decoration: none;" class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+        {% endif %}
+    <table class="ui celled structured table">
+        <div class="ui main menu">
+            <div class="header item">
+                    <h2> Προμηθευτές</h2>
+                </div>
+            <div style="width: 50%" class="item">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="ui search">
+                        <div style="width: 100%" class="ui icon input">
+                            <input style="width: 70%" class="prompt" id="search_pro" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <a href="/αποθήκη/προμηθευτές/δημιουργία/" class="popup icon item" id="my_button" data-content="Προσθήκη Προμηθευτή">
+                    <i class="add square green icon"></i>
+                </a>
+        </div>
+        <thead>
+            <tr>
+                <th rowspan="2"></th>
+                <th rowspan="2"><a href="/αποθήκη/προμηθευτές/table-order-by/title/">Προμηθευτής</a> </th>
+                <th rowspan="2">Email</th>
+                <th rowspan="2"><a href="/αποθήκη/προμηθευτές/table-order-by/title/">ΔΟΥ -ΑΦΜ</a></th>
+                <th colspan="2">Στοιχεία</th>
+                <th rowspan="2">Προσθήκη Προκαταβολής</th>
+
+            </tr>
+            <tr>
+                <th><a href="/αποθήκη/προμηθευτές/table-order-by/remaining_deposit/">Σύνολο Προκαταβολών</a></th>
+                <th><a href="/αποθήκη/προμηθευτές/table-order-by/balance/">Πιστωτικό Υπόλοιπο</a></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ele in vendors %}
+            <tr>
+                <td>
+                      <a href="{% url 'vendor_info' ele.id %}" target="_blank" data-content="Καρτέλα Προμηθευτή"  class="popup icon item">
+                          <i class="external icon"></i>
+                      </a>
+                </td>
+                <td><a data-content='Επεξεργασία' href="/αποθήκη/προμηθευτές/επεξεργασία/{{ ele.id }}/" class="ui button">{{ ele.title }}</a></td>
+                <td>{{ ele.email }}</td>
+                <td>{{ ele.doy.title }}, {{ ele.afm}}</td>
+                {% if ele.remaining_deposit > 0 %}
+                    <td style="background-color: darkseagreen">{{ ele.remaining_deposit|floatformat:2 }} €</td>
+                {% else %}
+                    <td>{{ ele.remaining_deposit|floatformat:2 }} €</td>
+                {% endif %}
+                {% if ele.balance > 0 %}
+                    <td style="background-color: indianred">{{ ele.balance|floatformat:2 }} €</td>
+                {% else %}
+                    <td>{{ ele.balance|floatformat:2 }} €</td>
+                {% endif %}
+                <td><a href="/αποθήκη/προμηθευτές/προκαταβολή/{{ ele.id }}/" class="ui green button"> Προκαταβολή</a>
+                    <a style="margin-top: 1%" href="/αποθήκη/προμηθευτές/επιταγή/{{ ele.id }}/" class="ui green button"> Επιταγή</a></td>
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+
+
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if contacts.has_previous %}
+                <a href="?page={{ contacts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+            </span>
+
+            {% if contacts.has_next %}
+                <a href="?page={{ contacts.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+    </div>
+    <div class="three wide column">
+        <div class="ui divider"></div>
+    <div class="ui blue inverted header segment">
+        Order by {{ tools_table.table_order_by  }},<br>Ανακατασκευή Τραπεζιου
+    </div>
+    <div class="ui segment">
+
+        <form method="post" class="ui form">{% csrf_token %}
+            {{ form }}
+            <input type="submit" id="table_form" name="table_form" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui green button">
+
+        </form>
+    </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+

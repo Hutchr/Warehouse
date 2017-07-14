@@ -1,0 +1,52 @@
+{% extends 'inventory/inve_vendor_informations/info_vendor_ipoloipo.html' %}
+
+{% block payments %}
+<table>
+    <h4>Πληρωμές </h4>
+    <thead>
+      <tr>
+          <th>Ημερομηνία</th>
+          <th>Απόδειξη</th>
+          <th>Τρόπος πληρωμής</th>
+          <th>Ποσό</th>
+
+
+      </tr>
+    </thead>
+    <tbody>
+    {% for ele in orders_pay %}
+      <tr>
+        <td>{{ ele.title }}</td>
+        <td>{{ ele.receipt }}</td>
+        <td>{{ ele.get_way_of_pay_display }}</td>
+        <td>{{ ele.value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block orders %}
+   <table>
+    <h4>Τιμολόγια</h4>
+    <thead>
+      <tr>
+          <th>Ημερομηνία</th>
+          <th>Αρ.Τιμολογίου</th>
+          <th>ΦΠΑ</th>
+          <th>Τελική Αξία</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for ele in orders %}
+      <tr>
+        <td>{{ ele.date }}</td>
+        <td>{{ ele.code }}</td>
+        <td>{{ ele.total_taxes }}</td>
+        <td>{{ ele.total_price }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'inventory/inve_vendor_informations/info_order_vendor.html' %}
+
+{% block orders %}
+     <table>
+     <h3>Στοιχεία τιμολογίου</h3>
+    <thead>
+      <tr>
+          <td>Προιόν</td>
+          <th>Τιμή</th>
+          <th>Ποσότητα</th>
+          <th>Έκπτωση</th>
+          <th>Φπα</th>
+
+      </tr>
+    </thead>
+    <tbody>
+    {% for ele in order_item %}
+      <tr>
+        <td>{{ ele.product.title }}</td>
+        <td>{{ ele.price }}</td>
+        <td>{{ ele.qty }} </td>
+        <td>{{ ele.discount }} %</td>
+        <td>{{ ele.get_taxes_display }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

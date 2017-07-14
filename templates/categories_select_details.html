@@ -1,0 +1,32 @@
+{% extends 'categories_select.html' %}
+
+
+{% block sidebar_cat %}
+
+    <div class="page-header">
+  <h1>{{ product.title }} <small>id: {{ product.id }}</small></h1>
+</div>
+<p>{{ product.description }}</p>
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block cate_contest %}
+
+<div class="list-group">
+  <a href="#" class="list-group-item active">
+    Στοιχεία προίόντος
+  </a>
+  <a href="#" class="list-group-item">Τιμή αγοράς :   {{ product.price_buy }} euro</a>
+  <a href="#" class="list-group-item">Τιμή αγοράς με εκπτωση :  {{ sum }}  euro</a>
+    <a href="#" class="list-group-item">Τιμή Λιανικής :  {{ product.price }}  euro</a>
+  <a href="#" class="list-group-item">Τιμή Χονδρικής : {{ product.price_internet }} euro </a>
+  <a href="#" class="list-group-item">Απόθεμα :  {{ product.reserve }} τεμάχια</a>
+</div>
+
+{% endblock %}

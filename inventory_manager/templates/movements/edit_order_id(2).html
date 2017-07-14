@@ -1,0 +1,18 @@
+{% extends 'movements/movements.html' %}
+
+{% block sidebar %}
+    <p>hello</p>
+    {% for ele in products %}
+    <p><a href="/inventory/movements/edit_orders/item_order/{{ ele.id }}">{{ ele.product.title }}</a></p>
+    {% endfor %}
+{% endblock %}
+
+{% block context %}
+    <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <ul>
+        {{ form.as_ul }}
+    </ul>
+    <input type="submit" name="submit" value="submit">
+    </form>
+
+{% endblock %}

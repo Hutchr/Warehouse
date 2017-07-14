@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <Title> Κατηγορίες </Title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+    <link href="{% static 'category.css' %}" rel="stylesheet">
+
+
+</head>
+<body>
+    <div class="col-md-11" id="head">
+        <div class="page-header">
+            <h1><a href="{% url 'categories' %}" >Κατηγορίες</a> </h1>
+
+        </div>
+
+    </div>
+    <div class="col-md-1" id="head_button">
+        <a href="{% url 'homepage' %}"><button>Back to the site.</button></a>
+    </div>
+
+
+<div class="col-md-3">
+ {% block sidebar_cat %}
+    <div class="list-group">
+        <a href="{% url 'products_admin' %}" class="list-group-item active">Όλες οι κατηγορίες</a>
+        {% for cat in categories %}
+            <a href="{{ cat.id }}" class="list-group-item">{{ cat.title }} </a>
+
+        {% endfor %}
+    </div>
+{% endblock %}
+</div>
+
+
+<div class="col-md-9">
+    {% block cate_contest %}
+        <div class="col-md-2" id="my_buttons">
+        <a href="http://127.0.0.1:8000/admin/products/product/add/"> <p align="center">Νέο προ"ιον</p></a>
+            </div>
+        <div class="col-md-2" id="my_buttons">
+         <a href="http://127.0.0.1:8000/admin/products/category/add/"><p align="center"> New Category</p></a>
+            </div>
+        <div class="col-md-2" id="my_buttons">
+         <a href="{% url 'homepage' %}"><p align="center">Back to site</p></a>
+        </div>
+
+
+    {% endblock %}
+</div>
+
+
+
+
+
+</body>
+</html>
+
+
+
+

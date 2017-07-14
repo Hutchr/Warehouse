@@ -1,0 +1,39 @@
+{% extends 'inventory/pay_section/fixed_costs/fixed_cost_ppl_id.html' %}
+
+
+
+{% block center %}
+    <div class="ui segments">
+        <div class="ui blue inverted header segment">
+            <h3 style="text-align: center">{{ person.title }}</h3>
+        </div>
+    </div>
+
+    <div class="ui cards">
+        {% for ele in person_orders %}
+        <div class="card">
+            <div class="content">
+                <div class="header">{{ ele.title }}<a style="margin-left: 15%;" href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/επεξεργασία/{{ person.occupation.id }}/{{ person.id }}/{{ ele.id }}" class="ui right grey button">Eπεξεργασία</a> </div>
+                <div class="description">
+                    Κατηγορία Πληρωμής....... {{ ele.category.title }}<br>
+                    Πληρωμή μέχρι ....... <section style="color: red;display: inline">{{ ele.day_expire }}</section> <br>
+                    Αξία Πληρωμής........ <section style="color: red;display: inline">{{ ele.value|floatformat:2 }} € </section>
+                </div>
+            </div>
+            <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/{{ person.id }}/{{ ele.id }}" class="ui bottom green attached button">
+                <i class="add  icon"></i>
+                    Αποπληρωμή
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+
+{% endblock %}
+
+
+{% block right_side %}
+
+{% endblock %}

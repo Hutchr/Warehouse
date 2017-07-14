@@ -1,0 +1,44 @@
+{% extends 'PoS/homepage.html' %}
+
+
+
+{% block center %}
+    <div class="ui segments">
+
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            Πωλήσεις Λιανικής
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui blue inverted segment">
+                <a href="/PoS/lianiki/new-order/" style="width: 100%; height: 100px;text-align: center" class="ui huge green  button">Πώληση Λιανικής</a>
+            </div>
+            <div class="ui blue inverted segment">
+                <a  style="width: 100%; height: 100px;text-align: center" class="ui huge green  button">Πώληση Χονδρικής</a>
+            </div>
+
+        </div>
+        <div class="ui blue inverted divider segment"></div>
+
+        <div class="ui blue inverted segment">
+                <a href="{% url 'create_return_order' %}"  style="width: 100%; height: 100px;text-align: center" class="ui huge red  button">Επιστροφές Προιόντων</a>
+        </div>
+        <div class="ui blue inverted divider segment"></div>
+        <div class="ui blue inverted segment">
+                <a href="/PoS/destroy-order/"  style="margin-top:20%;width: 100%; height: 100px;text-align: center" class="ui huge red  button">Καταστροφές Προϊόντων</a>
+        </div>
+        <table class="ui table segment">
+            <thead>
+
+            </thead>
+
+        </table>
+
+
+
+
+    </div>
+
+
+
+
+{% endblock %}

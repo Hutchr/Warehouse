@@ -1,0 +1,55 @@
+{% extends 'movements/movements.html' %}
+
+{% block sidebar %}
+    <a href="{% url 'movements' %}">Back</a>
+    <h3>Order: {{ order }}</h3>
+    <p>Vendor : {{ order.vendor }}</p>
+    <div class="col-md-3">
+    <table>
+        <thead>
+            <tr>
+                <td >Name</td>
+                <td>Quantity</td>
+                <td>Price</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ele in products %}
+            <tr>
+                <td style="font-size:small">{{ ele.product.title }}</td>
+                <td>{{ ele.qty }}</td>
+                <td>{{ ele.price }}</td>
+                <td><button>Delete</button></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+
+{% block context %}
+    <style>
+    .form_item{
+        margin-left: 100px;
+    }
+
+    </style>
+    <div>
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+    </div>
+
+
+    <form class="form_item" enctype="multipart/form-data" method="post">{% csrf_token %}
+<ul>
+    {{ form.as_ul }}
+</ul>
+<input type="submit" name="submit">
+</form>
+{% endblock %}

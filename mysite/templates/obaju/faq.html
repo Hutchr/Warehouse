@@ -1,0 +1,98 @@
+{% extends 'obaju/index.html' %}
+
+
+
+{% block content %}
+    <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>FAQ</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-3">
+                    <!-- *** PAGES MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Pages</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a class="active" href="{% url 'info_page' %}">Πληροφορίες</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'contact_page' %}">Επικοινωνίστε μαζί μας</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'faq_page' %}">FAQ</a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                    <!-- *** PAGES MENU END *** -->
+
+
+                    <div class="banner">
+                        <a href="#">
+                            <img src="img/banner.jpg" alt="sales 2014" class="img-responsive">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-9">
+
+
+                    <div class="box" id="contact">
+                        <h1>Frequently asked questions</h1>
+
+                        <p class="lead">Are you curious about something? Do you have some kind of problem with our products?</p>
+                        <p>Please feel free to contact us, our customer service center is working for you 24/7.</p>
+
+                        <hr>
+
+                        <div class="panel-group" id="accordion">
+                            {% for question in questions %}
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#faq{{ question.id }}">
+                                            {{ question.number }}. {{ question.title }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="faq{{ question.id }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        {{ question.content|safe }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.panel -->
+                            {% endfor %}
+
+
+                        </div>
+                        <!-- /.panel-group -->
+
+
+                    </div>
+
+
+                </div>
+                <!-- /.col-md-9 -->
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}
+

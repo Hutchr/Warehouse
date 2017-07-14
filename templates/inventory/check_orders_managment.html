@@ -1,0 +1,241 @@
+{% extends 'inventory/vendors_edit_section_NEW.html' %}
+{% load staticfiles %}
+{% block test %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+    <script src="{% static 'infinity/src/waypoint.js' %}"></script>
+    <script src="{% static 'infinity/src/shortcuts/infinite.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column"></div>
+    {% if messages %}
+        <div class="ui green message">
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} style="text-decoration: none;" class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    {% endif %}
+    <div class="three wide column"></div>
+    <div class="five wide column">
+    <canvas id="myChart" width="300" height="200"></canvas>
+        <script>
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Σύνολο", "Σε εξέλιξη", "Αποπληρωμένες",],
+                datasets: [{
+                    label: 'Ποσά σε ευρώ',
+                    data: [{{ total }},{{ orders_in_progress }}, {{ orders_done }},],
+                    backgroundColor: [
+                        'blue',
+                        'red',
+                        'green'
+
+                    ],
+                    borderColor: [
+                        'blue',
+                        'red',
+                        'green'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    </div>
+    <div class="five wide column">
+    <canvas id="myChart2" width="300" height="200"></canvas>
+        <script>
+        var ctx = document.getElementById("myChart2");
+        var myChart = new Chart(ctx, {
+            type: 'polarArea',
+            data: {
+                datasets: [{
+                    data: [
+                        {% for label, value in payment_analysis.items %}
+                        {{ value }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        "#FF6384",
+                        "#4BC0C0",
+                        "#FFCE56",
+                        "#E7E9ED",
+                        "#36A2EB"
+                    ],
+                    label: 'My dataset' // for legend
+                }],
+                labels: [
+                    {% for label, value in payment_analysis.items %}
+                        "{{ label }}",
+                    {% endfor %}
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+        </script>
+    </div>
+    <div class="three wide column"></div>
+    <div class="two wide column">
+        <div style="text-align: center" class="ui blue inverted header segment">
+            Επιταγές σε εξέλιξη
+        </div>
+    </div>
+    <div class="ten wide column">
+        <table class="ui celled structured table">
+        <thead>
+            <tr>
+                <th>Επεξεργασία</th>
+                <th rowspan="2">Ημερομηνεία</th>
+                <th rowspan="2">Πιστωτής</th>
+                <th rowspan="2">Τράπεζα</th>
+                <th rowspan="2">Κατάσταση</th>
+                <th rowspan="2">Ποσό</th>
+                <th rowspan="2">Επεξεργασία</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ele in orders_paginate %}
+            <tr>
+                <td><a href="/αποθήκη/προμηθευτές/διαχείρηση-επιταγών/{{ ele.id }}/">
+                        <button class=" edit icon button"><i class="cloud icon"></i></button>
+                    </a>
+                </td>
+                <td>{{ ele.date_expire }}</td>
+                <td>{{ ele.debtor.title }}</td>
+                <td>{{ ele.place.title }}</td>
+                {% if ele.status == 'a' %}
+                    <td style="background-color: lightblue">{{ ele.get_status_display }}</td>
+                {% elif ele.status == 'b' %}
+                    <td style="background-color: lightgreen">{{ ele.get_status_display }}</td>
+                {% else %}
+                    <td style="background-color: lightcoral">{{ ele.get_status_display }}</td>
+                {% endif %}
+                <td>{{ ele.value}} €</td>
+                <td>
+                {% if ele.status == 'a' %}
+                     <a href="/αποθήκη/προμηθευτές/επιταγή/{{ ele.id }}/είσπραξη/" class="ui blue button"> Είσπραξη</a>
+                {% else %}
+                      <a href="" class="ui green button"> Είσπρακτηκε.</a>
+                {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% if orders_paginate.has_next %}
+                <tr>
+                <td rowspan="3">
+                    Την φορτίζει και έρχετε.
+                </td>
+                <td>
+                    <a class="infinite-more-link" href="?page={{ orders_paginate.next_page_number }}">More</a>
+                </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+     <script>
+        var infinite = new Waypoint.Infinite({
+          element: $('.infinite-container')[0],
+          onBeforePageLoad: function () {
+            $('.loading').show();
+          },
+          onAfterPageLoad: function ($items) {
+            $('.loading').hide();
+          }
+        });
+      </script>
+    </div>
+    <div class="four wide column">
+        {% block right_side %}
+        <div style="margin-left: 20%;" class="ui segments">
+         <div  class="ui segment">
+        <div class="ui blue inverted button ">
+            <a style="width: 100%;" href="{% url 'check_order_management' %}">Καθαρισμός Φίλτρων</a>
+        </div>
+    </div>
+    <div class="ui segment">
+    <form class="ui form" method="get">
+        <div class="ui sub header">Προμηθευτές</div>
+        <select multiple="" id='vendor_name' name="vendor_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in vendors %}
+                <option value="{{ ele.title }}">{{ ele.title }}</option>
+            {% endfor %}
+        </select>
+
+    <div class="ui sub header">Τρόπος Πληρωμής</div>
+        <select multiple="" name="payment_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in payment_method %}
+                <option value="{{ ele.title }}">{{ ele.title }}</option>
+            {% endfor %}
+        </select>
+
+    <div class="ui sub header">Κατάσταση</div>
+        <select multiple="" name="status_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in choices %}
+                <option value="{{ ele.0}}">{{ ele.1 }}</option>
+            {% endfor %}
+        </select>
+
+
+    <div class="ui sub header">Χρονος</div>
+    <input name="date_pick" placeholder="{{ date_pick }}" value="{{ date_pick }}">
+            <input style="width: 100%;" class="ui green inverted button" type="submit">
+        </form>
+    </div>
+
+    </div>
+        {% endblock %}
+    </div>
+    <div style="margin-bottom: 5%" class="ui row"></div>
+{% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+    for (var id in {{ vendor_name }}) {
+        var $option = $("<option value=\"" + id + "\">" + championships[id].name + "</option>");
+            $select.append($option);
+        }
+        $select.dropdown('refresh');
+        if (defaultValueId)
+        setTimeout(function () {
+        $select.dropdown('set selected', defaultValueId);
+        }, 1);
+  $('input[name="vendor_name"]').dropdown('set selected',{{ vendor_name }});
+});
+</script>
+

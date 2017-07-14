@@ -1,0 +1,101 @@
+{% extends 'my_site/index.html' %}
+
+{% block upper_bar %}
+    <a href="{% url 'site_admin' %}" class="item">Homepage</a>
+    <a class="item">Παραγγελίες</a>
+    <a class="item">Πελάτες</a>
+    <a class="item">Διαχείρηση Site</a>
+    <a href="{% url 'blog_admin' %}" class="active item">Διαχείρηση Blog</a>
+    <a class="right item">Επιστοφή στην αποθήκη</a>
+{% endblock %}
+
+{% block bottom_menu %}
+<div class="ui three item bottom fixed menu">
+    <a href="{% url 'blog_admin' %}" class="active inverted blue item">Blog homepage</a>
+    <a href="{% url 'blog_admin_create' %}" class="item">Create Blog</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h3 class="ui header">Blog Menu</h3>
+    </div>
+    <div class="six wide column"></div>
+    <div class="one wide column"></div>
+    <div class="eleven wide column">
+        <h4>Υπάρxοντα Post</h4>
+        <div class="ui items">
+            {% for post in all_posts %}
+                <div class="item">
+                    <div class="image">
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}">
+                        {% endif %}
+                    </div>
+                    <div class="content">
+                        <a href="{% url 'blog_admin_edit' post.id %}" class="header">{{ post.title }}</a>
+                        <div class="meta">
+                            <span>{{ post.lead_content|truncatechars_html:10 }}</span>
+                        </div>
+                        <div class="description">
+                           {{ post.content|truncatechars_html:10 }}
+                        </div>
+                        <div class="extra">
+                            {{ post.user }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="four wide column">
+    <h4>Κατηγορίες Blog</h4>
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Κατηγορία</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in post_categories %}
+                <tr>
+                    <td>{{ tag.title }}</td>
+                    <td><a href="{% url 'cat_admin_edit' tag.id %}" class="ui blue button">Επεξεργασία</a></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td><a href="{% url 'cat_admin_create' %}" class="ui green button">Δημιουργία</a></td>
+            </tr>
+
+        </tbody>
+    </table>
+    <h4>Κατηγορίες Blog</h4>
+    <table class="ui table">
+        <thead>
+            <tr>
+                <th>Κατηγορία</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag in post_tags %}
+                <tr>
+                    <td>{{ tag.title }}</td>
+                    <td><a href="{% url 'tag_admin_edit' tag.id %}" class="ui blue button">Επεξεργασία</a></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td><a href="{% url 'tag_admin_create' %}" class="ui green button">Δημιουργία</a></td>
+            </tr>
+
+        </tbody>
+    </table>
+    </div>
+
+
+{% endblock %}
+

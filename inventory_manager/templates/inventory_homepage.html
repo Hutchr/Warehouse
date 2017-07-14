@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>My Inventory</title>
+ <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'p' %}">
+
+
+    <style>
+        body {
+  background-color: #e5e9e9;
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: 4px;
+  font-family: "Raleway";
+  font-weight: 400;
+}
+.fixed-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 100px;
+  padding: 0 25px;
+  box-sizing: border-box;
+  background-color: rgba(255,255,255,0.02);
+  box-shadow: 0 0 15px 2px rgba(0,0,0,0.5);
+  z-index: 100;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-transition: 0.35s ease;
+  transition: 0.35s ease;
+}
+.fixed-nav-bar .logo {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  text-transform: uppercase;
+  color: #ccc;
+  font-size: 28px;
+  font-weight: 300;
+  cursor: pointer;
+}
+.fixed-nav-bar .logo span {
+  color: #e78533;
+  font-weight: 600;
+}
+.fixed-nav-bar.scrolled {
+  min-height: 60px;
+  background-color: #fdfdfd;
+  box-shadow: 0 0 30px 3px rgba(0,0,0,0.6);
+}
+.fixed-nav-bar.scrolled .logo {
+  color: #000;
+}
+.fixed-nav-bar.scrolled .menu-button-label .white-bar {
+  background-color: #000;
+}
+        .menu-bar{
+        margin:100px;
+        padding-left:8%;
+        }
+        .menu-bar li{
+        display:inline;
+
+        }
+        .menu-bar a{
+            text-decoration: none;
+            transition: 1s;
+        }
+        .menu-bar a:hover{
+            color: #0B86AA;
+            background-color: #ebbf12;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="col-md-12">
+        <div class ="fixed-nav-bar">
+            <div class ="logo">
+                <span>ΑποΘηκη</span>Testing Production
+            </div>
+
+        </div>
+    </div>
+<div class="col-md-12">
+    <div class="menu-bar">
+        <ul>
+            <li class="active"><a href="{% url 'vendors' %}">Προμηθευτές</a> </li>
+            <li><a href="{%  url 'products' %}">Προιόντα</a> </li>
+            <li><a href="{% url 'movements' %}">Κινήσεις/Τιμολόγια</a> </li>
+            <li><a href="">Επιλογές</a> </li>
+            <li><a href="">Ρυθμίσεις</a> </li>
+        </ul>
+    </div>
+</div>
+
+<div class="col-md-3">
+    {% block sidebar %}
+        <p>Hello world</p>
+    {% endblock %}
+</div>
+
+<div class="col-md-9">
+    {% block context %}
+        <p>Hello world</p>
+    {% endblock %}
+</div>
+<footer style="margin-top: 50px">
+  <p>Posted by: Christos Stathakis</p>
+  <p>Contact information: >
+  lirageika@hotmail.gr</a>.</p>
+</footer>
+</body>
+
+</html>

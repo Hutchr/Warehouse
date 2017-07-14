@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head lang="el">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>PoS</title>
+    <link rel="stylesheet" href="{% static 'semantic-ui-css-master/semantic.min.css' %}">
+    <link rel="stylesheet" href="{% static 'my_static/index.css' %}">
+
+
+</head>
+<body>
+
+    <div class="ui grid">
+
+        <div class="three wide column">
+            {% block left_side %}
+                <div class="ui inverted black segments">
+                    <div class="ui inverted header segment">
+                        <h1>PoS</h1>
+                    </div>
+                    <div class="ui divider segment"></div>
+
+
+                    <div class="ui inverted black segment">
+                        <a style="width: 100%" href="/PoS/lianiki/" class="ui massive green button">Λιανική</a>
+                    </div>
+                    <div class="ui inverted black segment">
+                        <a style="width: 100%" href="/PoS/eshop/" class="ui massive green button">Eshop</a>
+                    </div>
+                    <div class="ui inverted black segment">
+                        <a style="width: 100%" href="{% url 'orders_management' %}" class="ui massive green button">Διαχείρηρη Παραγγελιών</a>
+                    </div>
+
+                    <div class="ui inverted black segment">
+                        <a style="width: 100%" href="/PoS/stats/" class="ui massive green button">Στατιστικά Ημέρας</a>
+                    </div>
+
+                    <div class="ui inverted black segment">
+                        <a style="width: 100%" href="/PoS/admin/" class="ui massive green button">Admin Settings</a>
+                    </div>
+                    <div class="ui divider segment"></div>
+                </div>
+
+
+            {% endblock %}
+        </div>
+        <div class="eight wide column">
+            {% block center %}
+                <div class="ui segments">
+                    <div class="ui inverted blue segment">
+                        <h2 style="text-align: center">Tables</h2>
+                    </div>
+                    <div class="ui inverted segment">
+
+
+                        {% for ele in table %}
+                            <a href="/PoS/νέα-παραγγελία/{{ ele.id }}/" id="table_pos" style="text-align:center; width: 30%; height: 200px; margin-top: 2%" class="ui massive green button ">{{ ele.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            {% endblock %}
+        </div>
+        <div class="five wide column">
+            {% block right_side %}
+
+            {% endblock %}
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="{% static 'jquery-1.12.2.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'semantic-ui-css-master/semantic.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'my_static/index.js' %}"></script>
+</body>
+
+
+</html>

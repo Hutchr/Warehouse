@@ -1,0 +1,104 @@
+{% extends 'PoS/lianiki/show_categories_lianiki.html' %}
+
+
+{% block center %}
+    <style>
+    .ui form{
+        text-align: center;
+    }
+    label[for=id_title],label[for=id_order],label[for=id_cost],label[for=id_color],label[for=id_size]{
+        display: none;
+    }
+    #id_title, #id_order, #id_cost, #id_color, #id_size{
+        display: none;
+    }
+    label[for=id_qty],label[for=id_price]{
+        height: 50px;
+        text-align: center;
+        font-size: 30px;
+        color: #0099d4;
+
+    }
+    #id_qty,#id_price,#id_paid_value{
+        height: 100px;
+        text-align: center;
+        font-size: 80px;
+        margin: 1%;
+    }
+
+    </style>
+
+    {% if messages %}
+        <div class="ui green message">
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="ui segments">
+        <div class="ui inverted blue segment">
+            <h2 style="text-align: center">{{ product.title }}, Προμηθευτής {{ product.supplier.title }}</h2>
+        </div>
+        <div class="ui segments">
+            <div class="ui segment">
+                <a href="/PoS/lianiki/order/{{ order.id }}" class="ui big left labeled icon button">
+                    <i class="left arrow icon"></i>
+                    Επιστροφή
+                </a>
+            </div>
+
+            <div class="ui divider segment">Επιλογή Ποσότητας  Τιμή {{ product.price|floatformat:2 }} €</div>
+            {% if product.size == 'a' %}
+                <div class="ui segment">
+                    {% for ele in product_size %}
+                        <a class="ui blue button" href="/PoS/lianiki/order/{{ order.id }}/{{ product.id }}/{{ ele.id }}/">
+                            {{ ele.color.title }}
+                            <br>{{ ele.title }}
+                            <br>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% elif product.color == 'a' %}
+                <div class="ui segment">
+                    {% for ele in products_colors %}
+                        <a class="ui blue button" href="/PoS/lianiki/order/only_color/{{ order.id }}/{{ product.id }}/{{ ele.id }}/">
+                            {{ ele.title }}
+
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="ui segment">
+                    <div class="ui form">
+                        <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                            {{ form }}
+                            <input  style="width: 100%;height: 200px; font-size: 50px;" type="submit" name="submit" class=" green shop icon" value="Προσθήκη"/>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui inverted red segment">
+            Όδηγίες!
+        </div>
+        <div class="ui segment">
+            <h1>ΠΕΙΡΑΖΕΙΣ ΜΟΝΟ την Τιμή εαν θες να κάνεις έκπτωση, και την Ποσότητα ανάλογα την παραγγελία</h1>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+

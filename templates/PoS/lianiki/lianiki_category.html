@@ -1,0 +1,75 @@
+{% extends 'PoS/lianiki/show_categories_lianiki.html' %}
+
+
+{% block center %}
+    {% load staticfiles %}
+    <div class="row">
+        <div style="width: 85%" class="ui segments">
+        <div class="ui inverted blue segment">
+            <h2 style="text-align: center">{{ categories.title }}</h2>
+        </div>
+        <div class="ui segments">
+            <div class="ui horizontal segments">
+                <div class="ui segment">
+                    <a href="/PoS/lianiki/order/{{ order.id }}" class="ui big left labeled icon button">
+                          <i class="left arrow icon"></i>
+                          Επιστροφή
+                    </a>
+                </div>
+                <div class="ui segment">
+                <form method="get">
+                    <div class="ui search">
+                        <div style="width: 100%; text-align: center;" class="ui icon input">
+                            <input  class="prompt" name="search_products" type="text" placeholder="Αναζήτηση Προϊόντος..">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                </form>
+            </div>
+            </div>
+            <div class="ui divider segment">Ολα τα Προιόντα</div>
+            <div class="ui segment">
+                <table class="ui selectable tiny table">
+                <thead>
+                    <tr>
+
+                        <th>Κωδικός Προιόντος</th>
+                        <th>Ονομασία</th>
+                        <th>Προμηθευτής</th>
+                        <th>Brand</th>
+                        <th>Τιμή</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in products %}
+                        <tr>
+                            <td>{{ ele.order_code }}<br>{{ ele.sku }}</td>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.category.title }}</td>
+                            <td>{{ ele.site_price|floatformat:2 }} {{ currency }} </td>
+                            {% if ele.have_size %}
+                            <td>
+                                <a href="{% url 'retail_choose_size' order.id ele.id %}" class="ui green button">Επιλογή Νούμερο.</a>
+                            </td>
+                            {% else %}
+                                <td>
+                                    <div class="ui buttons">
+                                        <a href="{% url 'retail_add' order.id ele.id %}" class="ui  button">Επιλογή</a>
+                                        <div class="or"></div>
+                                        <a href="{% url 'retail_auto_add' order.id ele.id %}" class="ui positive button">Προσθήκη</a>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'inventory/tools_change_qty.html' %}
+
+
+
+
+{% block add_item %}
+
+    <style>
+        #id_order, label[for=id_order]{
+            display: none;
+        }
+    </style>
+    <div class="ui blue inverted header segment">
+        Αλλαγή Ποσότητας
+    </div>
+    <div class="ui segment">
+        <form method="POST" class="ui form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="ui green button">
+        </form>
+    </div>
+
+
+{% endblock %}
+

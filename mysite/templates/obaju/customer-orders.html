@@ -1,0 +1,101 @@
+{% extends 'obaju/index.html' %}
+
+{% block content %}
+        <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>My orders</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-3">
+                    <!-- *** CUSTOMER MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Customer section</h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <ul class="nav nav-pills nav-stacked">
+                               <li class="active">
+                                    <a href="{% url 'costumer_page_order' %}"><i class="fa fa-list"></i>Οι Παραγγελίες μου</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'costumer_ask_page' %}"><i class="fa fa-heart"></i>Λίστα επιμυθιών<br>Ερωτήσεις.</a>
+                                </li>
+                                <li >
+                                    <a href={% url 'costumer_page' %}><i class="fa fa-user"></i> Επιλογές</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'log_out' %}"><i class="fa fa-sign-out"></i> Αποσύνδεση</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <!-- *** CUSTOMER MENU END *** -->
+                </div>
+
+                <div class="col-md-9" id="customer-orders">
+                    <div class="box">
+                        <h1>Οι Παραγγελίες μου</h1>
+
+                        <p class="lead">Δείτε το ιστορικό σας</p>
+                        <p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
+
+                        <hr>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Κωδικός Παραγγελίας</th>
+                                        <th>Ημερομηνία</th>
+                                        <th>Συνολική Αξία</th>
+                                        <th>Κατάσταση</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders %}
+                                        <tr>
+                                            <th>{{ order.eshop_order_id }}</th>
+                                            <td>{{ order.day_added }}</td>
+                                            <td>{{ order.value }}</td>
+                                            {% if order.status.id == 8 %}
+                                                <td><span class="label label-danger">Ακυρώθηκε</span></td>
+                                            {% elif order.status.id == 7 %}
+                                                <td><span class="label label-success">Απεστάλη</span></td>
+                                            {% elif order.status.id == 3 %}
+                                                 <td><span class="label label-warning">Αναμονή</span></td>
+                                            {% else %}
+                                            <td><span class="label label-info">Σε επεξεργασία</span></td>
+                                            {% endif %}
+                                            <td><a href="{% url 'costumer_order' order.eshop_order_id %}" class="btn btn-primary btn-sm">View</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h1>{{ supply.title }}</h1>
+    <p>{{ supply.phone }}</p>
+    {% for ele in products %}
+    <p>{{ ele }}</p>
+    {% endfor %}
+    <p>{{ products }}</p>
+{% endblock %}
+
+
+{% block main_block %}
+    <h1>{{ supply.title }}</h1>
+    <p>{{ supply.phone }}</p>
+    <p>Υπόλοιπο  {{ supply.balance }}  euro</p>
+    <table class="table table-bordered" style="margin-top: 5%; margin-bottom: 5%">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>'Ονομα</th>
+        <th>Κστηγορία</th>
+        <th>Τιμή Αγοράς</th>
+        <th>Τιμή Λιανικής</th>
+        <th>Τιμή Χονδρικής</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for supply in products %}
+    <tr>
+
+        <td>{{ supply.id }}</td>
+
+      <td><a href="/products/{{ supply.id }}"> {{ supply.title }}</a></td>
+       <td><a href="{% url 'categories' %}{{ supply.id }}">{{ supply.category }}</a></td>
+      <td>{{ supply.price_buy }}</td>
+      <td>{{ supply.price }}</td>
+      <td>{{ supply.price_internet }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

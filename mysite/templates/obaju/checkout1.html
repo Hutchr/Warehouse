@@ -1,0 +1,205 @@
+{% extends 'obaju/index.html' %}
+
+{% block content %}
+    <div id="content">
+        <div class="container">
+
+                    <div class="col-md-12">
+                        <ul class="breadcrumb">
+                            <li><a href="#">Home</a>
+                            </li>
+                            <li>Checkout - Address</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-md-9" id="checkout">
+
+                        <div class="box">
+                            <form method="post">{% csrf_token %}
+                                <h1>Checkout</h1>
+                                <h3 style="text-align: center"><i class="fa fa-map-marker"></i><br>Διεύθυνση</h3>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.first_name.errors }}
+                                                <label>{{ form.first_name.label }}</label>
+                                                {{ form.first_name }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.last_name.errors }}
+                                                <label>{{ form.last_name.label }}</label>
+                                                {{ form.last_name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ city.last_name.errors }}
+                                                <label>{{ form.city.label }}</label>
+                                                {{ form.city }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.address.errors }}
+                                                <label>{{ form.address.label }}</label>
+                                                {{ form.address }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="form-group">
+                                                {{ form.state.errors }}
+                                                <label>{{ form.state.label }}</label>
+                                                {{ form.state }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-3">
+                                            <div class="form-group">
+                                                {{ form.zip.errors }}
+                                                <label>{{ form.zip.label }}</label>
+                                                {{ form.zip }}
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.cell_phone.errors }}
+                                                <label>{{ form.cell_phone.label }}</label>
+                                                {{ form.cell_phone }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.phone.errors }}
+                                                <label>{{ form.phone.label }}</label>
+                                                {{ form.phone }}
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                {{ form.email.errors }}
+                                                <label>{{ form.email.label }}</label>
+                                                {{ form.email }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                                <h3 style="text-align: center"><i class="fa fa-map-marker"></i><br>Παρατηρήσεις</h3>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                {{ form.notes.errors }}
+                                                <label>{{ form.notes.label }}</label>
+                                                {{ form.notes }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3 style="text-align: center" ><i class="fa fa-truck"></i><br>Τρόπος Μεταφορας</h3>
+                                <div class="content">
+                                <div class="row">
+                                    {% for ship_type in shipping %}
+                                        <div class="col-sm-6">
+                                        <div class="box shipping-method">
+                                            <h4>{{ ship_type.title }}</h4>
+                                            <p>{{ ship_type.content }}</p>
+                                            <div class="box-footer text-center">
+                                                <input type="radio"  name="delivery" value="{{ ship_type.id }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <!-- /.row -->
+
+                            </div>
+                                <h3 style="text-align: center"><i class="fa fa-money"></i><br>Τρόπος Πληρωμής</h3>
+                                <div class="content">
+                                <div class="row">
+                                    {% for payment in payment_method %}
+                                    <div class="col-sm-6">
+                                        <div class="box payment-method">
+                                            <h4>{{ payment.title }}</h4>
+                                            <p>We like it all.</p>
+                                            <div class="box-footer text-center">
+                                                <input type="radio" name="payment" value="{{ payment.id }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <!-- /.row -->
+
+                            </div>
+
+                                <div class="box-footer">
+                                    <div class="pull-left">
+                                        <a href="{% url 'basket' %}" class="btn btn-default"><i class="fa fa-chevron-left"></i>Back to basket</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button type="submit"  class="btn btn-primary">Continue to Delivery Method<i class="fa fa-chevron-right"></i>
+
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.box -->
+
+
+                    </div>
+                    <!-- /.col-md-9 -->
+
+                    <div class="col-md-3">
+
+                        <div class="box" id="order-summary">
+                            <div class="box-header">
+                                <h3>Order summary</h3>
+                            </div>
+                            <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Order subtotal</td>
+                                            <th>$446.00</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping and handling</td>
+                                            <th>$10.00</th>
+                                        </tr>
+                                        <tr>
+                                            <td>Tax</td>
+                                            <th>$0.00</th>
+                                        </tr>
+                                        <tr class="total">
+                                            <td>Total</td>
+                                            <th>$456.00</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                </div>
+    </div>
+{% endblock %}

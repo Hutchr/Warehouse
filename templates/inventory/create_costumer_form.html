@@ -1,0 +1,140 @@
+{% extends 'inventory/costumers_section.html' %}
+
+{% block my_static %}
+<script type="text/javascript">
+
+   $('.modal')
+  .modal('setting', 'closable', false)
+  .modal('show')
+;
+
+</script>
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+    {% if add_size %}
+        <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+                <div class="header">
+                    {{ title }}
+                </div>
+                <div class="image content">
+                    {% if product.image %}
+                    <div class="ui medium image">
+                        <img src="{{ product.image.url }}">
+                    </div>
+                    {% else %}
+                    <div class="ui medium image">
+                        <img src="{% static 'obaju/img/no-photo.jpg' %}">
+                    </div>
+                    {% endif %}
+                    <div class="description">
+                        <form method="post" class="ui form">{% csrf_token %}
+                            {% for size in sizes %}
+                                <div class="inline field">
+                                    <div class="ui checkbox">
+                                      <input name="get_sizes" type="checkbox" tabindex="0" value="{{ size.id }}">
+                                      <label name="get_sizes">{{ size }}</label>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                            <div class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     {% elif retail %}
+        <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+                <div class="header">
+                    {{ product.title }}
+                </div>
+                <div class="image content">
+                    {% if product.image %}
+                    <div class="ui medium image">
+                        <img src="{{ product.image.url }}">
+                    </div>
+                    {% else %}
+                    <div class="ui medium image">
+                        <img src="{% static 'obaju/img/no-photo.jpg' %}">
+                    </div>
+                    {% endif %}
+                    <div class="description">
+                        <form method="post" class="ui form">{% csrf_token %}
+                            {% for size in sizes %}
+                                <div class="inline field">
+                                    <label name="{{ size.id }}">Νούμερο {{ size.title }}</label>
+                                    <input name="{{ size.id }}" class="inline field" type="number" value="0" placeholder="0">
+                                </div>
+
+                            {% endfor %}
+                            <div style="margin-top: 10%" class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+                <div class="header">
+                    {{ title }}
+                </div>
+                <div class="image content">
+                    {% if image %}
+                    <div class="ui medium image">
+                        <img src="{{ image.url }}">
+                    </div>
+                    {% else %}
+                    <div class="ui medium image">
+                        <img src="{% static 'obaju/img/no-photo.jpg' %}">
+                    </div>
+                    {% endif %}
+                    <div class="description">
+                        <form method="post" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                            {{ form.as_p }}
+                            <div style="margin-top: 5%" class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}

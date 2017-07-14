@@ -1,0 +1,31 @@
+{% extends 'inventory/pay_section/fixed_costs/fixed_cost_ppl_id.html' %}
+
+
+{% block right_side %}
+
+        <div class="ui header">
+            <h4>Απενεργοποιημένο Προσωπικό --- {{ occup.title }}</h4>
+        </div>
+        {% for ele in deactivated %}
+                <div class="ui orange segments">
+                    <div class="ui blue inverted segment">
+                        <h4>{{ ele.title }}</h4>
+                    </div>
+                    <div class="ui horizontal segments">
+                        <div class="ui segment">
+                            <p>Υπόλοιπο :{{ ele.salary_remaining }}</p>
+                        </div>
+                        <div class="ui segment">
+                            <p>Ημερομηνία Πρόσληψης  :{{ ele.date_joined }}</p>
+                        </div>
+
+                    </div>
+                    <div class="ui segment">
+                        <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/energy/{{ occup.id }}/{{ ele.id }}/" class="ui green button">Ενεργοποίηση</a>
+                    </div>
+                </div>
+        {% endfor %}
+
+
+
+{% endblock %}

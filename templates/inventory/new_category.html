@@ -1,0 +1,32 @@
+{%  extends 'inventory/new_all_NEW.html' %}
+
+{% block product_area %}
+<section class="panel b-yellow" id="2">
+
+  <article class="panel__wrapper">
+
+    <div class="panel__content">
+        <div>
+            {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+        </div>
+      <h1 class="panel__headline"><i class="fa fa-bolt"></i>&nbsp;Νέα Κατηγορία</h1>
+      <div class="panel__block"></div>
+      <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}
+          <input class="btn" type="submit" name="submit">
+      <ul>
+          {{ form_c.as_ul }}
+      </ul>
+
+      </form>
+    </div>
+  </article>
+
+<input style="align-content:center; width: 10%; background-color: #226da6; color: #ffffff;box-shadow: 1px 1px 1px 1px rgba(0, 0, 115, 0.25);" type="button" href='/homepage/new_all' value="Επιστροφή" />
+</section>
+{% endblock %}

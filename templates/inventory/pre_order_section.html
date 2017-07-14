@@ -1,0 +1,304 @@
+{% extends 'inventory/homepageNew.html' %}
+{% load extra_tags %}
+
+
+
+
+{% block content %}
+    <div class="four wide column">
+        <h3 class="ui header">Menu</h3>
+        <div class="ui top attached vertical tabular menu">
+            <a class="active item" data-tab="zero">Παραγγελία Σε Εξέλιξη <div class="ui teal left pointing label">{{ pre_order_items.count }}</div></a>
+            <a class="item" data-tab="first">Παραγγελίες Ενεργές <div class="ui teal left pointing label">1</div></a>
+            <a class="item" data-tab="second">Παραγγελίες σε Τιμολόγιο <div class="ui teal left pointing label">1</div></a>
+            <a class="item" data-tab="third">Ακυρωμένες <div class="ui teal left pointing label">1</div></a>
+        </div>
+    </div>
+    <div class="eight wide column">
+        <div class="ui bottom attached active tab segment" data-tab="zero">
+            {% if pre_order_active %}
+                <div class="row">
+                    <div class="ui header">
+                        <h4 style="text-align: center">Τίτλος Παραγγελίας ...{{ pre_order_active.title }}</h4>
+                    </div>
+                    <table class="ui small table">
+                        <thead>
+                        <tr>
+                            <th>Προϊόν</th>
+                            <th>Προμηθευτής</th>
+                            <th>Ποσότητα</th>
+                            <th>Τελευταία Τιμή Τιμ.</th>
+                            <th>Συνολικό Κόστος</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if pre_order_items or pre_order_new_items %}
+                            {% for product in pre_order_items %}
+                                <tr>
+                                    <td>{{ product.title }}</td>
+                                    <td>{{ product.title.supplier.title }}</td>
+                                    <td>{{ product.qty }}</td>
+                                    <td>{{ product.title.price_buy|floatformat:2 }} €</td>
+                                    <td>{% multiply product.qty product.title.price_buy %} €</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                            <a href="{% url 'pre_order_edit_item' product.id %}" class="ui button">Επεξεργασία</a>
+
+                                            <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    <a href="{% url 'info_product_id' product.title.id %}" target="_blank" class="item"><i class="edit icon"></i> Ανάλυση</a>
+                                                    <a href="{% url 'pre_order_delete_item' product.id %}" class="item"><i class="delete icon"></i> Remove Post</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for product in pre_order_new_items %}
+                                <tr>
+                                    <td style="background-color: #c5ceed">{{ product.title }}</td>
+                                    <td>{{ product.vendor.title }}</td>
+                                    <td>{{ product.qty }}</td>
+                                    <td>{{ product.price_buy|floatformat:2 }} €</td>
+                                    <td>{% multiply product.price_buy product.qty %} €</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                            <a href="{% url 'pre_order_edit_new_item' product.id %}" target="_blank" class="ui button">Επεξεργασία</a>
+                                            <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                  <a href="{% url 'pre_order_delete_new_item' product.id %}" class="item"><i class="delete icon"></i>Διαγραφή</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Κανένα Προϊόν ακόμα.</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ui divider row"></div>
+                <div style="margin-top: 7%" class="ui divider row"></div>
+                <div  class="row">
+                    <div style="text-align: center" class="ui blue header">
+                        Μετρατοπή σε Παραγγελίες
+                    </div>
+                    <div class="ui segment">
+                        <form class="ui form" method="post">{% csrf_token %}
+                            <div class="ui center header">
+                                Αποστολή Email
+                            </div>
+                            <div class="ui six column center aligned stackable divided grid segment">
+                                {% for vendor in vendors %}
+                                <div class="column">
+                                    {% if vendor.0.email %}
+                                    <div class="ui test toggle checkbox">
+                                        <input name="email_list" value="{{ vendor.0.id }}" type="checkbox" checked="checked">
+                                        <label>{{ vendor.0.title }}</label>
+                                    </div>
+                                    {% else %}
+                                        <div class="ui test toggle checkbox">
+                                            <input name="email_list" value="{{ vendor.0.id }}" type="checkbox" disabled>
+                                            <label>{{ vendor.0.title }}</label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="ui divider segment"></div>
+                            <div class="ui center header">
+                                Εκτύπωση Παραγγελίας
+                            </div>
+                            <div class="ui six column center aligned stackable divided grid segment">
+                                {% for vendor in vendors %}
+                                <div class="column">
+                                    <div class="ui test toggle checkbox">
+                                        <input name="print_list" value="{{ vendor.0.id }}" type="checkbox" >
+                                        <label>{{ vendor.0.title }}</label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <input style="margin-left: 80%" class="ui right input button" type="submit">
+                        </form>
+                    </div>
+                </div>
+
+
+
+            {% else %}
+                <a style="text-align: center" href="{% url 'pre_order_create' %}" class="ui green button">Δημιουργία Νέας Παραγγελίας</a>
+            {% endif %}
+        </div>
+        <div class="ui bottom attached  tab segment" data-tab="first">
+            {% if order %}
+                <div class="row">
+                    <div class="ui header">
+                        <h4 style="text-align: center">Τίτλος Παραγγελίας ...{{ order.title }}</h4>
+                    </div>
+                    <table class="ui small table">
+                        <thead>
+                        <tr>
+                            <th>Προϊόν</th>
+                            <th>Ποσότητα</th>
+                            <th>Size - Color</th>
+                            <th>Τελευταία Τιμή Τιμ.</th>
+                            <th>Συνολικό Κόστος</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in order_items %}
+                                <tr>
+                                    <td>{{ product.title }}</td>
+                                    <td>{{ product.qty }}</td>
+                                    <td>{{ product.color }}, {{ product.size }}</td>
+                                    <td>{{ product.price_buy|floatformat:2 }} €</td>
+                                    <td>{% multiply product.qty product.title.price_buy %} €</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                            <a href="{% url 'pre_order_statement_edit_product' order.id product.id %}" class="ui button">Επεξεργασία</a>
+
+                                            <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    <a href="{% url 'info_product_id' product.title.id %}" target="_blank" class="item"><i class="edit icon"></i> Ανάλυση</a>
+                                                    <a href="{% url 'pre_order_delete_item' product.id %}" class="item"><i class="delete icon"></i> Remove Post</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            {% for product in new_order_items %}
+                                <tr>
+                                    <td>{{ product.title }}</td>
+                                    <td>{{ product.title.supplier.title }}</td>
+                                    <td>{{ product.qty }}</td>
+                                    <td>{{ product.title.price_buy|floatformat:2 }} €</td>
+                                    <td></td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                            <a href="{% url 'pre_order_statement_edit_new_product' order.id product.id %}" class="ui button">Επεξεργασία</a>
+
+                                            <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    <a href="{% url 'pre_order_statement_edit_new_product' order.id product.id %}" target="_blank" class="item"><i class="edit icon"></i> Ανάλυση</a>
+                                                    <a href="{% url 'pre_order_delete_item' product.id %}" class="item"><i class="delete icon"></i> Remove Post</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="ui divider row"></div>
+
+            {% else %}
+            <div class=row">
+                <div class="ui header">
+                    Προπαραγγελίες
+                </div>
+                <table class="ui small table">
+                    <thead>
+                        <tr>
+                            <th>Τίτλος</th>
+                            <th>Προμηθευτής</th>
+                            <th>Email</th>
+                            <th>Εκτυπώθηκε.</th>
+                            <th>Κόστος</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for order in pre_order_statement %}
+                            <tr>
+                                <td>{{ order.title }}</td>
+                                <td>{{ order.vendor.title }}</td>
+                                <td>{{ order.get_is_sended_display }}</td>
+                                <td>{{ order.get_is_printed_display }}</td>
+                                <td></td>
+                                <td>
+                                    <div class="ui teal buttons">
+                                        <a href="{% url 'pre_order_create_order' order.id %}" class="ui button">Μετατροπή σε Τιμ.</a>
+                                            <div class="ui floating dropdown icon button">
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <a href="{% url 'pre_order_show_statement' order.id %}" class="item"><i class="edit icon"></i>Επεξεργασία</a>
+                                                <div class="item"><i class="delete icon"></i>Διαγραφή</div>
+                                                <div class="item"><i class="print icon"></i>Επανεκτύπωση</div>
+                                                <div class="item"><i class="mail icon"></i>Στείλε email</div>
+                                            </div>
+                                            </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="ui pagination">
+                    <span class="step-links">
+                        {% if pre_order_statement.has_previous %}
+                            <a href="?page={{ pre_order_statement.previous_page_number }}">previous</a>
+                        {% endif %}
+                        <span class="current">
+                            Page {{ pre_order_statement.number }} of {{ pre_order_statement.paginator.num_pages }}.
+                        </span>
+                        {% if pre_order_statement.has_next %}
+                            <a href="?page={{ pre_order_statement.next_page_number }}">next</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="second">
+            Second
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="third">
+            Third
+        </div>
+    </div>
+    <div class="four wide column">
+        {% if pre_order_active %}
+        <div class="row">
+            <div class="ui header">
+                <h4 style="text-align: center">{{ pre_order_active.title }}</h4>
+            </div>
+            <table class="ui small table">
+                    <thead>
+                    <tr>
+                        <th>Προμηθευτής</th>
+                        <th>Κόστος</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for vendor in vendors %}
+                        <tr>
+
+                            <td>{{ vendor.0.title }}</td>
+                            <td>{{ vendor.1|floatformat:2 }} €</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <a href="{% url 'pre_order_create_new_item' %}" class="ui button"><i class="add icon"></i>Δημιουργία Προϊόντος </a>
+        </div>
+    {% elif pre_order_statement %}
+    {% endif %}
+    </div>
+{% endblock %}
+

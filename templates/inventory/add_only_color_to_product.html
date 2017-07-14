@@ -1,0 +1,74 @@
+{% extends 'inventory/homepageNew.html' %}
+
+
+
+{% block center %}
+
+    <div class="ui segments">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            {{ product.title }}
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <form class="ui form" method="post">{% csrf_token %}
+                    <div class="ui accordion segment">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            <div style="text-align: center;" class="ui blue inverted header segment">
+                                Επιλογή Χρωμάτων
+                            </div>
+
+                        </div>
+                        <div style='height: 200px;width:300px;overflow: scroll' class=" content">
+                            {% for ele in colors %}
+                                {% if ele.title in colors_selected %}
+
+                                {% else %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="color_name" value="{{ ele.title }}">
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    <input type="submit" class="ui green button" placeholder="Επιλογή">
+                    </div>
+                </form>
+            </div>
+            <div class="ui segment">
+                <div class="ui accordion segment ">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        <div style="text-align: center;" class="ui blue inverted header segment">
+                            Διαθέσιμα Χρώματα
+                        </div>
+                    </div>
+                    <div  class=" active content">
+                        {% for ele in colors_selected %}
+                            <div class="ui label">
+                                {{ ele.title }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider segment"></div>
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+{% block right_side %}
+
+
+        <a href="/αποθήκη/προιόντα/" class="ui big blue button">Επιστροφή</a>
+
+
+{% endblock %}

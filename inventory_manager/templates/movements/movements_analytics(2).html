@@ -1,0 +1,120 @@
+{% extends "movements/movements.html" %}
+
+{% block sidebar %}
+    <style>
+    @import url(http://fonts.googleapis.com/css?family=Oswald:400,300,700|Montserrat:400,700|Droid+Serif:400,400italic,700,700italic);
+
+*{
+  margin: 0; border: 0;
+}
+
+
+
+h1{
+  font-weight: lighter;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 5%
+}
+p{
+
+  font-family: 'Droid Serif';
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  margin-top: 1%
+}
+
+Body{
+  font-family: 'Montserrat';
+}
+
+#container{
+  width: 400px;
+  height: auto;
+  margin: 0 auto;
+  margin-top: 3%;
+  border-top: 1px solid #bdbdbd;
+  border-left: 1px solid #bdbdbd;
+  border-right: 1px solid #bdbdbd;
+}
+
+.accordion label{
+  display:block;
+  background-color: #eeeeee;
+  padding: 10px;
+  color: #424242;
+  text-shadow: 0 0 2px rgba(255,255,255,0.6);
+  cursor: pointer;
+  border-bottom: 1px solid #bdbdbd;
+  border-top: 1px solid #ffffff;
+}
+
+.accordion p{
+  color: #424242;
+  padding: 10px;
+  font-size: 0.8em;
+  line-height: 1.7em;
+  border-bottom: 1px solid #bdbdbd;
+  font-family: 'Droid Serif';
+  font-style: italic;
+  visibility: hidden;
+  opacity: 0;
+  display: none;
+  text-align: left;
+  background-color: #fff;
+  margin-top: 0px;
+}
+
+#tm:checked ~ .hiddentext{
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+input#tm{
+  display: none;
+  position: relative;
+}
+
+#tn:checked ~ .hiddentext{
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+input#tn{
+  display: none;
+  position: relative;
+}
+
+#to:checked ~ .hiddentext{
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+input#to{
+  display: none;
+  position: relative;
+}
+.arrow{
+  color: #666666;
+}
+
+    </style>
+<!-- Start of the accordion -->
+<div id="container">
+  <!-- Item 1 -->
+  <div class="accordion">
+    <label for="tm" class="accordionitem"><h2 style="font-size: medium">Vendors<span class="arrow">&raquo;</span></h2></label>
+    <input type="checkbox" id="tm"/>
+      {% for ele in vendors %}
+    <p class="hiddentext"><a href="/inventory/movements/edit_orders/vendor/{{ ele.id }}">{{ ele.title }}</a> </p>
+      {% endfor %}
+  </div>
+
+
+
+  </div>
+{% endblock %}

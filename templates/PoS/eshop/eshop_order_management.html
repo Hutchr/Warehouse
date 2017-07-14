@@ -1,0 +1,322 @@
+{% extends 'PoS/homepage.html' %}
+{
+
+{% block center %}
+    <script type="text/javascript">
+    $('.ui.dropdown')
+  .dropdown()
+;
+    $('.combo.dropdown')
+  .dropdown({
+    action: 'combo'
+  })
+;
+    </script>
+    <div style="width: 110%" class="ui segments">
+        <div style="text-align: center" class="ui blue inverted header segment">
+             Διαχείρηση αποθήκης
+        </div>
+        <div class="ui horizontal segments">
+            <div style="width: 50%" class="ui segment">
+                <div class="ui teal inverted header segment">
+                    Μη επεξεργασμένες παραγγελίες
+                </div>
+                <div class="ui small segment">
+                    <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Αρ. Παρ.</th>
+                                <th>Πελάτης</th>
+                                <th>Συνολικά Προϊόντα</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in new_orders %}
+                                <tr>
+                                    <td><a href="{% url 'orders_management_details' order.id %}" >{{ order.title|truncatechars:20 }}</a></td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>
+                                        <div class="ui small teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 2 %}" class="ui button">Προς επεξεργασία</a>
+                                              <div class="ui combo dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="width: 50%" class="ui segment">
+                <div class="ui inverted blue header segment">
+                    Παραγγελίες Σε Εξέλιξη
+                </div>
+                <div class="ui segment">
+                    <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Αρ. Παρ.</th>
+                                <th>Πελάτης</th>
+                                <th>Συνολικά Προϊόντα</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders_in_progress %}
+                                <tr>
+                                    <td>{{ order.title|truncatechars:20 }}</td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>
+                                        <div class="ui small teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 5 %}" class="ui small button"> Προς Αποστολή</a>
+                                              <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+        <div  class="ui horizontal segments">
+            <div style="width: 50%" class="ui segment">
+                <div class="ui header segment">
+                    Έτοιμες προς αποστολή
+                </div>
+                <div class="ui segment">
+                    <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Αρ. Παρ.</th>
+                                <th>Πελάτης</th>
+                                <th>Ποσό</th>
+                                <th>Συνολικά Προϊόντα</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders_ready_to_go %}
+                                <tr>
+                                    <td>{{ order.title|truncatechars:20 }}</td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 6 %}" class="ui small button">Απεστάλη</a>
+                                              <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="width: 50%" class="ui segment">
+                <div class="ui green inverted header segment">
+                    Απεστάλη
+                </div>
+                <div class="ui segment">
+                    <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Αρ. Παρ.</th>
+                                <th>Πελάτης</th>
+                                <th>Ποσό</th>
+                                <th>Συνολικά Προϊόντα</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders_sent %}
+                                <tr>
+                                    <td>{{ order.title|truncatechars:20 }}</td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 7 %}" class="ui small button">Εισπράκτηκε.</a>
+                                              <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="ui segments">
+            <div class="ui header segment">
+                Αλλαγές -Αναμονή
+            </div>
+            <div class="ui segment">
+                <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν - Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Χρώμα- Μέγεθος</th>
+                                <th>Κωδικός Παρ.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders_in_waiting %}
+                                <tr>
+                                    <td>{{ order.title|truncatechars:20 }}</td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 5 %}" class="ui small button">Έτοιμη Προς Αποστολή</a>
+                                              <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+            <div class="ui header segment">
+                Ολοκληρωμένες
+            </div>
+            <div class="ui segment">
+                <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν - Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Χρώμα- Μέγεθος</th>
+                                <th>Κωδικός Παρ.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in order_get_paid %}
+                                <tr>
+                                    <td>{{ order.title|truncatechars:20 }}</td>
+                                    <td>{{ order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td>
+                                        <div class="ui teal buttons">
+                                              <a href="{% url 'orders_management_change' order.id 7 %}" class="ui small button">Εισπράκτηκε.</a>
+                                              <div class="ui floating dropdown icon button">
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu">
+                                                    {% for ele in status %}
+                                                        <a class="item" href="{% url 'orders_management_change' order.id ele.id %}"><i class="add icon"></i> {{ ele.title }}</a>
+                                                    {% endfor %}
+                                                </div>
+                                              </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+{% endblock %}
+
+{% block right_side %}
+    <div style="margin-left: 30%" class="ui segments">
+        <div class="ui header segment">
+            Προιόντα
+        </div>
+    <div class="ui top attached tabular menu">
+        <a class="active item" data-tab="first">
+           Προιόντα που δε βρέθηκαν
+        </a>
+        <a class="item" data-tab="second">Προϊόντα που βρέθηκαν</a>
+    </div>
+    <div class="ui bottom attached active tab segment" data-tab="first">
+         <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν - Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Χρώμα- Μέγεθος</th>
+                                <th>Κωδικός Παρ.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in order_items_not_found %}
+                                <tr>
+                                    <td>a{{ product.title.title|truncatechars:20 }} - {{ product.title.description }}</td>
+                                    <td>{{ product.order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td><a href="{% url 'orders_management_product_change' product.id %}" class="ui icon button"><i class="add green icon"></i>{{ product.order.title }} </a> </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    </div>
+    <div class="ui bottom attached tab segment" data-tab="second">
+        <table class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν - Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Χρώμα- Μέγεθος</th>
+                                <th>Κωδικός Παρ.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in order_items_found %}
+                                <tr>
+                                    <td>a{{ product.title.title|truncatechars:20 }} - {{ product.title.description }}</td>
+                                    <td>{{ product.order.costumer.title }}</td>
+                                    <td>{{ order.value|floatformat:2 }}</td>
+                                    <td><a href="{% url 'orders_management_product_change' product.id %}" class="ui icon button"><i class="remove red icon"></i>{{ product.order.title }} </a> </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    </div>
+    </div>
+
+
+
+{% endblock %}

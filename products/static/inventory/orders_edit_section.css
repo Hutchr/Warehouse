@@ -1,0 +1,101 @@
+* {
+  -webkit-transition-timing-function: ease-out;
+  /* Safari and Chrome */
+  transition-timing-function: ease-out;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+body {
+  font-family: "Segoe UI", Frutiger, "Frutiger Linotype", "Dejavu Sans", "Helvetica Neue", Arial, sans-serif;
+  color: #F2F2F2;
+  background-color: #41558C;
+}
+.toggleNav {
+  border-bottom: 5px solid #15e1af;
+  background-color: #54EFC9;
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+  cursor: pointer;
+  color: white;
+  font-size: 30px;
+}
+.toggleNav:hover {
+  border-bottom: 5px solid #13ca9d;
+}
+nav {
+  width: 100%;
+  min-height: 50px;
+}
+.toggleNavButton {
+  transition-duration: 0.5s;
+  width: 40px;
+  height: 2px;
+  background-color: white;
+  position: absolute;
+  left: 50%;
+  top: 25px;
+  margin-left: -20px;
+  border-radius: 2px;
+}
+.toggleNavButton:before,
+.toggleNavButton:after {
+  border-radius: 2px;
+  transition-duration: 0.5s;
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  background-color: white;
+  width: 40px;
+  height: 2px;
+}
+.toggleNavButton:after {
+  top: 20px;
+}
+.toggleNavButton.active {
+  width: 0;
+}
+.toggleNavButton.active:after {
+  top: 10px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.toggleNavButton.active:before {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+#subnav {
+  width: 100%;
+  border-bottom: 0px solid #e60b3e;
+  background-color: #F64870;
+  transition-duration: 0.2s;
+  overflow: hidden;
+  height: 0px;
+}
+#subnav.active {
+  border-bottom: 5px solid #e60b3e;
+  height: 50px;
+}
+#subnav ul {
+  width: 615px;
+  margin: 0 auto;
+}
+#subnav ul li {
+  transition-duration: 0.3s;
+  display: inline-block;
+  text-align: center;
+  width: 150px;
+  padding: 10px 0;
+  height: 50px;
+}
+#subnav ul li a {
+  color: white;
+}
+#subnav ul li:hover {
+  background-color: #e60b3e;
+}

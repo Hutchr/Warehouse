@@ -1,0 +1,125 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <div class="six wide column"></div>
+        <div class="four wide column">
+            <h2 style="text-align: center" class="ui header">
+                <i class="cart green icon"></i>
+                <div class="content">
+                    Αποθήκη
+                </div>
+            </h2>
+        </div>
+        <div class="six wide column"></div>
+        <div style="margin-left: 2%" class="three column row">
+        <div class="column">
+            <a href="{% url 'order_pay_section' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="red checked calendar icon"></i>
+                <div class="content">
+                    Τιμολόγια
+                    <div class="sub header">Απλήρωτες Τποχρεώσεις</div>
+                </div>
+            </h2>
+            </a>
+            <div class="ui relaxed divided animated list">
+                {% for payment in orders_pending %}
+                <div class="item">
+                    <i class="large alarm red middle aligned icon"></i>
+                    <div class="content">
+                        <a href="{% url 'pay_order' payment.id %}" class="header">{{ payment.vendor }}<br> Τρόπος Πληρωμής: {{ payment.payment_method }}, Ποσό Πληρωμής: {{ payment.total_price|floatformat:2 }} €</a>
+                        <div class="description">{{ payment.date }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'order_full_pay' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="green checked calendar icon"></i>
+                <div class="content">
+                    Τιμολόγια
+                    <div class="sub header">Πληρωμένες</div>
+                </div>
+            </h2>
+            </a>
+             <div class="ui relaxed divided animated list">
+                {% for payment in orders_complete %}
+                <div class="item">
+                    <i class="large alarm red middle aligned icon"></i>
+                    <div class="content">
+                        <a href="{% url 'report_order_id' payment.id %}" class="header">{{ payment.vendor }}, Τρόπος Πληρωμής: {{ payment.payment_method }},<br> Ποσό Πληρωμής: {{ payment.total_price|floatformat:2 }} €</a>
+                        <div class="description">{{ payment.date }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="column">
+            <a href="{% url 'vendors' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="blur checked calendar icon"></i>
+                <div class="content">
+                    Προμηθευτές
+                    <div class="sub header">10 Προμηθευτές με το μεγαλύτερο υπόλοιπο</div>
+                </div>
+            </h2>
+            </a>
+            <div class="ui relaxed divided animated list">
+                {% for payment in vendors %}
+                <div class="item">
+                    <i class="large alarm red middle aligned icon"></i>
+                    <div class="content">
+                        <a href="{% url 'vendor_info' payment.id %}" class="header">{{ payment.title }}, Υπόλοιπο: {{ payment.balance|floatformat:2 }} €</a>
+                        <div class="description">Συνολο Προκαταβολών {{ payment.remaining_deposit|floatformat:2 }} €</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="column">
+            <a href="{% url 'products' %}">
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="red checked calendar icon"></i>
+                <div class="content">
+                    Προϊόντα
+                    <div class="sub header">Τελευταίες αφίξεις</div>
+                </div>
+            </h2>
+            </a>
+            <div class="ui relaxed divided animated list">
+                {% for payment in products %}
+                <div class="item">
+                    <i class="large alarm red middle aligned icon"></i>
+                    <div class="content">
+                        <a href="{% url 'info_product_id' payment.product.id %}" class="header">{{ payment.product }} , <br> Ποσότητα: {{ payment.qty }}, Τιμή Μονάδας: {{ payment.price|floatformat:2 }} €</a>
+                        <div class="description">{{ payment.day_expire }}</div>
+                        <div class="description">Προμηθευτής {{ payment.product.supplier }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <h2 style="margin-left: 15%" class="ui icon header">
+                <i class="green checked calendar icon"></i>
+                <div class="content">
+                    Προϊόντα
+                    <div class="sub header">Πληρωμένες</div>
+                </div>
+            </h2>
+             <div class="ui relaxed divided animated list">
+                {% for payment in payroll_complete %}
+                <div class="item">
+                    <i class="large green checkmark middle aligned icon"></i>
+                    <div class="content">
+                        <a class="header">{{ payment.person }}, Ειδος Πληρωμής: {{ payment.category }}   , Ποσό Πληρωμής: {{ payment.value|floatformat:2 }} €</a>
+                        <div class="description">{{ payment.day_expire }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

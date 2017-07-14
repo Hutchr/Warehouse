@@ -1,0 +1,207 @@
+{% extends 'inventory/welcome_page.html' %}
+
+{% block my_static %}
+    {% load staticfiles %}
+    {{ form.media }}
+    <script  src="{% static 'marked-master/marked.min.js' %}"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function(){
+            $(".contentmark").each(function(){
+            var content = $(this).text()
+            var markedContent = marked(content)
+            $(this).html(markedContent)
+            })
+            $(".contentmark img").each(function(){
+                $(this).addClass("ui medium image");
+            })
+            var getTitle = $("#id_title");
+            console.log('hello')
+            $('#my_title').text(getTitle.val())
+            console.log(getTitle.val())
+            $( "#id_title" ).keyup(function() {
+                console.log(getTitle);
+            });
+        })
+
+
+    </script>
+    <script type="text/javascript">
+        function showEditPopup(url) {
+            var win = window.open(url, "Edit",
+                'height=500,width=800,resizable=yes,scrollbars=yes');
+            return false;
+        }
+        function showAddPopup(triggeringLink) {
+            var name = triggeringLink.id.replace(/^add_/, '');
+            href = triggeringLink.href;
+            var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+            win.focus();
+            return false;
+        }
+        function closePopup(win, newID, newRepr, id) {
+            $(id).append('<option value=' + newID + ' selected >' + newRepr + '</option>')
+            win.close();
+        }
+
+        </script>
+    <script type="text/javascript">
+        $("#edit_author").click(function(){
+            author_name = $("#id_author option:selected").text();
+            var data = {"author_name":author_name};
+            $.ajax({
+                type : 'GET',
+                url :  '/author/ajax/get_author_id',
+                data : data,
+                success : function(data){
+                    var url = "/author/" + data['author_id'] + "/edit/";
+                    showEditPopup(url);
+                },
+                error: function(data) {
+                  alert("Something Went Wrong");
+                }
+            });
+        })
+    </script>
+{% endblock %}
+{% block center %}
+    <div class="contentmark">
+    {{ post.content }}
+    </div>
+    {% if blog_detail %}
+        <div class="ui card">
+            <div class="content">
+                <i class="right floated like icon"></i>
+                <i class="right floated star icon"></i>
+                <div class="header">{{ post.title }}</div>
+                <div class="description">
+                    <div class="contentmark">
+                        {{ post.content }}
+                    </div>
+
+                </div>
+            </div>
+            <div class="extra content">
+            <span class="left floated like">
+              <i class="like icon"></i>
+              Like
+            </span>
+            <span class="right floated star">
+              <i class="star icon"></i>
+              Favorite
+            </span>
+          </div>
+        </div>
+        <a href="{% url 'blog_edit' post.slug %}" class="ui edit button">edit </a>
+        <div class="ui comments">
+                          <h3 class="ui dividing header">Comments</h3>
+                          {% for comment in comments %}
+                              <div class="comment">
+                                  <div class="content">
+                                      <a class="author">{{ comment.user.username }}</a>
+                                      <div class="metadata">
+                                          <span class="date">{{ comment.timestamp|timesince }} ago</span>
+                                      </div>
+                                      <div class="text">
+                                          {{ comment.content }}
+                                      </div>
+                                      <div class="actions">
+                                <a class="reply">Reply</a>
+                              </div>
+                                  </div>
+                              </div>
+                          {% endfor %}
+
+                    </div>
+
+    {% else %}
+    <div class="row">
+        <div class="ui header">
+            Όλα τα Posts
+        </div>
+        <div class="ui segments">
+            {% for post in posts %}
+                <div class="ui segment">
+                    <a href="{% url 'blog_detail' post.slug %}" class="ui header">{{ post.title }}</a>
+                    <div class="ui comments">
+                          <h3 class="ui dividing header">Comments</h3>
+                          {% for comment in comments %}
+                              <div class="comment">
+                                  <div class="content">
+                                      <a class="author">{{ comment.user.username }}</a>
+                                      <div class="metadata">
+                                          <span class="date">{{ comment.timestamp|timesince }} ago</span>
+                                      </div>
+                                      <div class="text">
+                                          {{ comment.content }}
+                                      </div>
+                                      <div class="actions">
+                                <a class="reply">Reply</a>
+                              </div>
+                                  </div>
+                              </div>
+                          {% endfor %}
+
+                    </div>
+                </div>
+                <div class="ui dividing segment"></div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block left_side %}
+    <div class="row">
+    <div class="form">
+    {% if create %}
+        <form method="post" enctype="multipart/form-data" class="ui small form">{% csrf_token %}
+         {{ form }}
+        <input type="submit" class="ui green button">
+        </form>
+    {% else %}
+        <a href="{% url 'blog_create' %}" class="ui green button">Δημιουργία</a>
+    {% endif %}
+    </div>
+    <a href="{% url 'AuthorCreate' %}" id="add_author" onclick="return showAddPopup(this);">Add Category</a>
+        <a id="edit_author" style="cursor: pointer; cursor: hand;"><img src = "{% static '/images/icon-changelink.svg' %}"></a>
+    </div>
+
+{% endblock %}
+
+
+{% block right_side %}
+    <div class="row ">
+    {% if create %}
+        <div class="ui card">
+            <div class="content">
+                <i class="right floated like icon"></i>
+                <i class="right floated star icon"></i>
+                <div id='my_title' class="header">{{ post.title }}</div>
+                <div class="description">
+                    <div class="contentmark">
+                        {{ post.content }}
+                    </div>
+
+                </div>
+            </div>
+            <div class="extra content">
+            <span class="left floated like">
+              <i class="like icon"></i>
+              Like
+            </span>
+            <span class="right floated star">
+              <i class="star icon"></i>
+              Favorite
+            </span>
+          </div>
+        </div>
+    {% else %}
+        <a href="{% url 'blog_create' %}" class="ui green button">Δημιουργία</a>
+    {% endif %}
+    </div>
+
+{% endblock %}

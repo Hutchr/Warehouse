@@ -1,0 +1,66 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+
+    <div class="ui segments">
+        <div  style="text-align: center" class="ui blue inverted header segment">
+            Πληροφορίες
+        </div>
+        <div class="ui horizontal segments">
+            <div style="width:50%;" class="ui  segments">
+                <div  style="text-align: center" class="ui red inverted header segment">
+                    Κόστος
+                </div>
+                <div class="ui segment">
+                    Κόστος Ημέρας {{ day_cost|floatformat:2 }} €
+                </div>
+                <div class="ui segment">
+                    Κόστος Μήνα {{ month_cost|floatformat:2 }} €
+                </div>
+
+
+
+            </div>
+            <div style="width:50%;" class="ui segments">
+                <div  style="text-align: center" class="ui green inverted header segment">
+                    Έσοδα
+                </div>
+                <div class="ui segment">
+                    Έσοδα Ημέρας {{ day_income|floatformat:2 }} €
+                </div>
+                <div class="ui segment">
+                    Έσοδα Μήνα {{ month_income|floatformat:2}} €
+                </div>
+
+            </div>
+
+        </div>
+        <div class="ui divider segment"></div>
+        <div class="ui segment">
+            <table class="ui table segment">
+                <thead>
+                    <tr>
+                        <th>Τίτλος</th>
+                        <th>Κόστος Πωληθέντων</th>
+                        <th>Αξία Πωληθέντων</th>
+                        <th>Είσπραξη</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in day_orders %}
+                        <tr>
+                            <td>{{ ele.title|truncatechars:20 }}</td>
+                            <td>{{ ele.total_cost }} €</td>
+                            <td>{{ ele.value }} €</td>
+                            <td>{{ ele.paid_value }} €</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock %}

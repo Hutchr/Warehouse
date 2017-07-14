@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="gr">
+
+<head>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="robots" content="all,follow">
+    <meta name="googlebot" content="index,follow,snippet,archive">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Obaju e-commerce template">
+    <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">
+    <meta name="keywords" content="">
+
+    {% block seo %}
+        <title>{{ welcome_page.title }}</title>
+        <meta name="keywords" content="{{ welcome_page.seo_keywords }}">
+        <meta name="description" content="{{ welcome_page.seo_description }}">
+    {% endblock %}
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
+    <!-- styles -->
+    <link href="{% static 'obaju/css/font-awesome.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/owl.carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'obaju/css/owl.theme.css' %}" rel="stylesheet">
+
+    <!-- theme stylesheet -->
+    <link href="{% static 'obaju/css/style.default.css' %}" rel="stylesheet" id="theme-stylesheet">
+
+    <!-- your stylesheet with modifications -->
+    <link href="{% static 'obaju/css/custom.css' %}" rel="stylesheet">
+
+    <script src="{% static 'obaju/js/respond.min.js' %}"></script>
+
+    <link rel="shortcut icon" href="favicon.png">
+
+
+
+</head>
+
+<body>
+
+    <!-- *** TOPBAR ***
+ _________________________________________________________ -->
+    <div id="top">
+        <div class="container">
+            <div class="col-md-6 offer" data-animate="fadeInDown">
+                <a href="{{ offer.url }}" class="btn btn-success btn-sm" data-animate-hover="shake">{{ offer.title }}</a>  <a href="{{ offer.url }}">{{ offer.text }}</a>
+            </div>
+            <div class="col-md-6" data-animate="fadeInDown">
+                <ul class="menu">
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'costumer_page_order' %}">{{ user.username }}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'log_out' %}">Αποσύνδεση</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#login-modal">{{ welcome_page.login_text }}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'register_page' %}">Σύνδεση</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="{% url 'info_page' %}">{{ welcome_page.info }}</a>
+                    </li>
+                    <li><a href="#">{{ welcome_page.phone_number }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="Login">Σύνδεση Χρήστη</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form  method="post">{% csrf_token %}
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email-modal" id="email-modal" placeholder="Όνομα Χρήστη">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password-modal" id="password-modal" placeholder="Κωδικός">
+                            </div>
+
+                            <p class="text-center">
+                                <button class="btn btn-primary"><i class="fa fa-sign-in"></i> Σύνδεση</button>
+                            </p>
+                        </form>
+                        <p class="text-center text-muted">Δεν έχετε εγγραφεί ακόμα</p>
+                        <p class="text-center text-muted"><a href="{% url 'register_page' %}"><strong>Εγγραφείτε τώρα</strong></a>! Είναι εύκολο &nbsp;και έχετε πρόσβαση στην παρακολούθηση παραγγελίας και στο ιστορικό σας</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- *** TOP BAR END *** -->
+
+    <!-- *** NAVBAR ***
+ _________________________________________________________ -->
+
+    <div class="navbar navbar-default yamm" role="navigation" id="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand home" href="/" data-animate-hover="bounce">
+                    <img src="{{ welcome_page.logo.url }}" alt="Obaju logo" class="hidden-xs">
+                    <img src="{{ welcome_page.logo_small.url }}" alt="Obaju logo" class="visible-xs"><span class="sr-only">Obaju - go to homepage</span>
+                </a>
+                <div class="navbar-buttons">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#search">
+                        <span class="sr-only">Toggle search</span>
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <a class="btn btn-default navbar-toggle" href="{% url 'basket' %}">
+                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">3 προϊόντα</span>
+                    </a>
+                </div>
+            </div>
+            <!--/.navbar-header -->
+            <div class="navbar-collapse collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="active"><a href="{% url 'offers_page' %}">Προσφορές!</a>
+                    </li>
+                    {% for category in categories %}
+                        <li class="dropdown yamm-fw">
+                            <a href="{% url 'category_site' category.slug %}" class="dropdown-toggle"  data-hover="dropdown" data-delay="200">{{ category.title }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                <div class="yamm-content">
+                                    <div class="row">
+                                        {% for cat in category.categorysite_set.all %}
+                                        <div class="col-sm-3">
+                                            <h5><a href="{% url 'category_site' cat.slug %}">{{ cat.title }}</a> </h5>
+                                            <ul>
+                                                {% for item in cat.categorysite_set.all %}
+                                                    <li>
+                                                    <a href="{% url 'category_site' item.slug %}">{{ item.title }}</a>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <!-- /.yamm-content -->
+                            </li>
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+            <div class="navbar-buttons">
+                <div class="navbar-collapse collapse right" id="basket-overview">
+                    {% if cart_items %}
+                    <a href="{% url 'basket' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">{{ cart_items.count }} προϊόντα</span></a>
+                    {% else %}
+                        <a href="{% url 'basket' %}" class="btn btn-primary navbar-btn"><i class="fa fa-shopping-cart"></i><span class="hidden-sm">0 προϊόντα</span></a>
+                    {% endif %}
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <!--/.nav-collapse -->
+                <div class="navbar-collapse collapse right" id="search-not-mobile">
+                    <button type="button" class="btn navbar-btn btn-primary" data-toggle="collapse" data-target="#search">
+                        <span class="sr-only">Toggle search</span>
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse clearfix" id="search">
+                <form autocomplete="off" class="navbar-form" method="POST">{% csrf_token %}
+                    <div class="input-group">
+                        <div class="ui icon input">
+                            <input  class="form-control prompt" id="search_pro" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                        </div>
+                        <span class="input-group-btn">
+                            <button  class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+
+                    </div>
+                    <div class="list-group wizard-menu">
+                        <ul class="result" id="results_ul">
+                        </ul>
+                    </div>
+                    <div>
+                    </div>
+                </form>
+            </div>
+            <!--/.nav-collapse -->
+
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /#navbar -->
+    <!-- *** NAVBAR END *** -->
+    <div id="all">
+    {% block content %}
+        <div id="content">
+            <div class="container">
+                <div class="col-md-12">
+                    <div id="main-slider">
+                        {% for banner in banners %}
+                        <div class="item">
+                            <img src="{{ banner.image.url }}" alt="" class="img-responsive">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- /#main-slider -->
+                </div>
+            </div>
+            <!-- *** ADVANTAGES HOMEPAGE ***
+ _________________________________________________________ -->
+            <div id="advantages">
+                <div class="container">
+                    <div class="same-height-row">
+                        {% for message in front_page_messages %}
+                            <div class="col-sm-4">
+                            <div class="box same-height clickable">
+                                <div class="icon"><i class="fa fa-heart"></i>
+                                </div>
+                                <h3><a href="#">{{ message.title }}</a></h3>
+                                <p>{{ message.text }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container -->
+            </div>
+            <!-- /#advantages -->
+            <!-- *** ADVANTAGES END *** -->
+            <!-- *** HOT PRODUCT SLIDESHOW ***
+ _________________________________________________________ -->
+            <div id="hot">
+                <div class="box">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <h2>Νεες Αφιξεις</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="product-slider">
+                        {% for product in last_products %}
+                            {% if product.have_size %}
+                                <div class="item">
+                                    <div class="product">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                                <div class="front">
+                                                    <a href="{% url 'product_page' product.slug %}">
+                                                        {% if product.image %}
+                                                            <img src="{{ product.image.url }}" alt="" style="text-align:center ;position: relative" class="img-responsive">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="back">
+                                                    <a href="{% url 'product_page' product.slug  %}">
+                                                        {% if product.image_back %}
+                                                            <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'product_page' product.slug %}" class="invisible">
+                                            <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="text">
+                                            <h3>
+                                                <a href="{% url 'product_page' product.slug %}">{{ product.title }}
+                                                    {% if product.color %}
+                                                        <br>{{ product.color }}
+                                                        {% else %}
+                                                        <br>
+                                                    {% endif %}
+                                                </a>
+                                            </h3>
+                                                <p class="price">
+                                                    <small>
+                                                        {% if product.brand.slug %}
+                                                            <a href="{% url 'brand_site' product.brand.slug %}">{{ product.brand.title }}</a>
+                                                        {% endif %}
+                                                        {% if product.category_site %}
+                                                            <a href="{% url 'category_site' product.category_site.slug %}"> , {{ product.category_site.title }}</a>
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+                                                {% if product.price_discount != 0 %}
+                                                    <p class="price"><del> {{ currency }} {{ product.price }}</del> {{ currency }} {{ product.price_discount }}</p>
+                                                    <a style="text-align: center;width: 100%" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                                {% else %}
+                                                    <p class="price"> {{ currency }} {{ product.price }}</p>
+                                                    <a style="text-align: center;width: 100%" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                                {% endif %}
+                                            </div>
+                                                <!-- /.text -->
+                                                {% if product.price_discount != 0 %}
+                                                    <div class="ribbon sale">
+                                                        <div class="theribbon">SALE</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}
+                                                <!-- /.ribbon -->
+                                                {% if product.tt %}
+                                                    <div class="ribbon new">
+                                                        <div class="theribbon">NEW</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                    <!-- /.ribbon -->
+                                                    <div class="ribbon gift">
+                                                        <div class="theribbon">GIFT</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}
+                                                <!-- /.ribbon -->
+                                            </div>
+                                            <!-- /.product -->
+                        </div>
+                            {% else %}
+                                <div class="item">
+                                    <div class="product">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                                <div class="front">
+                                                    <a href="{% url 'product_page' product.slug %}">
+                                                        {% if product.image %}
+                                                            <img src="{{ product.image.url }}" alt="{{ ele.title }}" class="img-responsive">
+                                                        {% else %}
+                                                             <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="{{ ele.title }}" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="back">
+                                                    <a href="{% url 'product_page' product.slug %}">
+                                                        {% if product.image_back %}
+                                                            <img src="{{ product.image_back.url }}" alt="{{ ele.title }}" class="img-responsive">
+                                                        {% else %}
+                                                             <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="{{ ele.title }}" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'product_page' product.slug %}" class="invisible">
+                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="text">
+                                            <h3>
+                                                <a href="{% url 'product_page' product.slug %}">{{ product.title }}
+                                                    {% if product.color %}
+                                                        <br>{{ product.color }}
+                                                    {% else %}
+                                                        <br>
+                                                    {% endif %}
+                                                </a>
+                                            </h3>
+                                            <p class="price">
+                                                <small>
+                                                    {% if product.brand.slug %}
+                                                            <a href="{% url 'brand_site' product.brand.slug %}">{{ product.tag_brand }}</a>
+                                                    {% else %}
+                                                        <a href="">{{ product.tag_brand }}</a>
+                                                    {% endif %}
+                                                    {% if product.category_site %}
+                                                        <br><a href="{% url 'category_site' product.category_site.slug %}"> {{ product.category_site.title|truncatechars:15 }}</a>
+                                                    {% else %}
+                                                        <a href="">{{ product.tag_category_site }}</a>
+                                                    {% endif %}
+                                                </small>
+                                            </p>
+                                            {% if product.price_discount != 0 %}
+                                                <p class="price"><del>{{ currency }} {{ product.price }}</del> {{ currency }} {{ product.price_discount }}</p>
+                                                <a  style="text-align: center; width: 100%" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                            {% else %}
+                                                <p class="price"> {{ currency }} {{ product.price }}</p>
+                                                <a  style="text-align: center; width: 100%;" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                            {% endif %}
+                                        </div>
+                                        <!-- /.text -->
+                                        {% if product.price_discount != 0 %}
+                                            <div class="ribbon sale">
+                                    <div class="theribbon">SALE</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                        {% else %}
+
+                                        {% endif %}
+                                        <!-- /.ribbon -->
+                                        {% if product.tt %}
+                                            <div class="ribbon new">
+                                    <div class="theribbon">NEW</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                            <!-- /.ribbon -->
+                                            <div class="ribbon gift">
+                                    <div class="theribbon">GIFT</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                        {% else %}
+                                {% endif %}
+                                <!-- /.ribbon -->
+                            </div>
+                                    <!-- /.product -->
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <!-- /.product-slider -->
+                </div>
+                <!-- /.container -->
+
+            </div>
+            <!-- /#hot -->
+
+            <!-- *** HOT END *** -->
+
+            <!-- *** GET INSPIRED ***
+ _________________________________________________________ -->
+            <div class="container" data-animate="fadeInUpBig">
+                <div class="col-md-12">
+                    <div class="box slideshow">
+                        <h3>Δες τις Κατηγοριες μας</h3>
+                        <p class="lead">Μεγάλη Ποικιλία.......</p>
+                        <div id="get-inspired" class="owl-carousel owl-theme">
+                            {% for banner in second_banners %}
+                            <div class="item">
+                                <a href="#">
+                                    <img src="{{ banner.image.url }}" alt="Get inspired" class="img-responsive">
+                                </a>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- *** GET INSPIRED END *** -->
+
+            <!-- *** BLOG HOMEPAGE ***
+ ___________________________________        ______________________ -->
+
+
+
+            <div class="box text-center" data-animate="fadeInUp">
+                <div class="container">
+                    <div class="col-md-12">
+                        <h3 class="text-uppercase">From our blog</h3>
+
+                        <p class="lead">What's new in the world of fashion? <a href="{% url 'blog_homepage' %}">Check our blog!</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+
+                <div class="col-md-12" data-animate="fadeInUp">
+
+                    <div id="blog-homepage" class="row">
+                        {% for post in posts %}
+                            <div class="col-sm-6">
+                            <div class="post">
+                                <h4><a href="post.html">{{ post.title }}</a></h4>
+                                <p class="author-category">By <a href="#">{{ post.user }}</a> in <a href="{% url 'blog_category' post.category.slug %}">{{ post.category.title }}</a>
+                                </p>
+                                <hr>
+                                <p class="intro">{{ post.lead_content|safe }}</p>
+                                <p class="read-more"><a href="{% url 'blog_detail' post.slug %}" class="btn btn-primary">Συνεχίστε</a>
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="col-sm-6">
+                            <div class="post">
+                                <h4><a href="post.html">Γιατί να ψωνίσετε από εμάς.</a></h4>
+                                <p class="author-category">By <a href="#">John Slim</a> in <a href="">About Minimal</a>
+                                </p>
+                                <hr>
+                                <p class="intro">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean
+                                    ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+                                <p class="read-more"><a href="post.html" class="btn btn-primary">Continue reading</a>
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /#blog-homepage -->
+                </div>
+            </div>
+            <!-- /.container -->
+
+            <!-- *** BLOG HOMEPAGE END *** -->
+
+
+        </div>
+        <!-- /#content -->
+    {% endblock %}
+        <!-- *** FOOTER ***
+ _________________________________________________________ -->
+        <div id="footer" data-animate="fadeInUp">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-6">
+                        <h4>Σελίδες</h4>
+
+                        <ul>
+                            <li><a href="{% url 'info_page' %}">Μάθετε για μας</a>
+                            </li>
+                            <li><a href="text.html">Όροι Χρήσης</a>
+                            </li>
+                            <li><a href="{% url 'faq_page' %}">FAQ</a>
+                            </li>
+                            <li><a href="contact.html">Επικοινωνίστε μαζί μας</a>
+                            </li>
+                        </ul>
+
+                        <hr>
+
+                        <h4>User section</h4>
+
+                        <ul>
+                            <li><a href="#" data-toggle="modal" data-target="#login-modal">Συνδεθείτε</a>
+                            </li>
+                            <li><a href="{% url 'register_page' %}">Δημιουργία λογαριασμού</a>
+                            </li>
+                        </ul>
+
+                        <hr class="hidden-md hidden-lg hidden-sm">
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <div class="col-md-3 col-sm-6">
+
+                        <h4>Top Κατηγορίες μας</h4>
+
+                        <h5>{{ footer.category_name_1 }}</h5>
+
+
+                        <ul>
+                            {% for ele in footer_cat %}
+                                <li><a href="{% url 'category_site' ele.title.slug %}">{{ ele.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+
+
+
+                        <hr class="hidden-md hidden-lg">
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <div class="col-md-3 col-sm-6">
+
+                        <h4>Πως θα μας βρείτε</h4>
+
+                        <p><strong>{{ eshop_identity.title }}</strong>
+                            <br>{{ eshop_identity.address }}
+                            <br>{{ eshop_identity.city }}
+                            <br>{{ eshop_identity.zip_code }}
+                            <br>{{ eshop_identity.state }}
+                            <br>
+                            <strong>{{ eshop_identity.country }}</strong>
+                        </p>
+
+                        <a href="{% url 'contact_page' %}">Επικοινωνήστε μαζί μας</a>
+
+                        <hr class="hidden-md hidden-lg">
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+
+
+                    <div class="col-md-3 col-sm-6">
+                        <h4>Γραφτείτε sto Newsletter μας</h4>
+                        <p class="text-muted">Για να βλέπετε πρώτοι τις προσφορές μας!</p>
+                        <form method="post"> {% csrf_token %}
+                            <div class="input-group">
+                                {{ newsletter_form }}
+                                <span class="input-group-btn">
+                                    <button type="submit" name="newsletter" class="btn btn-default" type="button">Εγγραφή!</button>
+                                </span>
+                            </div>
+                            <!-- /input-group -->
+                        </form>
+                        <hr>
+                        <h4>Μείνετε σε επικοινωνία</h4>
+                        <p class="social">
+                            <a href="#" class="facebook external" data-animate-hover="shake"><i class="fa fa-facebook"></i></a>
+                            <a href="#" class="twitter external" data-animate-hover="shake"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="instagram external" data-animate-hover="shake"><i class="fa fa-instagram"></i></a>
+                            <a href="#" class="gplus external" data-animate-hover="shake"><i class="fa fa-google-plus"></i></a>
+                            <a href="#" class="email external" data-animate-hover="shake"><i class="fa fa-envelope"></i></a>
+                        </p>
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#footer -->
+
+        <!-- *** FOOTER END *** -->
+        <!-- *** COPYRIGHT ***
+ _________________________________________________________ -->
+        <div id="copyright">
+            <div class="container">
+                <div class="col-md-6">
+                    <p class="pull-left">© 2017 Christos Stathakis</p>
+
+                </div>
+                <div class="col-md-6">
+                    <p class="pull-right">Template by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious.com</a>
+                         <!-- Not removing these links is part of the license conditions of the template. Thanks for understanding :) If you want to use the template without the attribution links, you can do so after supporting further themes development at https://bootstrapious.com/donate  -->
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- *** COPYRIGHT END *** -->
+    </div>
+    <!-- /#all -->
+    <!-- *** SCRIPTS TO INCLUDE ***
+ _________________________________________________________ -->
+    <script src="{% static 'obaju/js/jquery-1.11.0.min.js' %}"></script>
+    <script src="{% static 'obaju/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'obaju/js/jquery.cookie.js' %}"></script>
+    <script src="{% static 'obaju/js/waypoints.min.js' %}"></script>
+    <script src="{% static 'obaju/js/modernizr.js' %}"></script>
+    <script src="{% static 'obaju/js/bootstrap-hover-dropdown.js' %}"></script>
+    <script src="{% static 'obaju/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'obaju/js/front.js' %}"></script>
+    <script xmlns="http://www.w3.org/1999/html">
+            $(function(){
+                $('#search_pro').keyup(function() {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ajax-search/",
+                        data: {
+                            'search_text' : $('#search_pro').val(),
+                            'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                        },
+                        success: searchSuccess,
+                        dataType: 'html'
+            });
+
+        });
+
+    });
+
+    function searchSuccess(data, textStatus, jqXHR)
+    {
+        $('#results_ul').html(data);
+    }
+    </script>
+    {% block my_static %}
+
+    {% endblock %}
+</body>
+
+</html>

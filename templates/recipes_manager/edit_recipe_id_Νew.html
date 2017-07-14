@@ -1,0 +1,27 @@
+{% extends 'recipes_manager/add_product_to_recipe.html' %}
+
+
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui segment">
+            <h2 class="header">{{ recipe.title }}, Συνολικό Κόστος {{ recipe.recipe_cost }}</h2>
+        </div>
+        <div class="ui segment">
+
+                <form class="ui form" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <table>
+                        {{ form}}
+                    </table>
+                    <input class="ui green button" value="Αποθήκευση" type="submit" name="submit">
+                </form>
+
+
+        </div>
+    </div>
+
+
+
+{% endblock %}
+

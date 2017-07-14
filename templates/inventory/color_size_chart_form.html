@@ -1,0 +1,149 @@
+{% extends 'inventory/costumers_section.html' %}
+{% load staticfiles %}
+{% block my_static %}
+<script type="text/javascript">
+
+   $('.modal')
+  .modal('setting', 'closable', false)
+  .modal('show')
+;
+
+</script>
+{% endblock %}
+
+{% block content %}
+    {% if order_add_size %}
+        <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+                <div class="header">
+                    {{ product.title }}
+                </div>
+                <div class="image content">
+                    <div class="ui medium image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}">
+                        {% else %}
+                            <img src="{% static 'obaju/img/no-photo.jpg' %}">
+                        {% endif %}
+                    </div>
+                    <div class="description">
+                        <form method="post" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                            {{ form }}
+                            <table class="ui table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Νούμερο</th>
+                                        <th>Ποσότητα</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for size in sizes %}
+                                        <tr>
+                                            <td><input type="checkbox" name="check_size" value="{{ size.id }}"></td>
+                                            <td>{{ size.title }}</td>
+                                            <td><input type="number" name="{{ size.id }}" placeholder="0"> </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+
+                <div class="header">
+                    {{ title }}
+                </div>
+                <div class="image content">
+                    <div class="ui medium image">
+                        <img src="http://semantic-ui.com/images/avatar2/large/rachel.png">
+                    </div>
+                    <div class="description">
+                        <form method="post" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                            <div class="field">
+                                <label class="label">Αξία σε {{ currency }}</label>
+                                <input placeholder="{{ title.price_buy }}" value="{{ title.price_buy }}" name="price" type="number" required>
+                            </div>
+                            <div class="field">
+                                <label  class="label">'Εκπτωση σε %</label>
+                                <input name="discount" value="{{ title.order_discount }}" placeholder="{{ title.order_discount }}" type="number" required>
+                            </div>
+
+                            <div class="field">
+                                <label>ΦΠΑ</label>
+                                <select name="taxes">
+                                    <option value="c">24</option>
+                                    {% for taxes in taxes_choices %}
+                                        <option value="{{ taxes.0 }}">{{ taxes.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="field">
+                                <label>ΦΠΑ</label>
+                                <select name="unit">
+                                    {% for unit in unit_choices %}
+                                        <option value="{{ unit.id }}">{{ unit }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+
+                            <table class="ui table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Νούμερο</th>
+                                        <th>Ποσότητα</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for size in sizes %}
+                                        <tr>
+                                            <td><input type="checkbox" name="check_size" value="{{ size.id }}"></td>
+                                            <td>{{ size.title }}</td>
+                                            <td><input type="number" name="{{ size.id }}" placeholder="0"> </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

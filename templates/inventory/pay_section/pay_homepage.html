@@ -1,0 +1,176 @@
+{% extends 'index.html' %}
+
+
+{% block down_menu %}
+<div class="ui  three item bottom fixed menu">
+    <a href='/πληρωμές-εισπράξεις/'class="active item">Homepage Εξόδων</a>
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/" class="item">Αποπληρωμή Τιμολογίων</a>
+    <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/" class="item">Πάγια Έξοδα,Μισθοδοσία </a>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui icon header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Όλες οι ληξηπρόθεσμες υποχρεώσεις</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column"></div>
+    {% block center %}
+        <div class="eight wide column">
+            <div class="ui segments">
+                <div style ="text-align:center;" class="ui red inverted header segment">Τιμολόγια</div>
+                <div class="ui segment">
+                <table class="ui table segment">
+                <thead>
+                        <tr>
+                            <th>Αρ.Παραστατικού</th>
+                            <th>Προμηθευτής</th>
+                            <th>Ημερομηνία</th>
+                            <th>Κατάσταση</th>
+                            <th>Υπόλοιπο</th>
+                            <th></th>
+                        </tr>
+                </thead>
+                <tbody>
+                        {% if orders1.count > 0 %}
+                            {% for ele in orders1 %}
+                                <tr>
+                                    <td>{{ ele.code }}</td>
+                                    <td>{{ ele.vendor.title }}</td>
+                                    <td>{{ ele.date }}</td>
+                                    <td>{{ ele.get_status_display}}</td>
+                                    <td>{{ ele.ipoloipo_xreostiko|floatformat:2 }} €</td>
+                                    <td><a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/{{ ele.id }}/" class="ui green button">Αποπληρωμή</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Nothing to Show</td>
+                            </tr>
+                        {% endif %}
+                </tbody>
+            </table>
+            </div>
+            </div>
+        </div>
+        <div class="eight wide column">
+            <div class="ui segments">
+                <div style ="text-align:center;" class="ui red inverted header segment">Λογαριασμοί που λήγουν</div>
+                <div class="ui segment">
+                <table class="ui table segment">
+                    <thead>
+                        <tr>
+                            <th>Ονομασία</th>
+                            <th>Αξία</th>
+                            <th>Λογαριασμός</th>
+                            <th>Ημερομηνία Λήξης</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if log.count > 0 %}
+                            {% for ele in log %}
+                                <tr>
+                                    <td>{{ ele.title }}</td>
+                                    <td>{{ ele.price|floatformat:2 }} €</td>
+                                    <td>{{ ele.category.title }}</td>
+                                    <td>{{ ele.date }}</td>
+                                    <td><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/λογαριασμοί/πληρωμή/{{ ele.category.id }}/{{ ele.id }}/" class="ui green button">Λεπτομέριες</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Nothing to Show</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            </div>
+        </div>
+        <div class="eight wide column">
+            <div class="ui segments">
+                <div style ="text-align:center;" class="ui red inverted header segment">Αγορές/Επισκευές</div>
+                <div class="ui segment">
+                <table class="ui table segment">
+                    <thead>
+                        <tr>
+                            <th>Κατηγορία</th>
+                            <th>Ημερομηνία Λήξης</th>
+                            <th>Εταιρία</th>
+                            <th>Υπόλοιπο</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if pagia.count > 0 %}
+                            {% for ele in pagia %}
+                                <tr>
+                                    <td>{{ ele.category.title }}</td>
+                                    <td>{{ ele.date }}</td>
+                                    <td>{{ ele.person.title }}</td>
+                                    <td>{{ ele.show_remain|floatformat:2 }} €</td>
+                                    <td><a href="" class="ui green button">Λεπτομέριες</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Nothing to Show</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+
+        </div>
+        <div class="eight wide column">
+            <div class="ui segments">
+                <div style ="text-align:center;" class="ui red inverted header segment">Μισθοδοσία</div>
+                <div class="ui segment">
+                <table class="ui table segment">
+                    <thead>
+                        <tr>
+                            <th>Ονομασία</th>
+                            <th>Αξία</th>
+                            <th>Λογαριασμός</th>
+                            <th>Ημερομηνία Λήξης</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if person_log.count > 0 %}
+                            {% for ele in person_log %}
+                                <tr>
+                                    <td>{{ ele.title }}</td>
+                                    <td>{{ ele.person.title }}</td>
+                                    <td>{{ ele.show_remain|floatformat:2 }} €</td>
+                                    <td>{{ ele.day_expire }}</td>
+                                    <td><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/{{ ele.person.id }}/" class="ui green button">Λεπτομέριες</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>Nothing to Show</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    {% endblock %}
+
+{% endblock %}
+

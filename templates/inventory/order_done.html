@@ -1,0 +1,56 @@
+{% extends 'inventory/edit_order.html' %}
+
+
+
+
+{% block order_item %}
+
+
+{% endblock %}
+
+{% block table %}
+    <h3 style="color: #ffffff">Αριθμός Παραστατικού:   {{ order.code }}.<br>  Προμηθευτής:  {{ order.vendor.title }}.<br>  Ημερομηνία: {{ order.date }}</h3>
+    <p style="color: #ffffff;">Διάφορα Έξοδα: {{ order.cost_transfer }}   , ΦΠΑ: {{ order.total_taxes }}    ,Τελικό Κόστος: {{ order.total_price }}</p>
+ <div style="color: #ffffff" class="table-responsive">
+
+        <table class="table">
+            <thead>
+            <tr>
+
+                <th> Προϊον </th>
+                <th>Μ.Μ.</th>
+                <th>Ποσότητα  </th>
+                <th>Τιμή</th>
+                <th>Αξία προ έκπτωσης</th>
+                <th>Έκπτωση</th>
+                <th>Καθαρή Αξία</th>
+                <th>ΦΠΑ</th>
+
+            </tr>
+            </thead>
+                <tbody>
+                {% for ele in products %}
+                    <tr>
+                    <td>{{ ele.product.title }}</td>
+                    <td>{{ ele.unit }}</td>
+                    <td>{{ ele.qty }}</td>
+                    <td>{{ ele.price }}</td>
+                    <td>{{ ele.price_after_discount }}</td>
+                    <td>{{ ele.discount }}</td>
+                    <td>{{ ele.price_after_discount }}</td>
+                    <td>{{ ele.get_taxes_display }}</td>
+
+                  </tr>
+                {% endfor %}
+                <tr>
+                    <td><a href="/homepage/new_all/last_order/edit/{{ order.id }}"><button class="btn">Επεξεργασία</button></a></td>
+                </tr>
+
+                </tbody>
+              </table>
+
+            </div>
+
+             <a href="/homepage/new_all/"><button class="btn">Επιστροφή</button></a>
+    </div>
+{% endblock %}

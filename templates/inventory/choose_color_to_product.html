@@ -1,0 +1,55 @@
+{% extends 'inventory/add_product_to_order_NEW.html' %}
+
+
+{% block center %}
+
+    <div class="ui segments">
+        <div style="text-align: center" class="ui blue inverted header segment">
+            {{ product.title }}
+        </div>
+        <div class="ui comment segment">
+            Choose color
+        </div>
+        <div class="ui horizontal segments">
+        <div class="ui segment">
+            <table  class="ui table">
+                <thead>
+                    <tr>
+                        <th>Νέο Χρώμα</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in color %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+
+                            <td><a href="/αποθήκη/τιμολόγια/επεξεργασία-προϊόντος/add-color/{{ order.id }}/{{ product.id }}/{{ ele.id }}/" class="ui blue button">Προσθήκη Χρώματος</a> </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="ui segment">
+            <table  class="ui table">
+                <thead>
+                    <tr>
+                        <th>Χρώμα</th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in product_color %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+
+                            <td><a href="" class="ui blue button">Προσθήκη Μεγέθους</a> </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+{% endblock %}

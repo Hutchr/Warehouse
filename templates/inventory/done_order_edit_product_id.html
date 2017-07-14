@@ -1,0 +1,17 @@
+{% extends 'inventory/warehouse.html' %}
+
+{% block order_item %}
+    <div class="col-md-6">
+    <form enctype="multipart/form-data" method="post">{% csrf_token %}
+		<ul>
+            {{ form_i.as_ul }}
+        </ul>
+    <input name="submit" class="btn" type="submit" value="Αποθήκευση" />
+</form>
+</div>
+
+{% endblock %}
+
+{% block table %}
+ <a href="/homepage/new_all/last_order/{{ order_item.order.id }}"><button class="btn">'Ακυρο</button></a>
+{% endblock %}

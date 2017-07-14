@@ -1,0 +1,129 @@
+{% extends 'reports/warehouse.html' %}
+{% block down_menu %}
+
+<div class="ui five item bottom fixed menu">
+    <a href="/reports/products/" class="item">Προιόντα</a>
+    <a href="{% url 'products_flow' %}" class="item">Κίνηση Προϊόντων</a>
+    <a href="/reports/category-report/" class=" item">Κατηγορίες</a>
+    <a href="/reports/vendors/" class="active item">Προμηθευτές</a>
+    <a href="/reports/orders/" class="item">Τιμολόγια</a>
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="three column row">
+        <div class="column">
+            <div class="results_ul">
+                <ul class="result_ul" id="results_ul"></ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">{{ date_range }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column">
+            <form method="post" class="ui form">{% csrf_token %}
+                <label class="ui blue label">Επιλογή Ημερομηνίας</label>
+                <input  name="date_pick" placeholder="{{ date_pick }}" >
+                <input style="width: 100%;margin-top: 3%;" class="ui green inverted button" type="submit">
+            </form>
+        </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="eleven wide column">
+        <div  class="ui segments">
+        <div class="ui horizontal  segments">
+            <div class="ui blue inverted header segment">
+                Προμηθευτές
+            </div>
+            <div class="ui blue inverted segment">
+                <form class="ui form" method="get">
+                    <div class="ui search">
+                        <div class="ui icon input">
+                            <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="ui segment">
+            <table class="ui selectable celled structured table">
+                <thead>
+                    <tr>
+                        <th>Προμηθευτής</th>
+                        <th>Υπόλοιπο<br>Προκαταβολές</th>
+                        <th>ΑΦΜ<br>ΔΟΥ</th>
+                        <th>Τηλεφωνο<br>FAX</th>
+                        <th>Cell/email</th>
+                        <th><span >Αγορές Περιόδου</span>
+                            <br><span style="color: green">Αποπληρωμένο Ποσό</span>
+                            <br><span style="color: red">Αξία Αγορών</span>
+
+                        </th>
+                        <th>Πωλήσεις Περιόδου<br>
+                            <span style="color: green">Έσοδα Περιόδου</span><br>
+                            <span style="color: red">Κόστος Πωλ.</span></th>
+                        <th>Επιστροφές/Ελλατωματικά</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                {% for ele,value in vendors_info.items %}
+                    <tr>
+                        <td>
+                            <a href="/reports/vendors/{{ ele.id }}">{{ ele.title }}</a>
+                        </td>
+                        <td>
+                            <span style="color:red;">{{ ele.template_tag_balance }}</span>  <br>
+                            <span style="color:green">{{ ele.template_tag_remaining_deposit }}</span>
+                        </td>
+                        <td>{{ ele.afm }}<br>{{ ele.doy.title }}</td>
+                        <td>{{ ele.phone }}, {{ ele.phone1 }}<br>{{ ele.fax }}</td>
+                        <td>{{ ele.email }}</td>
+                        <td>{{ value.0|floatformat:2 }} Τεμ.
+                            <br><span style="color:green"> {{ value.2|floatformat:2 }} {{ currency }}</span>
+                            <br><span style='color:red'>{{ value.1|floatformat:2 }} {{ currency }}</span>
+                        </td>
+                        <td>{{ value.3|floatformat:2 }} Τεμ.<br><span style="color:green;">{{ value.4|floatformat:2 }} €</span>
+                            <br><span style="color:red;">{{ value.7|floatformat:2 }} {{ currency }}</span>
+                        </td>
+                        <td>{{ value.5|floatformat:2 }} Τεμ.<br> {{ value.6|floatformat:2 }} Τεμ.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+    <div class="four wide column">
+     <div style="width: 50%;margin-left: 30%" class="ui segments">
+        <div class="ui header segment">
+            ΔΟΥ
+        </div>
+        <div class="ui vertical blue inverted menu segment">
+            {% for ele in taxes_city %}
+                <div class="ui inverted blue item ">
+                    <a href="/reports/vendors-doy/{{ ele.id }}">{{ ele.title }}</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+

@@ -1,0 +1,335 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+    <script type="text/javascript">
+        $('.menu .item')
+                .tab();
+
+        $('.ui.dropdown')
+            .dropdown()
+            ;
+    </script>
+    <div class="ui segments">
+        <div class="ui blue center inverted header segment">
+            Create Eshop Order Section
+        </div>
+        <div class="ui segments">
+            <div class="ui segment">
+                <form method="post">{% csrf_token %}
+                    <div class="ui top attached menu">
+                        <div class="ui dropdown icon item">
+                            <i class="wrench icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <i class="dropdown icon"></i>
+                                    <span class="text">Κατηγορίες</span>
+                                    <div class="menu">
+                                        {% for category in categories %}
+                                            <div class="item">
+                                                <i class="dropdown icon"></i>
+                                                <span class="text"><input type="checkbox" name="main_cat" value="{{ category.id }}">{{ category.title }}</span>
+                                                <div class="menu">
+                                                    {% for ele in category.categorysiteset %}
+                                                        <div class="item">{{ ele.title }}</div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <i class="dropdown icon"></i>
+                                    <span class="text">Brand</span>
+                                    <div class="menu">
+                                        {% for brand in brands %}
+                                            <div class="item"><input type="checkbox" name="brand_name" id="brand_id" value="{{ brand.id }}">{{ brand.title }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <i class="dropdown icon"></i>
+                                    <span class="text">Color</span>
+                                    <div class="menu">
+                                        {% for brand in brands %}
+                                            <div class="item">{{ brand.title }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <input name="search_fil" id="search_fil" type="submit" class="ui blue button">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right menu">
+                            <div class="ui right aligned category search item">
+                                <div class="ui transparent icon input">
+                                    <input class="prompt" type="text" placeholder="Search animals...">
+                                <i class="search link icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui bottom attached segment">
+                        <p></p>
+                    </div>
+                </form>
+            </div>
+            <div class="ui segment">
+                <div class="ui items">
+                    {% for product in products %}
+                    <div class="item">
+                        <div class="image">
+                            <img class="tiny image" src="{{ product.image.url }}" alt="{{ product.title }}">
+                        </div>
+                        <div class="content">
+                            <a href="{% url 'eshop_add_product_auto' product.id %}" class="header">{{ product.tag_title }}</a>
+                            <div class="meta">
+                            <span>{{ product.brand }}</span>
+                            </div>
+                            <div class="description">
+                                <p>{{ product.price_site }} {{ currency }}</p>
+                            </div>
+                            <div class="extra">
+                            {{ product.notes }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block right_side %}
+    <div class="ui segments">
+        <div class="ui blue inverted header segment">
+            Πληροφορίες Παραγγελίας
+        </div>
+        <div class="ui segment">
+        <div class="ui pointing secondary menu">
+            <a class="item" data-tab="product_info ">Πληροφορίες Παραγγελίας</a>
+            <a class="item" data-tab="order_info">Στοιχεία Παραγγελίας</a>
+        </div>
+        <div class="ui tab segment active " data-tab="product_info">
+            <div class="ui segments">
+                <div class="ui  inverted header segment">
+                    Προϊόντα - Cost {{ request.session.new_order }}
+                </div>
+                <div class="ui segment">
+                    <table class="ui table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν-Κωδικός</th>
+                                <th>Τιμή- Ποσότητα</th>
+                                <th>Ποσότητα</th>
+                                <th>Επιλογές</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                                <tr>
+                                    <td><a href="" class="ui blue label">
+                                            {{ item.0.title }}
+                                            <div class="detail">{{ ele.0.description }}</div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="ui compact menu">
+                                            <a class="item">
+                                                <i class="icon euro"></i>{{ item.0.price_internet }}
+                                                <div class="floating ui green label">{{ item.1 }}</div>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td><a class="ui tag label">Αρχική Τιμή</a></td>
+                                    <td>
+                                        <div class="ui label">
+                                            <i class="delete icon"></i>
+
+                                            <a href="{% url 'eshop_delete_product' item.0.id %}" class="detail">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="ui tab segment " data-tab="order_info">
+            <div class="ui segments">
+                <div class="ui  inverted header segment">
+                   hohoho {{ request.session.new_order }}
+                </div>
+                <div class="ui segment">
+                    <table class="ui table">
+                        <thead>
+                            <tr>
+                                <th>Προϊόν-Κωδικός</th>
+                                <th>Τιμή</th>
+                                <th>Ποσότητα</th>
+                                <th>Επιλογές</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                                <tr>
+                                    <td>{{ item.0.title }}</td>
+                                    <td>{{ item.0.price_internet }}</td>
+                                    <td>{{ item.1 }}</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
+
+    <div class="ui small basic icon buttons">
+  <button class="ui button"><i class="file icon"></i></button>
+  <button class="ui button"><i class="save icon"></i></button>
+  <button class="ui button"><i class="upload icon"></i></button>
+  <button class="ui button"><i class="download icon"></i></button>
+</div>
+    </div>
+
+    <div class="ui segments">
+        <div class="ui blue inverted header segment">
+            Στοιχεία Πελάτη
+        </div>
+        <div class="ui segment">
+        {% if messages %}
+                        <div class="ui messages">
+                            <ul class="ui messages">
+                                {% for message in messages %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+            <div class="ui styled accordion">
+                <div class=" title">
+                    <i class="dropdown icon"></i>
+                    {% if request.session.current_costumer_account %}
+                       Έχετε επιλέξει τον Πελάτη... {{ current_costumer.user.username }}
+                    {% else %}
+                        Επιλογή Πελάτη Από Λίστα
+                    {% endif %}
+                </div>
+                <div class=" content">
+                    <table div class="ui small table">
+                        <thead>
+                            <tr>
+                                <th>Ονοματεπώνυμο</th>
+                                <th>Email</th>
+                                <th>Τηλέφωνα</th>
+                                <th>Διεύθυνση</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for costumer in costumers %}
+                                <tr>
+                                    <td><a style="width: 100%;" href="{% url 'eshop_add_costumer_account' costumer.id %}" class="ui blue button">{{ costumer.user.username }}</a> </td>
+                                    <td>{{ costumer.user.email }}</td>
+                                    <td>{{ costumer.cellphone }},<br>{{ costumer.phone }},<br>{{ costumer.phone1 }}</td>
+                                    <td>{{ costumer.shipping_address_1 }},<br>{{ costumer.shipping_city }} <br>TK {{ costumer.shipping_zip_code }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                        Δημιουργία Νέου Πελάτη
+                </div>
+                <div class=" content">
+                    <form method="post" class="ui form">{% csrf_token %}
+                        {{ form_new_costumer }}
+                        <input id="new_costumer" name="new_costumer" type="submit" class="ui button" tabindex="0" placeholder="Apo">
+                    </form>
+                </div>
+                <div class=" title">
+                    <i class="dropdown icon"></i>
+                       Ολοκλήρωση Παραγγελίας
+                </div>
+                <div class=" content">
+
+
+                    <form method="post">{% csrf_token %}
+
+
+                        <h4 class="ui dividing header">Τρόπος Πληρωμής</h4>
+                        <div class="field">
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="payment_name">
+                                <i class="dropdown icon"></i>
+                                {% if request.session.form_payment_method %}
+                                    <div class="item"  data-value="{{ request.session.form_payment_method }}" data-text="{{ request.session.form_payment_method }}">
+                                        {{ request.session.form_payment_method }}
+                                    </div>
+                                {% else %}
+                                    <div class="default text">Έπελεξε Τρόπο πληρωμής</div>
+                                {% endif %}
+                                <div class="menu">
+                                    {% for ele in payment_method %}
+                                        <div class="item" data-value="{{ ele.title }}" data-text="{{ ele.title }}">
+                                            <i class="visa icon"></i>
+                                            {{ ele.title }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <h4 class="ui dividing header">Τρόπος Αποστολής</h4>
+                        <div class="field">
+                            <div class="ui selection dropdown">
+                                <input type="hidden" name="shipping_name">
+                                <i class="dropdown icon"></i>
+                                {% if request.session.form_shipping %}
+                                    <div class="item"  data-value="{{ request.session.form_shipping }}" data-text="{{ request.session.form_shipping }}">
+                                        {{ request.session.form_shipping }}
+                                    </div>
+                                {% else %}
+                                    <div class="default text">Έπελεξε Τρόπο πληρωμής</div>
+                                {% endif %}
+                                <div class="menu">
+                                    {% for ele in shipping %}
+                                        <div class="item" data-value="{{ ele.title }}" data-text="{{ ele.title }}">
+                                            <i class="visa icon"></i>
+                                            {{ ele.title }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="ui dividing header">Επόμενο</h4>
+
+                        <button class="ui button">
+                          <i style="width: 50%;" class="cancel icon">Cancel </i>
+                        </button>
+                         <input type='submit' id='submit_order' name='submit_order' class="ui primary button">
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

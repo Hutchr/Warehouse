@@ -1,0 +1,111 @@
+{% extends 'my_site/index.html' %}
+
+{% block bottom_menu %}
+    <div class="ui three item bottom fixed menu">
+         <a href="{% url 'site_admin' %}" class="item">Νέες Παραγγελίες</a>
+         <a href="" class="item">Σχόλια</a>
+         <a href="{% url 'site_msg' %}" class="active item">Μηνύματα</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+            <div class="four wide column">
+                <h2 class="ui icon header">
+                    <i class="green mail icon"></i>
+                    <div class="content">
+                        Νέα Μηνύματα
+                        <div class="sub header">Δείτε τα νέα μυνήματα εδώ.</div>
+                    </div>
+                </h2>
+                <div class="ui cards">
+                    {% for msg in new_messages %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header">
+                                {{ msg.content }}
+                            </div>
+                            <div class="meta">
+                                {{ msg.user }}
+                            </div>
+                            <div class="description">
+                                {{ msg.comment_type }}
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui two buttons">
+                                <a href="" class="ui basic green button">Εκτύπωση</a>
+                                <div class="ui basic blue button">Επεξεργασία</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="six wide column">
+                <h2 class="ui icon header">
+                    <i class="green settings icon"></i>
+                    <div class="content">
+                        Προϊόντα
+                        <div class="sub header">Τα Προϊόντα που αποτελούν τις νέες παραγγελίες</div>
+                    </div>
+                </h2>
+                <div class="ui cards">
+                    {% for order in new_eshop_items %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header">
+                                {{ order.title }}
+                            </div>
+                            <div class="description">
+                                Χρώμα {{ order.color_a }} Μέγεθος {{ order.size_a }}
+                            </div>
+                            <div class="description">
+                                Τιμή Μονάδας{{ order.template_tag_price }}
+                            </div>
+                            <div class="description">
+                                Ποσότητα {{ order.qty }}
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui two buttons">
+                                <a href="{% url 'print_order' order.id %}" class="ui basic green button">Πήγαινε στην Παραγελία</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="six wide column">
+            <h2 class="ui icon header">
+                    <i class="green settings icon"></i>
+                    <div class="content">
+                        Απεσταλμένες Παραγγελίες
+                        <div class="sub header">Τα Προϊόντα που αποτελούν τις νέες παραγγελίες</div>
+                    </div>
+                </h2>
+                <div class="ui cards">
+                    {% for order in sent_eshop_orders %}
+                    <div class="card">
+                        <div class="content">
+                            <div class="header">
+                                {{ order.title }}
+                            </div>
+                            <div class="meta">
+                                {{ order.value|floatformat:2 }} €
+                            </div>
+                            <div class="description">
+                                {{ order.first_name }}  {{ order.last_name }}
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui two buttons">
+                                <a href="{% url 'print_order' order.id %}" class="ui inverted green button">Στάλθηκε</a>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endblock %}

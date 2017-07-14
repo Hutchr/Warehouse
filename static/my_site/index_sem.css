@@ -1,0 +1,170 @@
+#upper_navbar {
+    background-color:	#c2bbc3 ;
+    box-shadow: #008051;
+
+
+}
+
+#upper_navbar a{
+    color: #000000;
+}
+#upper_navbar a:hover{
+    color: #809a93;
+}
+
+
+
+#search_brand_menu{
+    background-color: 	#f1f5f7;
+    margin-top:60px;
+
+
+
+
+}
+
+#center_navbar{
+    margin-top: 180px;
+    background-color:	#c2bbc3 ;
+    box-shadow: #008051;
+
+}
+#center_navbar a{
+    color: #000000;
+}
+#center_navbar a:hover{
+    color: white;
+    background-color:#809a93 ;
+}
+
+
+
+
+#tab_main_page_menu{
+    background-color: 	#9c9664;
+}
+#tab_main_page_menu .item{
+    width: 25%;
+ }
+#tab_main_page_menu .item.active{
+    background-color: 	#809a93;
+    color: white;
+ }
+
+
+
+
+
+#tab_menu {
+    background-color: 	#f1f5f7;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.wrapper {
+	padding: 5em 0;
+	text-align: center;
+}
+.box {
+	position: relative;
+	display: inline-block;
+	margin: 0 3em;
+}
+figure,
+.shadow {
+	margin: 0;
+	padding: 0;
+	-webkit-transform: rotateX(45deg) rotateZ(-25deg);
+	transform: rotateX(45deg) rotateZ(-25deg);
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+
+figure {
+	position: relative;
+}
+figure img {
+	vertical-align: bottom;
+	-webkit-filter: grayscale(100%);
+	filter: grayscale(100%);
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+figure::before,
+figure::after {
+	content: '';
+	position: absolute;
+}
+figure::before {
+	bottom: -8px;
+	left: 0;
+	background-color: #d0d0d0;
+	width: 100%;
+	height: 16px;
+	-webkit-transform: rotateX(90deg) translateY(-8px);
+	transform: rotateX(90deg) translateY(-8px);
+}
+figure::after {
+	top: 0;
+	left: -8px;
+	width: 16px;
+	height: 100%;
+	background-color: #bbb;
+	-webkit-transform: rotateY(90deg) translateX(8px);
+	transform: rotateY(90deg) translateX(8px);
+}
+.shadow {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	box-shadow: -35px 45px 15px rgba(0,0,0,.1);
+}
+.box:hover figure,
+.box:hover .shadow {
+	-webkit-transform: rotateX(0) rotateZ(0);
+	transform: rotateX(0) rotateZ(0);
+}
+.box:hover figure img {
+	-webkit-filter: grayscale(0);
+	filter: grayscale(0);
+}
+.box:hover .shadow {
+	box-shadow: 0 5px 45px rgba(0,0,0,.2);
+}
+
+
+
+
+
+
+
+
+
+

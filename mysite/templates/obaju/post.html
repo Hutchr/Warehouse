@@ -1,0 +1,122 @@
+{% extends 'obaju/index.html' %}
+
+{% block content %}
+    <div id="content">
+            <div class="container">
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+                        <li><a href="index.html">Home</a>
+                        </li>
+                        <li><a href="{% url 'blog_homepage' %}">blog</a>
+                        </li>
+                        <li><a href="{% url 'blog_category' post.category.slug %}">{{ post.category.title }}</a>
+                        </li>
+                        <li>{{ post.title }}</li>
+                    </ul>
+                </div>
+
+                <div class="col-sm-9" id="blog-post">
+                    <div class="box">
+
+                        <h1>{{ post.title }}</h1>
+                        <p class="author-date">By <a href="#">{{ post.user.username }}</a> | {{ post.publish }}</p>
+                        <p class="lead">{{ post.lead_content|safe }}</p>
+
+                        <div id="post-content">
+                            {{ post.content|safe }}
+                        </div>
+                        <!-- /#post-content -->
+
+                        <div id="comments" data-animate="fadeInUp">
+                            <h4>{{ comments.count }} Σχόλια</h4>
+
+                            {% for comment in comments %}
+                                <div class="row comment">
+                                <div class="col-sm-3 col-md-2 text-center-xs">
+
+                                </div>
+                                <div class="col-sm-9 col-md-10">
+                                    <h5>{{ comment.user }}</h5>
+                                    <p class="posted"><i class="fa fa-clock-o"></i> {{ comment.timestamp}}</p>
+                                    <p>{{ comment.content }}</p>
+                                    {% if user.is_authenticated %}
+                                    <p class="reply"><a href="#"><i class="fa fa-reply"></i> Reply</a>
+                                    {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+
+                        </div>
+                        <!-- /#comments -->
+                        {% if user.is_authenticated %}
+                        <div id="comment-form" data-animate="fadeInUp">
+                            <h4>Leave comment</h4>
+                            <form method="post">{% csrf_token %}
+                                <div class="row" >
+                                   <div class="col-sm-6">
+                                        <div class="form-group">
+                                            {{ form_comment }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 text-right">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-comment-o"></i> Post comment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /#comment-form -->
+                        {% endif %}
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- /#blog-post -->
+
+                <div class="col-md-3">
+                    <!-- *** BLOG MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Κατηγορίες</h3>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <ul class="nav nav-pills nav-stacked">
+                                {% for cat in post_cat %}
+                                    {% if cat == post.category %}
+                                        <li class="active">
+                                            <a href="{% url 'blog_category' cat.slug %}">{{ cat.title }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li>
+                                            <a href="{% url 'blog_category' cat.slug %}">{{ cat.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <!-- *** BLOG MENU END *** -->
+
+                    <div class="banner">
+                        <a href="#">
+                            <img src="img/banner.jpg" alt="sales 2014" class="img-responsive">
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}

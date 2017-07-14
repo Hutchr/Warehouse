@@ -1,0 +1,56 @@
+{% extends 'recipes_manager/homepage.html' %}
+
+
+{% block center %}
+    <div class="ui segments">
+        <div class="ui menu segment">
+            <div class="item">Κστηγορίες</div>
+        </div>
+        <div class="ui segment">
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th>Κατηγορία</th>
+                        <th>Αριθμός Προτεριότητας</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in categories %}
+                        <tr>
+                            {% if ele.active == 'a' %}
+                            <td style='background-color:green;'>{{ ele.title }}</td>
+                            {% else %}
+                            <td style='background-color:red;'>{{ ele.title }}</td>
+                            {% endif %}
+                            <td>{{ ele.id_focus }}</td>
+                            <td><a href="/συνταγές/κατηγορίες/{{ ele.id }}" class="ui blue button">Επεξεργασία</a> </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block right_side %}
+
+<div class="ui segments">
+        <div class="ui segment">
+            <h2 class="ui green header">Νέα Κατηγορία</h2>
+        </div>
+        <div class="ui segment">
+
+                <form class="ui form" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <table>
+                        {{ form}}
+                    </table>
+                    <input class="ui green button" value="Αποθήκευση" type="submit" name="submit">
+                </form>
+
+
+        </div>
+</div>
+
+{% endblock %}

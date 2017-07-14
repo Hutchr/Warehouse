@@ -1,0 +1,24 @@
+{% extends "inventory/new_all_NEW.html" %}
+
+{% block product_area %}
+    <section class="panel b-yellow" id="2">
+
+  <article class="panel__wrapper">
+
+    <div class="panel__content">
+      <h1 class="panel__headline"><i class="fa fa-bolt"></i>&nbsp;Νέα Κατηγορία</h1>
+      <div class="panel__block"></div>
+      <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}
+      <ul>
+          {{ form_c.as_ul }}
+      </ul>
+      <input type="submit" name="submit">
+      </form>
+    </div>
+  </article>
+    <input style="align-content:center; width: 10%; background-color: #226da6; color: #ffffff;box-shadow: 1px 1px 1px 1px rgba(0, 0, 115, 0.25);" type="button" onclick="location.href='{% url 'new_all' %}';" value="Πίσω" />
+</section>
+
+
+
+{% endblock %}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% extends 'my_site/index.html' %}
+a
+{% block upper_bar %}
+        <a href="{% url 'site_admin' %}" class=" item">Homepage</a>
+        <a href="{% url 'orders_admin' %}" class="item">Παραγγελίες</a>
+        <a class="item">Πελάτες</a>
+        <a href="{% url 'site_control' %}" class="active item">Διαχείρηση Site</a>
+        <a href="{% url 'blog_admin' %}" class="item">Διαχείρηση Blog</a>
+        <a href="/home" class="right item">Επιστοφή στην αποθήκη</a>
+{% endblock %}
+
+
+
+
+{% block bottom_menu %}
+    <div class="ui five item bottom fixed menu">
+    <a href="{% url 'site_control' %}" style="background-color: teal" class="active item">Welcome Page</a>
+    <a href="{% url 'site_control_banners' %}" style="background-color: #0076ad" class="item">Banners</a>
+    <a href="{% url 'site_control_newsletter' %}" style="background-color: green" class="item">NewsLetter</a>
+    <a href="{% url 'site_control_contact' %}"  class="item">Contact Page</a>
+    <a href="" class="item">Κεντρική Σελίδα</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <h2 style="align-content: center; text-align: center;margin-left: 45%"  class="ui header">
+            <i class="folder open icon"></i>
+            <div class="content">
+                Banners
+                <div class="sub header">Manage your Banners</div>
+            </div>
+        </h2>
+    </div>
+    <div  class="eight wide column">
+        <h2 style="margin-left: 2%" class="ui header">
+            <i class="blue edit icon"></i>
+            <div class="content">
+                Front Banners
+                <div class="sub header">Επεξεργασία, Δημιουργία η Διαγραφή των Banner</div>
+            </div>
+        </h2>
+        <div class="ui items">
+            {% for banner in banners %}
+                  <div class="item">
+                    <div class="ui medium image">
+                      <img src="{{ banner.image.url }}">
+                    </div>
+                    <div class="middle aligned content">
+                      <div class="header">
+                        {{ banner.title }}
+                      </div>
+                      <div class="description">
+                          <i class="external square icon"></i>
+                          <span>{{ banner.href }}</span>
+                          <br>
+                          <i class="file outlline icon"></i>
+                          <span>{{ banner.alt }}</span>
+                          <br>
+                      </div>
+                      <div class="extra">
+                        <div class="ui right floated buttons">
+                            <a target="_blank" href="/admin/mysite/banners/{{ banner.id }}/delete/" class="ui negative button">Διαγραφή</a>
+                            <div class="or"></div>
+                            <a target="_blank" href="/admin/mysite/banners/{{ banner.id }}/change/" class="ui blue button">Επεξεργασία</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
+            <div class="item">
+                <div class="middle aligned content">
+                      <div class="header"></div>
+                      <div class="description"><span></span></div>
+                      <div class="extra">
+                        <a target="_blank" href="/admin/mysite/banners/add/" class="ui right floated green button">
+                            <i class="add icon"></i>
+                            Δημιουργία
+                        </a>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="eight wide column">
+         <h2 style="margin: 2%" class="ui header">
+            <i class="blue edit icon"></i>
+            <div class="content">
+                Bottom Banners
+                <div class="sub header">Επεξεργασία, Δημιουργία η Διαγραφή των Banner</div>
+            </div>
+        </h2>
+        <div class="ui items">
+            {% for banner in second_banners %}
+                  <div class="item">
+                    <div class="ui medium image">
+                      <img src="{{ banner.image.url }}">
+                    </div>
+                    <div class="middle aligned content">
+                      <div class="header">
+                        {{ banner.title }}
+                      </div>
+                      <div class="description">
+                          <i class="external square icon"></i>
+                          <span>{{ banner.href }}</span>
+
+                      </div>
+                      <div class="extra">
+                        <div class="ui right floated buttons">
+                            <a target="_blank" href="/admin/mysite/secondsectonbanners/{{ banner.id }}/delete/" class="ui negative button">Διαγραφή</a>
+                            <div class="or"></div>
+                            <a target="_blank" href="/admin/mysite/secondsectonbanners/{{ banner.id }}/change/" class="ui blue button">Επεξεργασία</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            {% endfor %}
+            <div class="item">
+                <div class="middle aligned content">
+                      <div class="header"></div>
+                      <div class="description"><span></span></div>
+                      <div class="extra">
+                        <a target="_blank" href="/admin/mysite/secondsectonbanners/add/" class="ui right floated green button">
+                            <i class="add icon"></i>
+                            Δημιουργία
+                        </a>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 5%"></div>
+
+{% endblock %}

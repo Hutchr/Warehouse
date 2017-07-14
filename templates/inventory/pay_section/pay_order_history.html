@@ -1,0 +1,20 @@
+{% extends 'inventory/pay_section/pay_orders.html' %}
+
+
+
+{% block right_side %}
+    <h3 class="ui header" xmlns="http://www.w3.org/1999/html">Ιστορικό</h3>
+    <div class="ui styled fluid accordion">
+    {% for ele in pay_orders %}
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Ημερομηνία: {{ ele.date  }} Ποσό: {{ ele.value }}
+          </div>
+          <div class="content">
+            <p class="transition hidden"><span style="color: #0084b4">Απόδειξη:    </span> {{ ele.receipt }}.<br>
+                <span style="color: #0084b4">Τρόπος Πληρωμής:   </span>  {{ ele.get_way_of_pay_display }}</p>
+          </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}

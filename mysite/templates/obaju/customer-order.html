@@ -1,0 +1,141 @@
+{% extends 'obaju/index.html' %}
+
+{% block content %}
+    {% load staticfiles %}
+    <div id="content">
+            <div class="container">
+
+                <div class="col-md-12">
+
+                    <ul class="breadcrumb">
+                        <li><a href="index.html">Home</a>
+                        </li>
+                        <li><a href="#">My orders</a>
+                        </li>
+                        <li>Order # 1735</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-md-3">
+                    <!-- *** CUSTOMER MENU ***
+ _________________________________________________________ -->
+                    <div class="panel panel-default sidebar-menu">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Customer section</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked">
+                               <li class="active">
+                                    <a href="{% url 'costumer_page_order' %}"><i class="fa fa-list"></i>Οι Παραγγελίες μου</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'costumer_ask_page' %}"><i class="fa fa-heart"></i>Λίστα επιμυθιών<br>Ερωτήσεις.</a>
+                                </li>
+                                <li >
+                                    <a href={% url 'costumer_page' %}><i class="fa fa-user"></i> Επιλογές</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'log_out' %}"><i class="fa fa-sign-out"></i> Αποσύνδεση</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.col-md-3 -->
+
+                    <!-- *** CUSTOMER MENU END *** -->
+                </div>
+
+                <div class="col-md-9" id="customer-order">
+                    <div class="box">
+                        <h1>Παραγγελία {{ order.title }}</h1>
+                        <p class="lead">Η παραγγελία {{ order.title }} επεξεργάστηκε στις <strong>{{ order.day_added }}</strong>
+                            και αυτή την στιγμή βρίσκετε στην κατάσταση <strong> {{ order.status.title }}</strong>.</p>
+                        <p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>
+                        <hr>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Προϊόν</th>
+                                        <th>Χρώμα - Μέγεθος</th>
+                                        <th>Ποσότητα</th>
+                                        <th>Τιμή Μονάδας</th>
+                                        <th>Συνολική Αξία</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for product in order_items %}
+                                        <tr>
+                                            <td>
+                                                {% if product.title.image %}
+                                                <a href="#">
+                                                    <img src="{{ product.title.image.url }}" alt="White Blouse Armani">
+                                                </a>
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="White Blouse Armani">
+                                                {% endif %}
+                                            </td>
+
+                                            <td><a href="#">{{ product.title }}</a></td>
+                                             <td>
+                                                {{ product.title.color_a }}
+                                            </td>
+                                            <td>{{ product.qty }}</td>
+                                            <td>{{ product.template_tag_price }}</td>
+                                            <td>{{ product.template_tag_total_price }}</td>
+
+                                        </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="5" class="text-right">Αξία Προϊόντων</th>
+                                        <th> €{{ order.show_value_of_products }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="5" class="text-right">Μεταφορικά </th>
+                                        <th> €{{ order.shipping_cost }}</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th colspan="5" class="text-right">Σύνολο</th>
+                                        <th> €{{ order.value }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+                        <!-- /.table-responsive -->
+
+                        <div class="row addresses">
+                            <div class="col-md-6">
+                                <h2>Διεύθυνση Τιμολόγησης</h2>
+                                <p>{{ order.first_name }} {{ order.last_name }}
+                                    <br>{{ order.address }}
+                                    <br>{{ order.city }}
+                                    <br>ΤΚ {{ order.zip_code }}
+                                    <br>Ελλάδα
+                                    </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h2>Διεύθυνση Παράδοσης</h2>
+                                <p>{{ order.first_name }} {{ order.last_name }}
+                                    <br>{{ order.address }}
+                                    <br>{{ order.city }}
+                                    <br>ΤΚ {{ order.zip_code }}
+                                    <br>Ελλάδα
+                                    </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.container -->
+        </div>
+{% endblock %}
+

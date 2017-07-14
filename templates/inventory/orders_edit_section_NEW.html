@@ -1,0 +1,209 @@
+{% extends 'inventory/homepageNew.html' %}
+
+
+
+{% block my_static %}
+ <script>
+        $(function(){
+            $('#search_pro').keyup(function() {
+                $.ajax({
+                type: "POST",
+                url: "/αποθήκη/τιμολόγια/ajax-search/",
+                data: {
+                    'search_text' : $('#search_pro').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: searchSuccess,
+                dataType: 'html'
+                });
+            });
+        });
+
+    function searchSuccess(data, textStatus, jqXHR)
+    {
+        $('#results_ul').html(data);
+    }</script>
+
+{% endblock %}
+
+{% block down_menu %}
+<div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="active item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column"></div>
+    <div class="two wide column">
+     <ul class="result" id="results_ul">
+        </ul>
+    </div>
+    <div class="eleven wide column">
+        <div class="ui left floated main menu">
+                <div class="header item">
+                    <h2>'Ολα τα τιμολόγια</h2>
+                </div>
+                <div class="item">
+                        <form method="POST">{% csrf_token %}
+                            <div class="ui search">
+                                <div class="ui icon input">
+                                    <input class="prompt" id="search_pro" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                                    <i class="search icon"></i>
+                                </div>
+                                <ul class="result" id="results_ul">
+                                </ul>
+                            </div>
+                        </form>
+                </div>
+                <a href="/αποθήκη/τιμολόγια/νέο" class="popup icon item" id="my_button" data-content="Προσθήκη Τιμολογίου">
+                    <i class="add square green icon"></i>
+                </a>
+        </div>
+        <table class="ui celled structured table">
+            <thead>
+            <tr>
+                <th rowspan="2"><a href="/αποθήκη/εργαλεία/table-order-by/date/{{ tools_table.id }}/">Ημερομηνία</a> </th>
+                <th rowspan="2"><a href="/αποθήκη/εργαλεία/table-order-by/code/{{ tools_table.id }}/">Αριθμός Παραστατικού</a></th>
+                <th rowspan="2"><a href="/αποθήκη/εργαλεία/table-order-by/vendor/{{ tools_table.id }}/">Προμηθευτής</a></th>
+                <th rowspan="2"><a href="/αποθήκη/εργαλεία/table-order-by/status/{{ tools_table.id }}/">Κατάσταση</a></th>
+                <th colspan="3"><a href="/αποθήκη/εργαλεία/table-order-by/edit/{{ tools_table.id }}/">Αξία</a></th>
+                <th rowspan="2"></th>
+            </tr>
+            <tr>
+                <th>Καθαρή Αξία</th>
+                <th>ΦΠΑ</th>
+                <th>Τελική Αξία</th>
+            </tr>
+        </thead>
+            <tbody>
+        {% for ele in orders %}
+            <tr>
+                <td>{{ ele.date }}</td>
+                <td>{{ ele.code }}</td>
+                <td>{{ ele.vendor.title }}</td>
+                <td class="right aligned">{{ ele.get_status_display }}</td>
+                <td class="center aligned">{{ ele.total_price_after_discount|floatformat:2 }} €</td>
+                <td>{{ ele.total_taxes|floatformat:2 }} €</td>
+                <td>{{ ele.total_price|floatformat:2 }} €</td>
+                <td>
+                    <a class="popup icon item" data-content='Επεξεργασία' href="/αποθήκη/τιμολόγια/επεξεργασία/{{ ele.id }}">
+                        <i class="edit icon"></i>
+                    </a>
+
+                </td>
+            </tr
+            {% endfor %}
+
+        </tbody>
+        </table>
+        <div class="pagination">
+        <span class="step-links">
+            {% if contacts.has_previous %}
+                <a href="?page={{ contacts.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ contacts.number }} of {{ contacts.paginator.num_pages }}.
+            </span>
+
+            {% if contacts.has_next %}
+                <a href="?page={{ contacts.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+    </div>
+    <div class="three wide column">
+        <div  class="ui segments">
+        <div class="ui segment">
+            <div class="ui left  main menu">
+                <div class="header item">
+                    <h4>Τελευταίο Τιμολόγιο</h4>
+                </div>
+                <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ last_order.id }}/">
+                <div class="ui icon button">
+                    <i class="file green big icon"></i>
+                </div>
+                </a>
+            </div>
+        </div>
+        <div style="text-align: center" class="ui blue header inverted segment">
+            Φίλτρα
+        </div>
+        <div  class="ui segments">
+            <form method="post" class="ui form">{% csrf_token %}
+                <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if request.session.ware_order_ven %}
+                            {% for ele in request.session.ware_order_ven %}
+                                <label class="ui blue label">{{ ele.title }}</label>
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε Προμηθευτή
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+
+                        {% for ele in vendors %}
+                            {% if ele.title in request.session.ware_order_ven %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor_name" value="{{ ele.title }}" checked>
+                                    <label >{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor_name" value="{{ ele.title }}">
+                                    <label >{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <input type="submit" class="ui green button" name='ven' id="ven" placeholder="Search">
+            </form>
+            <a href="/clear-sessions/" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui red button">
+                <i class="trash icon"></i>
+                Καθαρισμός Φίλτρων
+            </a>
+
+        </div>
+        <div class="ui divider"></div>
+    <div class="ui blue inverted header segment">
+        Order by {{ tools_table.table_order_by  }},<br>Ανακατασκευή Τραπεζιου
+    </div>
+    <div class="ui segment">
+        <form method="post" class="ui form">{% csrf_token %}
+            {{ form }}
+            <input type="submit" id="table_form" name="table_form" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui green button">
+        </form>
+    </div>
+    </div>
+
+    </div>
+
+
+
+{% endblock %}
+
+

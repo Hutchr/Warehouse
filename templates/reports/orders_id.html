@@ -1,0 +1,249 @@
+{% extends 'reports/orders.html' %}
+
+{% block down_menu %}
+    <div class="ui four item bottom fixed menu">
+    <a href="/reports/products/" class="item">Προιόντα</a>
+    <a href="/reports/category-report/" class=" item">Κατηγορίες</a>
+    <a href="/reports/vendors/" class=" item">Προμηθευτές</a>
+    <a href="/reports/orders/" class="active item">Τιμολόγια</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="three column row">
+        <div class="column">
+            <div class="results_ul">
+                <ul class="result_ul" id="results_ul"></ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">Manage your account settings and set e-mail preferences.</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column">
+            <a  class="ui red button" href="{% url 'report_order_edit' order.id %}">Επεξεργασία Τιμολογίου</a>
+            <label class="ui warning">
+                <br>Προσοχή !!! Σε περίπτωση επεξεργασίας εάν έχετε κάνει πληρωμές θα διαγραφούν.</label>
+        </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="eleven wide column">
+        <div  class="ui segments">
+        <div style="text-align: center;" class="ui inverted header blue segment">
+            Αρ.Παραστατικού {{ order.code }}
+        </div>
+        <div class="ui segment">
+            <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>Προιόν</th>
+                            <th>Μ.Μ - Ποσότητα</th>
+
+                            <th>Τιμή</th>
+                            <th>Εκπτωση-Φπα</th>
+
+                            <th>Τελική Τιμή</th>
+                            <th>Συνολική Αξία</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for ele in products %}
+                        <tr>
+                            <td>{{ ele.product.title }}</td>
+                            <td>{{ ele.unit.name }}--- {{ ele.qty|floatformat:2  }}</td>
+                            <td>{{ ele.price|floatformat:2  }} €</td>
+                            <td>{{ ele.discount }} % - {{ ele.get_taxes_display }}% </td>
+                            <td class="positive"> {{ ele.price_after_taxes|floatformat:2  }} €</td>
+                            <td class="active">{{ ele.total_value|floatformat:2  }} €</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+        <div class="ui divider segment"></div>
+        <div style="text-align: center;" class="ui header blue segment">
+            Εντολές Πληρωμής
+        </div>
+        <div class="ui segment">
+            <table class="ui table">
+                <thead>
+                <tr>
+                    <th>Ημερομηνία</th>
+                    <th>Απόδειξη</th>
+                    <th>Τρόπος Πληρωμής</th>
+                    <th>Τιμή</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ele in pay_info %}
+                    <tr>
+                        <td>{{ ele.date }}</td>
+                        <td>{{ ele.receipt }}</td>
+                        <td>{{ ele.payment_method.title }}</td>
+                        <td>{{ ele.value|floatformat:2 }} €</td>
+                    </tr>
+                {% endfor %}
+                {% for ele in deposit %}
+                    <tr>
+                        <td>{{ ele.day_added }}</td>
+                        <td>{{ ele.title }}</td>
+                        <td>{{ ele.payment_method.title }}</td>
+                        <td>{{ ele.value|floatformat:2 }} €</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    </div>
+    <div class="four wide column">
+        <div class="ui segments">
+        <div style='text-align: center' class="ui inverted blue segment">Πληροφορίες</div>
+
+
+        <div class="ui fluid horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        {{order.code }}
+                    </div>
+                    <div class="label">
+                        Κωδικός Τιμολογίου
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment"></div>
+
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        {{ order.date }}
+                    </div>
+                    <div class="label">
+                        Ημερομηνία
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider segment"></div>
+
+
+        <div style='text-align: center' class="ui header blue segment">Στοιχεία</div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        {{ order.vendor.title }}
+                    </div>
+                    <div class="label">
+                        Προμηθευτής
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                       <i class="euro icon"></i> {{ order.vendor.balance|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Υπόλοιπο Προμηθευτή
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro red icon"></i> {{ order.total_price_no_discount|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Καθαρή Αξία
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro icon"></i> {{ order.total_discount|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Ποσό 'Εκπτωσης
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro icon"></i> {{ order.cost_transfer|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Μεταφορικά/Επιπλέον Έξοδα
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style='text-align: center' class="ui blue header segment">Στοιχεία Πώλησης</div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro icon"></i> {{ order.total_taxes|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Φπα
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro green icon"></i> {{ order.total_price|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Συνολική Αξία
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+
+                <div class="ui mini red inverted statistic">
+                    <div class="value">
+                        <i class="euro red icon"></i> {{ order.ipoloipo_xreostiko|floatformat:2 }}
+                    </div>
+                    <div style="color:red;" class="label">
+                        Υπόλοιπο
+                    </div>
+                </div>
+            </div>
+
+        </div>
+		{% if order.status == 'a' %}
+        <div style='text-align: center' class="ui inverted green segment">{{ order.get_status_display }}</div>
+		{% elif order.status == 'p' %}
+        <div style='text-align: center' class="ui inverted red segment">{{ order.get_status_display }}</div>
+		{% else %}
+		<div style='text-align: center' class="ui inverted blue segment">{{ order.get_status_display }}</div>
+		{% endif %}
+    </div>
+    </div>
+
+
+
+	
+	
+
+
+
+{% endblock %}
+
+

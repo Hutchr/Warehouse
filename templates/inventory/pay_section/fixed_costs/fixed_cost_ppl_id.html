@@ -1,0 +1,60 @@
+{%  extends 'inventory/pay_section/fixed_costs/homepage.html'%}
+
+
+{% block center %}
+    {% if messages %}
+        <div class="ui green message">
+
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+        </div>
+     {% endif %}
+
+    <div class="ui segments">
+        <div style ='text-align: center;'  class="ui inverted blue header segment">
+            <h3 style="text-align: center">{{ occup.title }},     Συνολική οφειλή {{ occup.show_remain|floatformat:2 }}  €</h3>
+            <a  class='ui green button' style="color: white;" href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/προσθήκη/{{ occup.id }}/">Προσθήκη Υπαλλήλου<i class="green arrow right icon"></i></a>
+        </div>
+    </div>
+
+    <div class="ui cards">
+        {% for ele in ppl %}
+            <div class="card">
+                <div class="content">
+                    <div class="header">
+                        {{ ele.title }}
+                    </div>
+                    <div class="meta">
+                        {{ ele.occupation.title }}
+                    </div>
+          <div class="description">
+            Συνολική Οφειλή : {{ ele.salary_paid|floatformat:2 }} €
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui two buttons">
+            <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/edit/{{ occup.id }}/{{ ele.id }}" class="ui basic green button">Επεξεργασία</a>
+            <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/d-energy/{{ occup.id }}/{{ ele.id }}" class="ui basic red button">Απενεργοποίηση</a>
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui two buttons">
+            <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/{{ occup.id }}/{{ ele.id }}" class="ui basic blue button">Προσθήκη Εντολή Πληρωμής</a>
+            <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/υπόλοιπο/{{ ele.id }}" class="ui basic green button">Αποπληρωμή</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+{% block right_side %}
+
+   <a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/προσωπικό/απενεργοποιημένο/{{ occup.id }}/"><button class="negative ui button">Απενεργοποιημένο Προσωπικό</button></a>
+
+{% endblock %}

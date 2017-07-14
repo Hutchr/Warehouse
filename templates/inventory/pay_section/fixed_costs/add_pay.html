@@ -1,0 +1,47 @@
+{% extends 'inventory/pay_section/fixed_costs/pay_remaining_cost_person.html' %}
+
+
+
+{% block right_side %}
+     <style>
+        #id_date_month{
+            width: 25%;
+            display: inline;
+        }
+        #id_date_year{
+            width: 25%;
+            display: inline;
+            padding-left: 15%;
+        }
+        #id_date_day{
+            width: 25%;
+            display: inline;
+        }
+        label{
+            display: block;
+            margin-top: 2% ;
+            font-size: larger;
+        }
+
+
+
+
+
+    </style>
+    <div class="ui segments">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            <h3>Πληρωμή {{ form_title }}</h3>
+        </div>
+
+
+
+    <div class="ui form segment">
+
+        <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input style="height:200px;width:100%;" type="submit" name="submit" class="ui red button" value="Πληρωμή"/>
+        </form>
+    </div>
+    </div>
+
+{% endblock %}

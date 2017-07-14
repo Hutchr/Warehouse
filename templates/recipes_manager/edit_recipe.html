@@ -1,0 +1,12 @@
+{% extends 'recipes_manager/add_product_to_recipe.html' %}
+
+{% block right_side %}
+    <div class="ui form">
+        <h3 class="ui header"> Προσθήκη {{ product.title }}</h3>
+        <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input type="submit" name="submit" class="ui green button" value="Προσθήκη"/>
+        </form>
+    </div>
+
+{% endblock %}

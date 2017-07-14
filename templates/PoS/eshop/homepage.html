@@ -1,0 +1,55 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+    <div style="width: 150%" class="ui segments">
+        <div class="ui blue center inverted  header segment">
+            Eshop
+        </div>
+        <div class="ui segment">
+            <a href="{% url 'eshop_new_order' %}" class="ui button">
+                Νέα Παραγγελία
+            </a>
+        </div>
+        <div class="ui horizontal segments">
+            <div style="width: 50%;" class="ui segments">
+                <div class="ui segment header">
+                    Νέες Παραγγελίες
+                </div>
+                <div class="ui segment">
+                    <table class="ui table">
+                        <thead>
+                            <tr>
+                                <th>Ημερομηνία</th>
+                                <th>Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Ποσό</th>
+                                <th>Κατάσταση</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div style="width: 50%;" class="ui segments">
+                <div class="ui segment header">
+                    Επεξεργασμένες Παραγγελίες
+                </div>
+                <div class="ui segment">
+                    <table class="ui table">
+                        <thead>
+                            <tr>
+                                <th>Ημερομηνία</th>
+                                <th>Κωδικός</th>
+                                <th>Πελάτης</th>
+                                <th>Ποσό</th>
+                                <th>Κατάσταση</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

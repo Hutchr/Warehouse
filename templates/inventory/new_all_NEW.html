@@ -1,0 +1,79 @@
+{% extends 'inventory/orders_edit_section_NEW.html' %}
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column"></div>
+    <div class="two wide column">
+        <ul class="result" id="results_ul"></ul>
+    </div>
+    <div class="eleven wide column">
+        <style>
+        #id_date_month{
+            width: 25%;
+            display: inline;
+        }
+        #id_date_year{
+            width: 25%;
+            display: inline;
+            padding-left: 15%;
+        }
+        #id_date_day{
+            width: 25%;
+            display: inline;
+        }
+        label{
+            display: block;
+            margin-top: 2% ;
+            font-size: larger;
+        }
+    </style>
+    <div class="ui segments">
+    <div style ='text-align: center' class="ui blue inverted header segment">Συμπλήρωση Φόρμας</div>
+        <div class="ui segment form">
+            <form class="myForm" method="post" enctype="application/x-www-form-urlencoded" action="">{% csrf_token %}
+                <ul>
+                    {{ form }}
+                </ul>
+                <input style="width:100%;height: 100px" type="submit" name="submit" value="Καταχώρηση" class="ui green submit button" />
+            </form>
+        </div>
+    </div>
+
+    </div>
+    <div class="three wide column">
+        <div class="ui segments">
+        <div class="ui segment">
+            {% if last_order %}
+            <a class="ui green icon button" href="/αποθήκη/τιμολόγια/επεξεργασία/{{ last_order.id }}/">Τελευταίο Τιμολόγιο
+
+            </a>
+            {% endif %}
+        </div>
+        <div class="ui segment">
+            <a href="/αποθήκη/τιμολόγια/προμηθευτής/" class="ui blue button">Νεός Προμηθευτής</a>
+        </div>
+         <div class="ui segment">
+            <a href="/αποθήκη/τιμολόγια/DOY/" class="ui blue button">ΔΟΥ</a>
+        </div>
+		 <div class="ui segment">
+            <a href="/αποθήκη/τιμολόγια/νέο/" class="ui blue button">Νέο τιμολόγιο</a>
+        </div>
+
+    </div>
+    </div>
+
+
+
+{% endblock %}
+
+

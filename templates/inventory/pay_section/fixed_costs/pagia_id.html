@@ -1,0 +1,86 @@
+{%  extends 'inventory/pay_section/fixed_costs/homepage.html'%}
+
+
+
+{% block center %}
+    {% if messages %}
+        <div class="ui green message">
+
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+        </div>
+     {% endif %}
+    <div class="ui segments">
+        <div class="ui header blue inverted segment">
+            <h3 style="text-align: center">{{ cat.title }},    Συνολική οφειλή {{ cat.show_remain|floatformat:2 }}  €</h3>
+        </div>
+        <div style="margin-top: 1%">
+            <a class="ui green button" href="/πληρωμές-εισπράξεις/πάγια-έξοδα/{{ cat.id }}/add-company/">Προσθήκη Εταιρίας</a>
+        </div>
+    </div>
+
+    <div class="ui horizontal segments">
+        <div class="ui segments">
+            <div style="text-align: center" class="ui blue inverted header segment">Εξοφλημένοι Λογαριασμοι</div>
+            <div class="ui segment">
+            <table class="ui celled structured table segment">
+                <thead>
+                    <tr>
+                        <th>Κωδικός Λογαριασμού - Hμ. Πληρωμής</th>
+                        <th>Αξία</th>
+                        <th>Κατάσταση</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in orders_done %}
+                    <tr>
+                        <td>{{ ele.title }}-{{ ele.date }}</td>
+                        <td>{{ ele.price|floatformat:2 }} €</td>
+                        <td style="background-color: #008051">{{ ele.get_active_display }}</td>
+                    </tr>
+                {%  endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+
+        <div class="ui segments">
+                <div style="text-align: center;" class="ui segment">
+                    <a  class="ui green button" href="/πληρωμές-εισπράξεις/πάγια-έξοδα/{{ cat.id }}/προσθήκη/" >Προσθήκη Λογαριασμού</a>
+                </div>
+                <div class="ui segment">
+                <table class="ui celled table">
+                    <thead>
+                        <tr>
+                            <th>Κωδικός Λογαριασμού</th>
+                            <th>Αξία</th>
+                            <th>Ημερομηνία λήξης</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for ele in orders %}
+                        <tr>
+                            <td><a href="/πληρωμές-εισπράξεις/πάγια-έξοδα/επεξεργασία/{{ cat.id }}/{{ ele.id }}/">{{ ele.title }}</a> </td>
+                            <td>{{ ele.price|floatformat:2 }} €</td>
+                            <td style="background-color: mistyrose">{{ ele.date }}</td>
+                            <td><a  href="/πληρωμές-εισπράξεις/πάγια-έξοδα/πληρωμή/{{ cat.id }}/{{ ele.id }}"><i style="width: 100%" class="ui green arrow right icon"></i></a> </td>
+                        </tr>
+                    {%  endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block right_side %}
+
+{% endblock %}

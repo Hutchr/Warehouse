@@ -1,0 +1,108 @@
+{% extends 'inventory/welcome_page.html' %}
+
+
+{% block left_side %}
+    <div class="ui vertical menu" id="warehouse_menu">
+        <a href='/συνταγές/κατηγορίες/' class="active item">Κατηγορίες Συνταγών</a>
+        {% for ele in categories %}
+            <a href="/συνταγές/κατηγορία/{{ ele.id }}" class="item"> {{ ele.title }}</a>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+
+{% block center %}
+    <div class="ui grid" id="warehouse_center">
+
+        <div class="row">
+            <div class="ui right floated main menu">
+                <div class="header item">
+                    <h2>Ολες οι  Συνταγές(Ενεργές)</h2>
+                </div>
+                <div class="item"></div>
+                <a href="/συνταγές/νέα" class="popup icon item" id="my_button" data-content="Προσθήκη Συνταγής">
+                    <i class="add square green icon"></i>
+                </a>
+            </div>
+
+
+            <table class="ui red table">
+                <thead>
+                    <tr>
+                        <td>Συνταγή</td>
+                        <td>Κόστος Παραγωγής</td>
+                        <td>Κατηγορία</td>
+                        <td>Τιμή Πώλησης</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in recipes %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.recipe_cost|floatformat:2  }} €</td>
+                            <td>{{ ele.category }}</td>
+                            <td>{{ ele.recipe_price|floatformat:2  }} €</td>
+                            <td><a class="popup icon item" data-content='Επεξεργασία' href="/συνταγές/προσθήκη/{{ ele.id }}/">
+                                    <i class="edit icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <div class="ui inverted divider"></div>
+        </div>
+    </div>
+
+    <div class="ui grid" id="warehouse_center">
+
+        <div class="row">
+            <div class="ui right floated main menu">
+                <div class="header item">
+                    <h2>Ολες οι  Συνταγές(Απενεργοποιημένες)</h2>
+                </div>
+                <div class="item"></div>
+            </div>
+
+
+            <table class="ui red table">
+                <thead>
+                    <tr>
+                        <td>Συνταγή</td>
+                        <td>Κόστος Παραγωγής</td>
+                        <td>Κατηγορία</td>
+                        <td>Τιμή Πώλησης</td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in recipes_ina %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.recipe_cost|floatformat:2  }} €</td>
+                            <td>{{ ele.category }}</td>
+                            <td>{{ ele.recipe_price|floatformat:2  }} €</td>
+                            <td><a class="popup icon item" data-content='Επεξεργασία' href="/συνταγές/προσθήκη/{{ ele.id }}/">
+                                    <i class="edit icon"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <div class="ui inverted divider"></div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block right_side %}
+
+{% endblock %}

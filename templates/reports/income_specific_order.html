@@ -1,0 +1,154 @@
+{% extends 'reports/incomes.html' %}
+
+{% block down_menu %}
+
+<div class="ui six item bottom fixed menu">
+    <a  href="/reports/income/" class="active green item">Πωλήσεις</a>
+    <a  href="{% url 'sell_item_flow' %}" class=" item">Ροή Προϊόντων</a>
+    <a  href="{% url 'costumers_reports' %}" class="item">Υπόλοιπα Πελατών</a>
+    <a  href="/reports/isologismos/" class="item">Επιστροφή στα Reports</a>
+</div>
+{% endblock %}
+
+{% block content %}
+      <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">Manage your account settings and set e-mail preferences.</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="four wide column">
+        <div class="ui segments">
+            <div style='text-align: center' class="ui inverted blue segment">Ανάλυση</div>
+            <div class="ui divider segment"></div>
+            <div style='text-align: center' class="ui header blue segment">Στοιχεία</div>
+            <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro green icon"></i> {{ order.order_clean_value|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Καθαρή Αξία
+                    </div>
+                </div>
+
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                       <i class="euro red icon"></i> {{ order.order_taxes|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Φπα Πωλήσεων
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini  statistic">
+                    <div class="value">
+                        <i class="euro red icon"></i> {{ order.total_cost|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Κόστος Παραγγελιών
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        {{ order.costumer_account.full_name }}
+                    </div>
+                    <div class="label">
+                        Πελάτης
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style='text-align: center' class="ui blue header segment">Στοιχεία Πώλησης</div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro red icon"></i> {{ avg_cost|floatformat:2  }}
+                    </div>
+                    <div style="color:red;" class="label">
+                        Μέσο Κόστος Παραγγελίας
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro blue icon"></i> {{ avg_income|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Μέσα Έσοδα Παραγγελίας
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment">
+
+                <div class="ui mini green inverted statistic">
+                    <div class="value">
+                        <i class="euro green icon"></i> {{ avg_profit|floatformat:2 }}
+                    </div>
+                    <div style="color:darkgray;" class="label">
+                        Μέσο Κέρδος Παραγγελίας
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+    <div class="ten wide column">
+         <div class="ui segment">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            <h1> Συνολική Αξία {{ order.paid_value|floatformat:2 }}</h1>
+        </div>
+        <div class="ui segment">
+            <table class="ui table ">
+                <thead>
+                    <tr>
+                        <th>Περιγραφή</th>
+                        <th>Κόστος Παραγωγής</th>
+                        <th>Αξία Μονάδας</th>
+                        <th>Ποσότητα</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in order_items %}
+                        <tr>
+                            <td>{{ ele.title.title }}</td>
+                            <td>{{ ele.cost }} €</td>
+                            <td>{{ ele.price }} €</td>
+                            <td>{{ ele.qty }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    </div>
+    <div class="one wide column"></div>
+
+
+
+{% endblock %}
+

@@ -1,0 +1,56 @@
+{% extends 'PoS/homepage.html' %}
+
+
+{% block center %}
+     <style>
+    .ui form{
+        text-align: center;
+    }
+    label[for=id_day],label[for=id_month],label[for=id_year]{
+        display: none;
+    }
+    #id_day, #id_month, #id_year{
+        display: none;
+    }
+    label[for=id_title],label[for=id_notes]{
+        height: 50px;
+        text-align: center;
+        font-size: 30px;
+        color: #0099d4;
+
+    }
+    #id_title,#id_notes{
+        height: 100px;
+        text-align: center;
+        font-size: 40px;
+        margin: 1%;
+    }
+
+    </style>
+
+    <div class="ui segments">
+        <div style="text-align: center" class="ui black inverted header segment">
+            <h3>Επιβεβαίωση</h3>
+        </div>
+         <form style="text-align: center;font-size: larger" class="ui form segment" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input style="width: 100%;height: 300px; font-size: 50px;" type="submit" name="submit" class="ui huge green button" value="Νέα Παραγγελία"/>
+        </form>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block right_side %}
+    <div class="ui segments">
+        <div style="text-align: center" class="ui inverted red segment">
+            Όδηγίες!
+        </div>
+        <div class="ui segment">
+            <p>Το μόνο που αλλάζεις εάν θες είναι ο τίτλος, και οι Σημειώσεις</p>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'recipes_manager/recipe_categories.html' %}
+
+{% block right_side %}
+
+
+   <div class="ui segments">
+    <div class="ui segment">
+        <p class="header">{{ recipe.title }}</p> <i class="ui red button"></i>
+    </div>
+   <div class="ui segment">
+       <div class="table"></div>
+           {% for ele in recipe_items %}
+           <div> {{ ele.recipe_part }}</div>
+            {% endfor %}
+       </div>
+   </div>
+   </div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "movements/movements.html" %}
+
+
+{% block sidebar %}
+    <style>
+    .edit_side{
+        background-color: #516158;
+        color: #ffffff;
+        font-size: medium;
+    }
+    .edit_side a{
+        text-decoration: none;
+        color: #ffffff;
+
+    }
+    .edit_side li{
+        list-style-type: decimal-leading-zero;
+    }
+    .edit_side a:hover{
+        color: #ff5b17;
+        background-color: #cdcdff;
+        font-size: large;
+    }
+    </style>
+    <div class="edit_side">
+
+    <h3> Προμηθευτές</h3>
+    <ul>
+    {% for cat in vendors %}
+    <li><a href="/inventory/movements/all_orders/vendor/{{ cat.id }}">{{ cat.title }}</a> </li>
+    {% endfor %}
+    </ul>
+    </div>
+{% endblock %}
+
+{% block context %}
+    {% for product in orders %}
+    <div class="col-md-2">
+        <h4><a href="{% url 'all_orders' %}{{ product.id }}">{{ product.code }}</a> </h4>
+    </div>
+    {% endfor %}
+{% endblock %}

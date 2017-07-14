@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends 'my_site/index.html' %}
+a
+{% block upper_bar %}
+        <a href="{% url 'site_admin' %}" class=" item">Homepage</a>
+        <a href="{% url 'orders_admin' %}" class="item">Παραγγελίες</a>
+        <a class="item">Πελάτες</a>
+        <a href="{% url 'site_control' %}" class="active item">Διαχείρηση Site</a>
+        <a href="{% url 'blog_admin' %}" class="item">Διαχείρηση Blog</a>
+        <a href="/home" class="right item">Επιστοφή στην αποθήκη</a>
+{% endblock %}
+
+
+
+{% block bottom_menu %}
+    <div class="ui six item bottom fixed menu">
+    <a href="{% url 'orders_admin' %}" class="active item">Όλες οι Παραγγελίες</a>
+    <a href="{% url 'new_orders_admin' %}" style="background-color: teal" class="item">Νέες</a>
+    <a href="{% url 'in_progress_orders_admin' %}" style="background-color: #0076ad" class="item">Σε Εξέλιξη</a>
+    <a href="{% url 'done_orders_admin' %}" style="background-color: green" class="item">Ολοκληρωμένες</a>
+    <a href="{% url 'products_in_pro' %}"  class="item">Ροή Προϊόντων</a>
+    <a href="{% url 'site_cart_items' %}"  class="item">Καλάθια</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <h2 style="align-content: center; text-align: center;margin-left: 45%"  class="ui header">
+            <i class="cart icon"></i>
+            <div class="content">
+                Cart Items
+                <div class="sub header">See you Site Movement</div>
+            </div>
+        </h2>
+    </div>
+    <div  class="eight wide column">
+        <h2 style="margin-left: 2%" class="ui header">
+            <i class="blue edit icon"></i>
+            <div class="content">
+                Όλα τα cart items
+                <div class="sub header">Επεξεργασία, Δημιουργία η Διαγραφή των Banner</div>
+            </div>
+        </h2>
+        <div class="ui list">
+            {% for item in cart_items %}
+                <div class="item">
+                    <i class="map marker icon"></i>
+                    <div class="content">
+                        <a class="header">{{ item.product }}</a>
+                        <div class="description">{{ item.date_added }}, {{ item.cart_id }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="eight wide column">
+
+    </div>
+    <div class="row" style="margin-bottom: 5%"></div>
+
+{% endblock %}

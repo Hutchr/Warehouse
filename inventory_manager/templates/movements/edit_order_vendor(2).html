@@ -1,0 +1,35 @@
+{% extends "movements/movements.html" %}
+
+
+
+{% block context %}
+    <style>
+    .show{
+        border: groove 2px;
+    }
+    .show:hover{
+
+        background-color: #d9edf7 ;
+    }
+    </style>
+
+    <div>
+    {{ vendor.title }}
+    </div>
+
+
+{% for ele in orders %}
+
+    <div class="col-md-4">
+    <a href="/inventory/movements/edit_orders/vendor/edit/{{ ele.id }}">
+
+    <div class="show">
+    <h3>{{ ele.code }}</h3>
+    <p>Ημερομηνεία {{ ele.date }}</p>
+    <p> Κόστος {{ ele.total_price }}</p>
+    </div>
+         </a>
+    </div>
+
+    {% endfor %}
+{% endblock %}

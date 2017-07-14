@@ -1,0 +1,96 @@
+{% extends 'reports/products.html' %}
+
+
+{% block down_menu %}
+
+<div class="ui five item bottom fixed menu">
+    <a href="/reports/products/" class="item">Προιόντα</a>
+    <a href="{% url 'products_flow' %}" class="item">Κίνηση Προϊόντων</a>
+    <a href="/reports/category-report/" class="active item">Κατηγορίες</a>
+    <a href="/reports/vendors/" class=" item">Προμηθευτές</a>
+    <a href="/reports/orders/" class="item">Τιμολόγια</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="three column row">
+        <div class="column">
+            <div class="results_ul">
+                <ul class="result_ul" id="results_ul"></ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">Επιλεγμένο Διάστημα... {{ date_range }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column">
+            <form method="post" class="ui form">{% csrf_token %}
+                <label class="ui blue label">Επιλογή Ημερομηνίας</label>
+                <input  name="date_pick" placeholder="{{ date_pick }}" >
+                <input style="width: 100%;margin-top: 3%;" class="ui green inverted button" type="submit">
+            </form>
+        </div>
+    </div>
+    <div  class="eight wide column">
+        <div style="text-align: center" class="ui  medium header">Κατηγορίες ΑποΘήκης</div>
+        <table style="margin-left: 1%" class="ui selectable striped table">
+            <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Αγορές<br>Κόστος Περιόδου</th>
+                    <th>Πωλήσεις/'Εσοδα<br>Κόστος Πωληθ.</th>
+                    <th>Επιστροφές<br>Ελλατωμ.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in category_info.items %}
+                    <tr>
+                        <td><a href="{% url 'product_category_id' key.id %}">{{ key.title }}</a> </td>
+                        <td>{{ value.0 }} Τεμ  <br><span style="color: red">{{ value.1|floatformat:2 }} {{ currency }}</span></td>
+                        <td>{{ value.2 }} Τεμ.<br><section style="color: green">{{ value.3|floatformat:2 }} {{ currency }}</section><section style="color: red">{{ value.7|floatformat:2 }} €</section></td>
+                        <td>{{ value.4 }}Τεμ.<br>{{ value.5 }} </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <div  class="eight wide column">
+        <div style="text-align: center" class="ui medium header">Κατηγορίες Site</div>
+        <table class="ui striped table">
+            <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Αγορές<br>Κόστος Περιόδου</th>
+                    <th>Πωλήσεις/'Εσοδα<br>Κόστος Πωληθ.</th>
+                    <th>Επιστροφές<br>Ελλατωμ.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in category_site_info.items %}
+                    <tr>
+                        <td>{{ key.title }}</td>
+                        <td>{{ value.0|floatformat:2 }}<br><span style="color: red">{{ value.1|floatformat:2 }} €</span></td>
+                        <td>{{ value.2|floatformat:2 }} Τεμ.
+                            <br><span style="color: green">{{ value.3|floatformat:2 }} €</span>
+                            <br><span style="color:red">{{ value.7|floatformat:2 }} €</span>
+                        </td>
+                        <td>{{ value.4|floatformat:2 }} Τεμ.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock %}
+
+{% block right_side %}
+
+
+{% endblock %}

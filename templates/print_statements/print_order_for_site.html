@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="el">
+
+<head lang="el">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Warehouse</title>
+    <link rel="stylesheet" href="{% static 'semantic-ui-css-master/semantic.min.css' %}">
+    <link rel="stylesheet" href="{% static 'my_static/index.css' %}">
+
+
+
+</head>
+<body>
+    <div class="ui grid">
+        <div class="one column row">
+            <h2 class="ui center aligned icon header">
+                <i class="circular users icon"></i>
+                {{ order.title }}
+            </h2>
+        </div>
+        <div class="three wide column "></div>
+        <div style="width: 100%" class="ten wide column">
+            <div class="ui raised segment">
+                <h3 class="ui header">Παρατηρήσεις</h3>
+                <p>{{ order.notes }}</p>
+            </div>
+        </div>
+        <div class="three wide column"></div>
+
+        <div class="three wide column "></div>
+        <div style="width: 100%" class="ten wide column">
+            <table class="ui tiny celled table">
+                <thead>
+                    <tr>
+                        <th>Προϊόν</th>
+                        <th>Ποσότητα</th>
+                        <th>Χρώμα - Μέγεθος</th>
+                        <th>Τιμή</th>
+                    </tr>
+                </thead>
+              <tbody>
+                {% for item in order_items %}
+                    <tr>
+                        <td>{{ item.title }}</td>
+                        <td>{{ item.qty }}</td>
+                        <td>{{ item.color_a }}</td>
+                         <td>{{ item.total_price|floatformat:2 }} €</td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td class="positive">Μεταφορικά</td>
+                    <td class="positive">{{ order.shipping_cost|floatformat:2 }} €</td>
+                    <td class="positive">Αξία Προϊόντων</td>
+                    <td class="positive">{{ order.show_value_of_products|floatformat:2 }} €</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="positive">Συνολική Αξία</td>
+                    <td class="positive">{{ order.value|floatformat:2 }} €</td>
+                </tr>
+
+              </tbody>
+            </table>
+        </div>
+        <div class="three wide column"></div>
+        <div class="three wide column"></div>
+        <div class="ten wide column">
+            <div class="ui card">
+                <div class="content">
+                    <div class="header">Αποστολέας... {{ site_info.title }}</div>
+                </div>
+                <div class="content">
+                    <h4 class="ui sub header">{{ site_info.address }}</h4>
+                    <div class="ui small feed">
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             {{ site_info.zip_code }}  {{ site_info.state }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                              Τηλ. {{ site_info.phone }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             Γρηγόρης Σταθάκης
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+        </div>
+        <div class="three wide column"></div>
+        <div class="three wide column"></div>
+
+        <div class="six wide column">
+            <div class="ui card">
+                <div class="content">
+                    <div class="header">Διεύθυνση Τιμολόγησης</div>
+                </div>
+                <div class="content">
+                    <h4 class="ui sub header">{{ order.template_tag_full_name }}</h4>
+                    <div class="ui small feed">
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             {{ order.address }} {{ order.city }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                              Τηλ. {{ order.cellphone }}  {{ order.phone }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             {{ order.email }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="extra content">
+                    <button class="ui button">Σας Ευχαριστούμε!</button>
+                  </div>
+                </div>
+
+        </div>
+        <div class="four wide column">
+            <div class="ui card">
+                <div class="content">
+                    <div class="header">Διεύθυνση Αποστολής</div>
+                </div>
+                <div class="content">
+                    <h4 class="ui sub header">{{ order.template_tag_full_name }}</h4>
+                    <div class="ui small feed">
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             {{ order.address }} {{ order.city }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                              Τηλ. {{ order.cellphone }}  {{ order.phone }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="event">
+                        <div class="content">
+                          <div class="summary">
+                             {{ order.email }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+        </div>
+        <div class="three wide column"></div>
+    </div>
+
+
+
+<script type="text/javascript" src="{% static 'jquery-1.12.2.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'semantic-ui-css-master/semantic.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'my_static/index.js' %}"></script>
+
+
+
+
+{% block my_static %}
+
+{% endblock %}
+</body>
+
+
+</html>

@@ -1,0 +1,9 @@
+{% extends "movements/movements.html" %}
+
+
+
+{% block context %}
+{% for ele in orders %}
+    <a href="{% url 'all_orders' %}{{ ele.id }}">{{ ele.code }}</a>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "products/products.html" %}
+
+
+
+{% block sidebar %}
+<p><a href="">Back</a></p>
+    <h3>{{ product.title }}</h3>
+{% endblock %}
+
+
+{% block context %}
+     {% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    <style>
+    .move_form{
+        background-color:#adadad;
+        width: 60%;
+    }
+    .move_form li{
+        border: dotted 2px;
+        font-family: "Raleway";
+    }
+    .move_form li:hover{
+        background-color: #939393;
+    }
+    #sub{
+        background-color: #0B86AA;
+        font-size: large;
+        font-family: "Raleway";
+    }
+    </style>
+
+<form class="move_form" method="post" enctype="multipart/form-data">{% csrf_token %}
+<ul>
+    {{ form.as_p}}
+</ul>
+<input id="sub" type="submit" name="submit" value="submit">
+</form>
+{% endblock %}

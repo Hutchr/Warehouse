@@ -1,0 +1,354 @@
+{% extends 'obaju/index.html' %}
+
+
+{% block content %}
+    {% load staticfiles %}
+    {% load extra_tags %}
+    {% if cart_items %}
+    <div id="content">
+        <div class="container">
+            <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li>Καλάθι Αγορών</li>
+                    </ul>
+                </div>
+            <div class="col-md-9" id="basket">
+                <div class="box">
+                        <form method="post">{% csrf_token %}
+                            <h1>Καλάθι Αγορών</h1>
+                            <p class="text-muted">Αυτή την στιγμή έχεις {{ total_qty }} προϊό(ντα) στο καλάθι σου.</p>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Προϊόν</th>
+                                            <th>Ποσότητα</th>
+                                            <th>Αρχική Τιμή</th>
+                                            <th>Τιμή Μετά την έκπτωση </th>
+                                            <th colspan="2">Συνολική Αξία</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in cart_items %}
+                                            {% if item.size %}
+                                                <tr>
+                                                <td>
+                                                    <a href="#">
+                                                        {% if item.product.image %}
+                                                            <img src="{{ item.product.image.url }}" alt="White Blouse Armani">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="White Blouse Armani">
+                                                        {% endif %}
+                                                    </a>
+                                                </td>
+                                                <td><a href="#">{{ item.size|truncatechars:60 }}</a></td>
+                                                <td>
+                                                    <input placeholder="{{ item.qty }}" type="number" name="{{ item.id }}" value="{{ item.qty }}" class="form-control">
+                                                </td>
+                                                <td>{{ item.price|floatformat:2 }} {{ currency }}</td>
+                                                <td>{{ item.site_price_number|floatformat:2 }} {{ currency }}</td>
+                                                <td>{% multiply item.price item.qty %} {{ currency }}</td>
+                                                <td>
+                                                    <a href="{% url 'cart_item_delete' item.id %}"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                                <tr>
+                                                <td>
+                                                    <a href="#">
+                                                        {% if item.product.image %}
+                                                            <img src="{{ item.product.image.url }}" alt="White Blouse Armani">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="White Blouse Armani">
+                                                        {% endif %}
+                                                    </a>
+                                                </td>
+                                                <td><a href="{% url 'product_page' item.product.slug %}">{{ item.product.title|truncatechars:30 }}</a>
+                                                </td>
+                                                <td>
+                                                    <input placeholder="{{ item.qty }}" type="number" name="{{ item.id }}" value="{{ item.qty }}" class="form-control">
+                                                </td>
+                                                <td>{{ item.product.price|floatformat:2 }} {{ currency }}</td>
+                                                <td>{{ item.product.site_price|floatformat:2 }} {{ currency }}</td>
+                                                <td>{% multiply item.product.site_price item.qty %} {{ currency }}</td>
+                                                <td>
+                                                    <a href="{% url 'cart_item_delete' item.id %}"><i class="fa fa-trash-o"></i></a>
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5">Total</th>
+                                            <th colspan="2">{{ total_price }} €</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                            <div class="box-footer">
+                                <div class="pull-left">
+                                    <a href="category.html" class="btn btn-default"><i class="fa fa-chevron-left"></i> Continue shopping</a>
+                                </div>
+                                <div class="pull-right">
+                                    <button type="submit" name="change_qty" class="btn btn-default"><i class="fa fa-refresh"></i> Update basket</button>
+                                    <a href="{% url 'checkout' %}"  class="btn btn-primary">Proceed to checkout <i class="fa fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                {% if messages %}
+                    <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="alert alert-warning"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                <div class="row same-height-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="box same-height">
+                                <h3>Προϊόντα που μπορεί να σου αρέσουν</h3>
+                            </div>
+                        </div>
+                        {% for query in related_products %}
+                            {% for related in query %}
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="product same-height">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                                <div class="front">
+                                                    <a href="{% url 'product_page' related.slug %}">
+                                                        <img src="{{ related.image.url }}" alt="{{ related }}" class="img-responsive">
+                                                    </a>
+                                                </div>
+                                                <div class="back">
+                                                    <a href="{% url 'product_page' related.slug %}">
+                                                        {% if related.image %}
+                                                        <img src="{{ related.image.url }}" alt="{{ related }}" class="img-responsive">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="{{ related }}" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'product_page' related.slug %}" class="invisible">
+                                            {% if related.image %}
+                                                <img src="{{ related.image.url }}" alt="{{ related }}" class="img-responsive">
+                                            {% else %}
+                                                <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="{{ related }}" class="img-responsive">
+                                            {% endif %}
+                                        </a>
+                                        <div class="text">
+                                            <h3>{{ related }}</h3>
+                                            <p class="price">{{ related.site_price }} {{ currency }} </p>
+                                        </div>
+                                    </div>
+                                    <!-- /.product -->
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                </div>
+            </div>
+                <!-- /.col-md-9 -->
+            <div class="col-md-3">
+                    <div class="box" id="order-summary">
+                        <div class="box-header">
+                            <h3>Ανάλυση Παραγγελίας</h3>
+                        </div>
+                        <p class="text-muted">Για αγορές άνω των {{ rules.shipping_cost_limit }} ευρώ έχετε {{ rules.shipping_cost }} € μεταφορικά </p>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Αρχική Αξία</td>
+                                        <th>€ {{ total_price }}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Έκπτωση</td>
+                                        <th>0 €</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Μεταφορικά</td>
+                                        <th>Δωρεάν</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Κουπόνι</td>
+                                        <th>Δεν έχετε επιλέξει.</th>
+                                    </tr>
+                                    <tr class="total">
+                                        <td>Σύνολο</td>
+                                        <th>$456.00</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h4>Κουπόνι</h4>
+                        </div>
+                        <p class="text-muted">Εάν έχετε κάποιον κωδικό κουπονιού, χρησιμοποιήστε τον εδώ.</p>
+                        <form>
+                            <div class="input-group">
+
+                                <input type="text" class="form-control">
+
+                                <span class="input-group-btn">
+
+					<button class="btn btn-primary" type="button"><i class="fa fa-gift"></i></button>
+
+				    </span>
+                            </div>
+                            <!-- /input-group -->
+                        </form>
+                    </div>
+
+                </div>
+                <!-- /.col-md-3 -->
+        </div>
+            <!-- /.container -->
+    </div>
+    {% else %}
+    <div id="content">
+            <div class="container">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="/">Home</a>
+                        </li>
+                        <li>Καλάθι Αγορών</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-9" id="basket">
+                    <div class="box">
+                        <form method="post">{% csrf_token %}
+                            <h1>Καλάθι Αγορών</h1>
+                            <p class="text-muted">Δεν έχετε επιλέξει κάποιο προϊόν.</p>
+                            <div class="box-footer">
+                                <div class="pull-right">
+                                    <a href=""  class="btn btn-primary">Επιστροφή <i class="fa fa-chevron-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box -->
+                    <div class="row same-height-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="box same-height">
+                                <h3>Δείτε μερικά προϊόντα</h3>
+                            </div>
+                        </div>
+                        {% for product in related_products %}
+                            <div class="col-md-3 col-sm-6">
+                            <div class="product same-height">
+                                <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page' product.slug %}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-responsive">
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="{% url 'product_page' product.slug %}">
+                                                <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-responsive">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="{% url 'product_page' product.slug %}" class="invisible">
+                                    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="img-responsive">
+                                </a>
+                                <div class="text">
+                                    <h3>{{ product.title }}</h3>
+                                    <p class="price">{{ product.category_site }}</p>
+                                </div>
+                            </div>
+                            <!-- /.product -->
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+
+                </div>
+                <!-- /.col-md-9 -->
+
+                <div class="col-md-3">
+                    <div class="box" id="order-summary">
+                        <div class="box-header">
+                            <h3>Ανάλυση Παραγγελίας</h3>
+                        </div>
+                        <p class="text-muted">Για αγορές άνω των {{ rules.shipping_cost_limit }} € έχετε {{ rules.shipping_cost }} € μεταφορικά </p>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Αρχική Αξία</td>
+                                        <th>€ {{ total_price }}</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Έκπτωση</td>
+                                        <th>--</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Μεταφορικά</td>
+                                        <th>{{ rules.shipping_cost }} €</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Κουπόνι</td>
+                                        <th>--</th>
+                                    </tr>
+                                    <tr class="total">
+                                        <td>Σύνολο</td>
+                                        <th>$456.00</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                    <div class="box">
+                        <div class="box-header">
+                            <h4>Κουπόνι</h4>
+                        </div>
+                        <p class="text-muted">Εάν έχετε κάποιον κωδικό κουπονιού, χρησιμοποιήστε τον εδώ.</p>
+                        <form>
+                            <div class="input-group">
+
+                                <input type="text" class="form-control">
+
+                                <span class="input-group-btn">
+
+					<button class="btn btn-primary" type="button"><i class="fa fa-gift"></i></button>
+
+				    </span>
+                            </div>
+                            <!-- /input-group -->
+                        </form>
+                    </div>
+
+                </div>
+                <!-- /.col-md-3 -->
+
+            </div>
+            <!-- /.container -->
+        </div>
+    {% endif %}
+{% endblock %}
+

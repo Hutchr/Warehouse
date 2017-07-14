@@ -1,0 +1,49 @@
+{% extends "products/products.html" %}
+
+{% block sidebar %}
+    <style>
+    .edit_side{
+        background-color: #516158;
+        color: #ffffff;
+        font-size: medium;
+    }
+    .edit_side a{
+        text-decoration: none;
+        color: #ffffff;
+
+    }
+    .edit_side li{
+        list-style-type: decimal-leading-zero;
+    }
+    .edit_side a:hover{
+        color: #ff5b17;
+        background-color: #cdcdff;
+        font-size: large;
+    }
+    </style>
+    <div class="edit_side">
+
+    <h3> Κατηγορίες</h3>
+    <ul>
+    {% for cat in category %}
+    <li><a href="/inventory/products/edit/category/{{ cat.id }}">{{ cat.title }}</a> </li>
+    {% endfor %}
+    </ul>
+    </div>
+{% endblock %}
+
+{% block context %}
+
+    {% for product in products %}
+        <style>
+        .edit_pro a:hover{
+            background-color: orange;
+        }
+        </style>
+    <div class="col-md-2">
+    <div class="edit_pro">
+        <h4><a href="{% url 'edit_product' %}{{ product.id }}">{{ product.title }}</a> </h4>
+    </div>
+    </div>
+    {% endfor %}
+{% endblock %}

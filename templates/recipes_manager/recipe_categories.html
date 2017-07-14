@@ -1,0 +1,44 @@
+{% extends 'recipes_manager/homepage.html' %}
+
+
+
+{% block center %}
+    <div class="ui segments">
+        <div class="ui header segment">
+            {{ category.title }}
+        </div>
+        <div class="ui table segment">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Συνταγή</th>
+                        <th>Κόστος </th>
+                        <th>Τιμή</th>
+                        <th>Κατάσταση</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ele in recipes %}
+                        <tr>
+                            <td>{{ ele.title }}</td>
+                            <td>{{ ele.recipe_cost }}</td>
+                            <td>{{ ele.recipe_price }}</td>
+                            {% if  ele.active == 'a' %}
+                                <td><a href="/συνταγές/κατηγορία/{{ category.id }}/ap/{{ ele.id }}" class="ui  red button">Απενεργοποίηση</a></td>
+                            {% else %}
+                                  <td><a href="/συνταγές/κατηγορία/{{ category.id }}/ap/{{ ele.id }}" class="ui green button">Ενεργοποίηση</a></td>
+                            {% endif %}
+                            <td><a href="/συνταγές/προσθήκη/{{ ele.id }}" class="ui blue button">Λεπτομέριες </a> </td>
+                            <td><a href=""></a> </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+{% endblock %}

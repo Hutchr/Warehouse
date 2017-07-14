@@ -1,0 +1,147 @@
+{% extends 'reports/warehouse.html' %}
+
+{% block down_menu %}
+
+<div class="ui six item bottom fixed menu">
+    <a href="/reports/outcome/"  class=" ui active blue item">Home</a>
+    <a href="/reports/outcome/payment-analysis/" class=" ui blue item">Ροή Πληρωμών</a>
+    <a href="/reports/outcome/logariasmoi/" class=" ui blue item">Λογαριασμοί</a>
+    <a href="/reports/outcome/pagia-agores/{{ pagia_id }}/" class=" ui blue item">Πάγια έξοδα</a>
+    <a href="/reports/outcome/μισθοδοσία/" class=" ui blue item">Μισθοδοσία</a>
+</div>
+{% endblock %}
+
+
+{% block content %}
+    <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">{{ date_range }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="fifteen wide column">
+        <div class = "ui segments">
+        <div style="text-align: center" class="ui header inverted blue segment">Σύνολα {{ bills_paid }}</div>
+        <div class="ui segment">
+            <table class=" ui table segment">
+                <thead>
+                    <tr>
+                        <th>Κατηγορία</th>
+                        <th>Συνολικό Οφειλόμενο Ποσό</th>
+                        <th>Συνολικό Ποσό Πληρωμένο</th>
+                        <th>Διαφορά</th>
+
+                    </tr>
+                <thead>
+                <tbody>
+                    <tr>
+                        <td>Λογαριασμοί</td>
+                        <td>{{ bills_all|floatformat:2  }} {{ currency }}</td>
+                        <td>{{ bills_paid|floatformat:2  }} {{ currency }}</td>
+                        {% if bills_pending > 0 %}
+                            <td class="negative">{{ bills_pending|floatformat:2  }} {{ currency }}</td>
+                        {% else %}
+                             <td>{{ bills_pending|floatformat:2  }} {{ currency }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>Γενικά Έξοδα</td>
+                        <td>{{ expenses_all|floatformat:2  }} {{ currency }}</td>
+                        <td>{{ expenses_paid|floatformat:2  }} {{ currency }}</td>
+                        <td>{{ expenses_pending|floatformat:2  }} {{ currency }}</td>
+                    </tr>
+                    <tr>
+                        <td>Προσωπικό</td>
+                        <td>{{ person_all|floatformat:2  }} {{ currency }}</td>
+                        <td>{{ person_paid|floatformat:2  }} {{ currency }}</td>
+                        <td>{{ person_pending|floatformat:2  }} {{ currency }}</td>
+                    </tr>
+                    </tbody>
+            </table>
+        </div>
+        <div class="ui blue divider segment"></div>
+        <div style="text-align: center" class="ui header inverted blue segment">Ανάλυση</div>
+        <div class ="ui horizontal segments">
+            <div class="ui segments">
+                <div  style="text-align: center" class="ui header inverted green segment">Λογαριασμοί</div>
+                    <table class ="ui table segment">
+                        <thead>
+                            <tr>
+                                <th>Κατηγορία</th>
+                                <th>Υπόλοιπο</th>
+                            </tr>
+                        <thead>
+                        <tbody>
+                            {% for key,value in bill_analytics.items %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    {% if value > 0 %}
+                                    <td class="negative">{{ value|floatformat:2  }} {{ currency }}</td>
+                                    {% else %}
+                                    <td> 0 {{ currency }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            <div class=" ui segments">
+                <div  style="text-align: center" class="ui header inverted green segment">Απασχόληση</div>
+
+                <table class ="ui table segment">
+                    <thead>
+                        <tr>
+                            <th>Κατηγορία</th>
+                            <th>Υπόλοιπο</th>
+                        </tr>
+                    <thead>
+                    <tbody>
+                        {% for key,value in occupation_analytics.items %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    {% if value > 0 %}
+                                    <td class="negative">{{ value|floatformat:2  }} {{ currency }}</td>
+                                    {% else %}
+                                    <td> 0 {{ currency }}</td>
+                                    {% endif %}
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+             <div class=" ui segments">
+                <div class="ui header inverted green segment">Αγορές, Πάγια 'Εξοδα</div>
+                <table class ="ui table segment">
+                    <thead>
+                        <tr>
+                            <th>Κατηγορία</th>
+                            <th>Υπόλοιπο</th>
+                        </tr>
+                    <thead>
+                    <tbody>
+                        {% for key,value in bill_analytics.items %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    {% if value > 0 %}
+                                    <td>{{ value|floatformat:2  }} {{ currency }}</td>
+                                    {% else %}
+                                    <td> 0 {{ currency }}</td>
+                                    {% endif %}
+                                </tr>
+                        {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+

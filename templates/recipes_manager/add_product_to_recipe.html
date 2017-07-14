@@ -1,0 +1,58 @@
+{% extends 'recipes_manager/homepage.html' %}
+
+
+
+
+{% block center %}
+
+<div class="ui grid" id="warehouse_center">
+    <div class="row">
+        <div class="ui right floated main menu">
+            <div class="header item">
+                    <h2>{{ recipe.title }}</h2>
+            </div>
+             <a href="/συνταγές/επεξεργασία-συνταγής/{{ recipe.id }}/" class="popup icon item" id="my_button" data-content="Επεξεργασία Συνταγής">
+                <i class="edit  blue icon"></i>
+            </a>
+            <div class="item">Συνολικό Κόστος : {{ recipe.recipe_cost }} </div>
+            <div class="item">Αξία Πώλησης : {{ recipe.recipe_price }}</div>
+            <div class="item"></div>
+            <a href="/συνταγές/προσθήκη-συστατικού/{{ recipe.id }}/" class="popup icon item" id="my_button" data-content="Προσθήκη Συστατικού">
+                <i class="add square green icon"></i>
+            </a>
+        </div>
+
+
+        <table class="ui red table">
+            <thead>
+            <tr>
+                <td>Συστατικό</td>
+                <td>Συσχετόμενο προϊόν Αποθήκης</td>
+                <td>Ποσότητα</td>
+                <td>Συνολικό Κόστος</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+                {% for ele in recipe_items %}
+                    <tr>
+                        <td>{{ ele.recipe_part }}</td>
+                        <td>{{ ele.product.title }}</td>
+                        <td>{{ ele.qty }}</td>
+                        <td>{{ ele.price_cost }}</td>
+                        <td><a class="popup icon item" data-content='Επεξεργασία' href="/συνταγές/επεξεργασία-συστατικού/{{ recipe.id }}/{{ ele.id }}">
+                            <i class="edit icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,234 @@
+{% extends 'my_site/order_management.html' %}
+
+{% block content %}
+    {% load staticfiles %}
+    <div class="eight wide column">
+        {% if order.status.id == 1 %}
+            <label class="ui massive teal label">{{ order.status }}</label>
+        {% elif order.status.id == 2 %}
+            <label class="ui massive blue label">{{ order.status }}</label>
+        {% else %}
+            <label class="ui massive green label">{{ order.status }}</label>
+        {% endif %}
+    </div>
+    <div class="seven wide column">
+        <div class="five ui buttons">
+            <div class="ui labeled icon  left pointing dropdown button">
+                <i class="wrench icon"></i>
+                <span class="text">Shortcuts</span>
+                <div class="menu">
+                    <div class="header">Κατάσταση {{ order.status }}</div>
+                    <a href="{% url 'eshop_change_status' order.id 2 %}" class="item">Μετατροπή σε Επεξεργασία.</a>
+                    <a href="{% url 'eshop_change_status' order.id 1 %}" class="item">Μετατροπή σε Απεστάλη.</a>
+                    <a href="{% url 'eshop_change_status' order.id 7 %}" class="item">Μετατροπή σε Εισπραχτηκε.</a>
+
+                    <div class="ui divider"></div>
+                    <div class="item">Γρήγορες Αλλαγές</div>
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        <span class="text">Κατάσταση Παραγγελίας: {{ order.status.title }}</span>
+                        <div class="menu">
+                            {% for status in all_status %}
+                            <a href="{% url 'eshop_change_status' order.id status.id %}" class="item">
+                                {{ status.title }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        <span class="text">Τρόπος Μεταφοράς : {{ order.shipping.title }}</span>
+                        <div class="menu">
+                             {% for ship in shipping %}
+                                <a href="{% url 'eshop_change_shipping' order.id ship.id %}" class="item">
+                                    {{ ship }}
+                                </a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        <span class="text">Τρόπος Πληρωμής: {{ order.payment_method.title }}</span>
+                        <div class="menu">
+                            {% for payment in payment_method %}
+                                <a href="{% url 'eshop_change_payment' order.id payment.id %}" class="item">
+                                    {{ payment }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui button">
+                <a target="_blank" href="{% url 'print_order' order.id %}" class=" content"><i class="ui print icon"></i> Εκτύπωση</a>
+            </div>
+            <div class="ui button">
+                <a href="{% url 'eshop_order_full_edit' order.id %}" class=" content">Επεξεργασία</a>
+            </div>
+            <div class="ui labeled icon  left pointing dropdown button">
+                <i class="wrench icon"></i>
+                <span class="text">Επιλογές</span>
+                <div class="menu">
+                    <div class="header">Κατάσταση {{ order.status }}</div>
+                    <a href="" class="item">Αλλαγή Ποσού στα Μεταφορικά</a>
+                    <a href="{% url 'pos_order_discount' order.id %}" class="item">Έκπτωση</a>
+                    <a href="" class="item">Ιστορικό Πελάτη</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="one wide column"></div>
+    <div class="eight wide column">
+       <h2 class="ui header">
+           <i class="cart icon"></i>
+           <div class="content">
+               {{ order.title }} Αξία Παραγγελίας  {{ order.template_tag_value }}
+               <div class="sub header">{{ order.day_added }}</div>
+           </div>
+       </h2>
+       <div class="ui horizontal cards">
+        <div class="ui card">
+            <div class="content">
+                <div class="header">{{ order.first_name }} {{ order.last_name }}</div>
+                <div class="meta">
+                    <span class="right floated time">Καρτέλα</span>
+                    <span class="category">{{ order.status.title }}</span>
+                </div>
+                <div class="description">
+                    <p></p>
+                </div>
+            </div>
+            <div class="extra content">
+                <p>{{ order.address }}, {{ order.city }}, TK {{ order.zip_code }}</p>
+                <p>{{ order.shipping.title }}</p>
+                <p>{{ order.payment_method.title }}</p>
+
+            </div>
+        </div>
+        <div class="ui card">
+            <div class="content">
+                <div class="header">Σχόλια</div>
+                <div class="meta">
+                    <span class="category">{{ order.notes }}</span>
+                </div>
+                <div class="description">
+                    <p></p>
+                </div>
+            </div>
+            <div class="extra content">
+                {% if order.discount %}
+                <p>'Εχει γίνει έκπτωση {{ order.template_tag_discount }}</p>
+                {% endif %}
+            </div>
+        </div>
+       </div>
+    </div>
+    <div class="seven wide column">
+     <h2 class="ui header">
+           <i class="cart icon"></i>
+           <div class="content">
+               Ανάλυση Τιμής
+           </div>
+       </h2>
+    <div class="ui horizontal cards">
+        <div class="ui right floated card">
+            <div class="content">
+                <div class="header">Συνολική Αξία {{ order.value }} {{ currency }}</div>
+                <div class="meta">
+                    <span class="right floated time">{{ order.shipping_cost }} {{ currency }}</span>
+                    <span class="category">Μεταφορικά</span>
+                </div>
+                <div class="description">
+                    <span>Αντκαταβολή</span>
+                    <span class="right floated time">0 {{ currency }}</span>
+                </div>
+            </div>
+            <div class="extra content">
+                <p>Αξία Προϊόντων........ {{ order.template_tag_order_items_value }} </p>
+                <p>Φπα.......... {{ order.template_tag_taxes }}</p>
+                <p>Καθαρή Αξία</p>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="fourteen wide column">
+    <table class="ui single line selectable table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Εικόνα</th>
+                    <th>Προϊόν<br></th>
+                    <th>Ποσότητα</th>
+                    <th>Σύνολο</th>
+                    <th>Τιμή</th>
+                    <th>Κατάσταση Αποθήκης</th>
+                    <th>Νέο Υπόλοιπο Αποθήκης</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                    <tr>
+                        <td>
+                            <div style="margin-top: 1%" class="ui toggle checkbox">
+                                <input type="checkbox"  name="shipping">
+                                <label>{{ ship }}</label>
+                            </div>
+                        </td>
+                        <td><img src="{{ item.image.url }}" class="ui tiny image"> </td>
+                        <td>
+                            {{ item.title }}<br>{{ item.title.color }}
+                        </td>
+                        <td>{{ item.size }} : {{ item.qty }}</td>
+                        <td>{{ item.template_tag_price }}</td>
+                        <td>{{ item.template_tag_total_price }}</td>
+                        {% if item.is_find %}
+                            <td>
+                            <div class="ui teal buttons">
+                                <a href="{% url 'order_item_is_find' item.id order.id %}" class="ui button">Βρέθηκε</a>
+                                <div class="ui floating dropdown icon button">
+                                    <i class="dropdown icon"></i>
+                                </div>
+                            </div>
+                        </td>
+                        {% else %}
+                            <td>
+                            <div class="ui red buttons">
+                                <a href="{% url 'order_item_is_find' item.id order.id %}" class="ui button">Δε έχει βρεθεί</a>
+                                <div class="ui floating dropdown icon button">
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu">
+                                        <div class="item"><i class="edit icon"></i> Επεξεργασία</div>
+                                        <div class="item"><i class="delete icon"></i> Διαγραφή</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        {% endif %}
+                        {% if item.title.size_color_chart %}
+                            <td>{{ item.size.qty }}</td>
+                        {% else %}
+                            <td>{{ item.title.qty }}</td>
+                        {% endif %}
+
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><a target="_blank" class="ui green button" href="{% url 'retail_order_section' order.id %}">Επεξεργασία Προίόντων</a> </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="one wide column"></div>
+{% endblock %}

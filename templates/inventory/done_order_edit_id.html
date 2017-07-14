@@ -1,0 +1,33 @@
+{% extends 'inventory/add_product_to_order_NEW.html' %}
+
+{% block center %}
+
+     
+    
+
+    <div class="ui segments">
+        <div style ="text-align: center;" class="ui header segment">
+            <h3>Επεξεργασία Τιμολογίου {{ order_id.title }}</h3>
+        </div>
+        <div class="ui form segment">
+
+            <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                {{ form }}
+                <input type="submit" name="submit" class="ui green button" value="Αποθήκευση"/>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
+{% block left_side %}
+
+{% endblock %}
+
+{% block right_side %}
+
+{% endblock %}

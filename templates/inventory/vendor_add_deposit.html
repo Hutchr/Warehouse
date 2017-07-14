@@ -1,0 +1,42 @@
+{% extends 'inventory/vendors_edit_section_NEW.html' %}
+
+
+
+{% block right_side %}
+    <style>
+        #id_date_expire_month{
+            width: 35%;
+            display: inline;
+        }
+        #id_date_expire_year{
+            width: 35%;
+            display: inline;
+            padding-left: 15%;
+        }
+        #id_date_expire_day{
+            width: 25%;
+            display: inline;
+        }
+        #id_status,label[for=id_status]{
+
+            display: none;
+        }
+        label{
+            display: block;
+            margin-top: 2% ;
+            font-size: larger;
+        }
+    </style>
+    <div class="ui segments">
+        <div class="ui segment blue inverted header">
+            Προκαταβολή {{ vendor.title }}
+        </div>
+        <div class="ui segment">
+            <form method="post" enctype="multipart/form-data" class="ui form">{% csrf_token %}
+                {{ form }}
+                <input style="width: 100%;margin-top: 5%" class="ui green button" type="submit" placeholder="Αποθήκευση" name="submit">
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

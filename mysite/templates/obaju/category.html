@@ -1,0 +1,441 @@
+{% extends 'obaju/index.html' %}
+ {% load staticfiles %}
+{% block seo %}
+    {% if category %}
+        <title>{{ welcome_page.title }} | {{ category }}</title>
+        <meta name="keywords" content="{{ category.seo_keyword }}">
+        <meta name="description" content="{{ category.meta_description }}">
+    {% elif offers %}
+        <title>{{ welcome_page.title }} | Προσφορές</title>
+        <meta name="keywords" content="{{ welcome_page.seo_keyword }}, προσφορές ">
+        <meta name="description" content="{{ welcome_page.meta_description }}, προσφορές">
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <div class="container">
+        {% if messages %}
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    {% for message in messages %}
+                        <li style="width: 100%"  class="alert alert-success">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="col-md-12">
+            <ul class="breadcrumb">
+                <li><a href="/">Home</a></li>
+                {% if search_text %}
+                    <li><a href="">{{ search_text }}</a> </li>
+                {% elif offers %}
+                    <li><a href="">Προσφορές</a> </li>
+                {% else %}
+                    <li><a href="{% url 'category_site' category_site.slug %}">{{ category_site.title }}</a> </li>
+                {% endif %}
+            </ul>
+        </div>
+        <form method="get">
+            <div class="col-md-3">
+                    <!-- *** MENUS AND FILTERS ***
+ _________________________________________________________ -->
+                    <input type="text" value="{{ search_text }}" name="search_pro" hidden>
+                    {% if initial_brands %}
+                        <div class="panel panel-default sidebar-menu">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Brands <a class="btn btn-xs btn-danger pull-right" href="{% url 'my_site_clear_session' 'get_brands' %}"><i class="fa fa-times-circle"></i>Καθαρισμός</a></h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    {% for brand in initial_brands %}
+                                        {% if brand|stringformat:'s' in get_brands %}
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input onChange="this.form.submit()" name="brand_name" value="{{ brand.id }}"  type="checkbox" checked>{{ brand.title }}
+                                                </label>
+                                            </div>
+                                        {% else %}
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input onChange="this.form.submit()" name="brand_name" value="{{ brand.id }}"  type="checkbox">{{ brand.title }}
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if categories %}
+                        <div class="panel panel-default sidebar-menu">
+                            <div class="panel-heading">
+                            <h3 class="panel-title">Κατηγορίες <a class="btn btn-xs btn-danger pull-right" href="{% url 'my_site_clear_session' 'get_categories' %}"><i class="fa fa-times-circle"></i>Καθαρισμός</a></h3>
+                        </div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    {% for cate in initial_categories %}
+                                        {% if cate.id|stringformat:'s' in get_categories %}
+                                            <div class="checkbox">
+                                            <label>
+                                                <input onChange="this.form.submit()" name="category_name" value="{{ cate.id }}"  type="checkbox" checked>{{ cate.title }}
+                                            </label>
+                                        </div>
+                                        {% else %}
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input onChange="this.form.submit()" name="category_name" value="{{ cate.id }}" type="checkbox">{{ cate.title }}
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if initial_colors %}
+                            <div class="panel panel-default sidebar-menu">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Χρώματα <a class="btn btn-xs btn-danger pull-right" href="{% url 'my_site_clear_session' 'get_color' %}"><i class="fa fa-times-circle"></i>Καθαρισμός</a></h3>
+                            </div>
+                            <div class="panel-body">
+                                    <div class="form-group">
+                                        {% for color in initial_colors %}
+                                            {% if color.id|stringformat:'s' in get_colors %}
+                                                 <div class="checkbox">
+                                                    <label>
+                                                        <input onChange="this.form.submit()" name="color_name" value="{{ color.id }}" type="checkbox" checked> <span class="colour {{ color.code_id }}"></span> {{ color.title }}
+                                                    </label>
+                                                </div>
+                                            {% else %}
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input onChange="this.form.submit()" name="color_name" value="{{ color.id }}" type="checkbox"> <span class="colour {{ color.code_id }}"></span> {{ color.title }}
+                                                    </label>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% if initial_sizes %}
+                        <div class="panel panel-default sidebar-menu">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Μέγεθος<a class="btn btn-xs btn-danger pull-right" href="#"><i class="fa fa-times-circle"></i>Καθαρισμός</a></h3>
+                            </div>
+                            <div class="panel-body">
+                                    <div class="form-group">
+                                        {% for size in initial_sizes %}
+                                            {% if size.id|stringformat:'s' in get_sizes %}
+                                                 <div class="checkbox">
+                                                    <label>
+                                                        <input onChange="this.form.submit()" name="size_name" value="{{ size.id }}" type="checkbox" checked>  {{ size.title }}
+                                                    </label>
+                                                </div>
+                                            {% else %}
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input onChange="this.form.submit()" name="size_name" value="{{ size.id }}" type="checkbox">{{ size.title }}
+                                                    </label>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    {% if characteristics %}
+                    <div class="panel panel-default sidebar-menu">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Φίλτρα</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="nav nav-pills nav-stacked category-menu">
+                                <li>
+                                    <a href="category.html">Men <span class="badge pull-right">42</span></a>
+                                    <ul>
+                                        <li><a href="category.html">T-shirts</a>
+                                        </li>
+                                        <li><a href="category.html">Shirts</a>
+                                        </li>
+                                        <li><a href="category.html">Pants</a>
+                                        </li>
+                                        <li><a href="category.html">Accessories</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="active">
+                                    <a href="category.html">Ladies  <span class="badge pull-right">123</span></a>
+                                    <ul>
+                                        <li><a href="category.html">T-shirts</a>
+                                        </li>
+                                        <li><a href="category.html">Skirts</a>
+                                        </li>
+                                        <li><a href="category.html">Pants</a>
+                                        </li>
+                                        <li><a href="category.html">Accessories</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="category.html">Kids  <span class="badge pull-right">11</span></a>
+                                    <ul>
+                                        <li><a href="category.html">T-shirts</a>
+                                        </li>
+                                        <li><a href="category.html">Skirts</a>
+                                        </li>
+                                        <li><a href="category.html">Pants</a>
+                                        </li>
+                                        <li><a href="category.html">Accessories</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!-- *** MENUS AND FILTERS END *** -->
+                    <div class="banner">
+                        {% if category_site.image %}
+                        <a href="">
+                            <img src="{{ category_site.image.url }}" alt="{{ category_site.alt }}" class="img-responsive">
+                        </a>
+                        {% else %}
+                        {% endif %}
+                    </div>
+                </div>
+            <div class="col-md-9">
+                <div class="box">
+                    {% if category_site %}
+                        <h1>{{ category_site.title }}</h1>
+                        <p>{{ category_site.content }}</p>
+                    {% elif offers %}
+                         <h1>Προσφορές</h1>
+                         <p>Όλες οι προσφορές μας εδώ.</p>
+                    {% endif %}
+                </div>
+                <div class="box info-bar">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 products-showing">
+                            Προϊόντα ανά σελίδα..  <strong>{{ show_products }}</strong>
+                        </div>
+                        <div class="col-sm-12 col-md-8  products-number-sort">
+                                <div class="row">
+                                        <div class="col-md-6 col-sm-6">
+                                            <div class="products-number">
+                                                {% for number in order_numbers %}
+                                                    {% if number|floatformat:1 == show_products|floatformat:1 %}
+                                                        <div class="btn btn-default btn-sm btn-primary active radio">
+                                                            <label>
+                                                                <input onChange="this.form.submit()" type="radio" value="{{ number }}" name="show_product" checked>{{ number }}
+                                                            </label>
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="btn btn-default btn-sm radio">
+                                                            <label>
+                                                                <input onChange="this.form.submit()" type="radio" value="{{ number }}" name="show_product">{{ number }}
+                                                            </label>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <div class="products-sort-by">
+                                                <strong>Ταξινόμηση</strong>
+                                                <select onChange="this.form.submit()"  name="sort-by" class="form-control">
+                                                    <option value="price">Τιμή</option>
+                                                    <option value="title">Ονομασία</option>
+                                                    <option value="vendor__title">Brand</option>
+                                                    <option value="id">Καινουργιο</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </form>
+                <div class="row products">
+                    {% for product in contacts %}
+                        {% if product.have_size %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="product">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                                <div class="front">
+                                                    <a href="{% url 'product_page' product.slug %}">
+                                                        {% if product.image %}
+                                                            <img src="{{ product.image.url }}" alt="" style="text-align:center ;position: relative" class="img-responsive">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                                <div class="back">
+                                                    <a href="{% url 'product_page' product.slug  %}">
+                                                        {% if product.image_back %}
+                                                            <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                        {% else %}
+                                                            <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a href="{% url 'product_page' product.slug %}" class="invisible">
+                                            <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="text">
+                                            <h3>
+                                                <a href="{% url 'product_page' product.slug %}">
+                                                    {{ product.title }}
+                                                    {% if product.color %}
+                                                        {{ product.color }}
+                                                    {% endif %}
+                                                </a>
+                                            </h3>
+                                            {% if product.brand.slug %}
+                                                <p class="price"><small><a href="{% url 'brand_site' product.brand.slug %}">{{ product.brand.title }}</a> ,{% if product.category_site %}
+                                                    <a href="{% url 'category_site' product.category_site.slug %}">{{ product.category_site.title }}</a>
+                                                {% endif %}
+                                                </small></p>
+                                            {% endif %}
+                                                {% if product.price_discount != 0 %}
+                                                <p class="price"><del>€{{ product.price }}</del> €{{ product.price_discount }}</p>
+                                                <a style="text-align: center;width: 100%" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                            {% else %}
+                                                <p class="price"> €{{ product.price }}</p>
+                                                <a style="text-align: center;width: 100%" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                            {% endif %}
+                                            </div>
+                                                <!-- /.text -->
+                                                {% if product.price_discount != 0 %}
+                                                    <div class="ribbon sale">
+                                                        <div class="theribbon">SALE</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}
+                                                <!-- /.ribbon -->
+                                                {% if product.tt %}
+                                                    <div class="ribbon new">
+                                                        <div class="theribbon">NEW</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                    <!-- /.ribbon -->
+                                                    <div class="ribbon gift">
+                                                        <div class="theribbon">GIFT</div>
+                                                        <div class="ribbon-background"></div>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}
+                                                <!-- /.ribbon -->
+                                            </div>
+                                            <!-- /.product -->
+                                        </div>
+                            {% else %}
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="product">
+                                        <div class="flip-container">
+                                            <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page' product.slug %}">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                     <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="{% url 'product_page' product.slug %}">
+                                                {% if product.image_back %}
+                                                    <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                     <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                        </div>
+                                        <a href="{% url 'product_page' product.slug %}" class="invisible">
+                                            <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="text">
+                                            <h3>
+                                                <a href="{% url 'product_page' product.slug %}">{{ product.title }},
+                                                    {% if product.color %}
+                                                        {{ product.color }}
+                                                    {% endif %}
+                                                </a>
+                                            </h3>
+                                            {% if product.brand.slug %}
+                                                    <p class="price"><small><a href="{% url 'brand_site' product.brand.slug %}">{{ product.brand.title }}</a> ,
+                                                    {% if product.category_site %}
+                                                        <a href="{% url 'category_site' product.category_site.slug %}">{{ product.category_site.title }}</a>
+                                                    {% else %}
+                                                        <p>Δε έχει Κατηγορία</p>
+                                                    {% endif %}
+                                                    </small></p>
+                                                {% endif %}
+                                            {% if product.price_discount != 0 %}
+                                                <p class="price"><del>€{{ product.price }}</del> €{{ product.price_discount }}</p>
+                                                <a  style="text-align: center;width: 100%;" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                                {% comment %}<a  style="text-align: center" href="{% url 'cart_item_add' product.id %}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> </a> {% endcomment %}
+                                            {% else %}
+                                                <p class="price"> €{{ product.price }}</p>
+                                                <a  style="text-align: center; width:100%;" href="{% url 'product_page' product.slug %}" class="btn btn-primary">Δες το!</a>
+                                                {% comment %}<a  style="width: 50%" href="{% url 'cart_item_add' product.id %}" class="btn btn-primary"><i class="fa fa-shopping-cart"></i> </a> {% endcomment %}
+                                            {% endif %}
+                                        </div>
+                                        <!-- /.text -->
+                                        {% if product.price_discount != 0 %}
+                                            <div class="ribbon sale">
+                                                <div class="theribbon">SALE</div>
+                                                <div class="ribbon-background"></div>
+                                            </div>
+                                        {% else %}
+                                        {% endif %}
+                                        <!-- /.ribbon -->
+                                        {% if product.tt %}
+                                            <div class="ribbon new">
+                                    <div class="theribbon">NEW</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                            <!-- /.ribbon -->
+                                            <div class="ribbon gift">
+                                    <div class="theribbon">GIFT</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                        {% else %}
+                                {% endif %}
+                                <!-- /.ribbon -->
+                            </div>
+                                    <!-- /.product -->
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <!-- /.col-md-4 -->
+                    </div>
+                    <!-- /.products -->
+                    <div class="pages">
+                        <ul class="pagination">
+                            {% if contacts.has_previous %}
+                                <li><a href="?page={{ contacts.previous_page_number }}">&laquo;</a></li>
+                            {% endif %}
+                                <li><a href="">Σελίδα {{ contacts.number }} από {{ contacts.paginator.num_pages }}.</a> </li>
+                            {% if contacts.has_next %}
+                                <li><a href="?page={{ contacts.next_page_number }}">&raquo;</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.col-md-9 -->
+            </div>
+    <!-- /.container -->
+    </div>
+{% endblock %}

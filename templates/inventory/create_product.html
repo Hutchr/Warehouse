@@ -1,0 +1,582 @@
+{% extends 'inventory/homepageNew.html' %}
+{% load staticfiles %}
+{% block down_menu %}
+<div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="active item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+{% block my_static %}
+    <script>
+        $(function(){
+        $('#related_pro').keyup(function() {
+            $.ajax({
+                type: "POST",
+                url: "/αποθήκη/προιόντα/επεξεργασία/related-ajax/",
+                data: {
+                    'search_text' : $('#related_pro').val(),
+                    'dk' : $('#dk').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: searchSuccess,
+                dataType: 'html'
+            });
+        });
+    });
+    function searchSuccess(data, textStatus, jqXHR)
+    {
+        $('#results_ul').html(data);
+    }
+    </script>
+
+    <script>
+        $(function(){
+        $('#color_pro').keyup(function() {
+            $.ajax({
+                type: "POST",
+                url: "/αποθήκη/προιόντα/επεξεργασία/color-ajax/",
+                data: {
+                    'search_tet' : $('#color_pro').val(),
+                    'dk_' : $('#dk').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success: searchSuccess_,
+                dataType: 'html'
+            });
+        });
+    });
+    function searchSuccess_(data, textStatus, jqXHR)
+    {
+        $('#result_ul').html(data);
+    }
+    </script>
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ product }}
+                <div class="sub header">Επεξεργασία/Δημιουργία  </div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column">
+
+    </div>
+    <div class="two wide column">
+
+    </div>
+    <div class="eleven wide column">
+        <div class="row">
+        {{ form.non_field_errors }}
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="ui segment">
+                <div class="ui right teal buttons">
+                    {% if order %}
+                         <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ order.id }}/" class="ui button">Ακύρωση</a>
+                    {% else %}
+                         <a href="/αποθήκη/προιόντα/" class="ui button">Ακύρωση</a>
+                    {% endif %}
+                    <input name="product_save" type="submit" class="ui button" placeholder="Αποθήκευση">
+                    <div class="ui floating dropdown icon button">
+                         <i class="dropdown icon"></i>
+                         <div class="menu">
+                             {% if product %}
+                                 <a  href="{% url 'duplicate_product' product.id %}" class="item"><i class="edit icon"></i> Αντιγραφή Προιόντος</a>
+                                 <a  href="{% url 'duplicate_product' product.id %}" class="item"><i class="delete icon"></i> Διαγραφή Προιόντος</a>
+                                 <a href="/reports/products/{{ product.id }}" class="item"><i class="info icon"></i>Πληροφορίες Προιόντος</a>
+                             {% endif %}
+                         </div>
+                    </div>
+                </div>
+                {% if product %}
+                <a style="margin-left: 70%" onclick="" href="{% url 'product_delete' product.id %}" class="ui red button">Διαγραφή</a>
+                {% endif %}
+            </div>
+            <div class="ui segments">
+            <div style="text-align: center;" class="ui blue inverted header segment">
+             {% if product %}
+                {{ product.title }}
+             {% else %}
+                 Δημιουργία Προιόντος
+             {% endif %}
+            </div>
+            <div class="ui segment">
+            <div class="ui top attached tabular menu">
+                <a style="background-color: #ff6449" class="item active" data-tab="first">Βασικές Πληροφορίες</a>
+                <a class="item" data-tab="second">Αποθήκη</a>
+                <a class="item" data-tab="third">Στατιστικά</a>
+                <a class="item " data-tab="fourth">Site</a>
+            </div>
+                <div class="ui bottom attached tab segment active" data-tab="first">
+                    <div class="ui form">
+                        <h4 class="ui dividing header">Βασικά Χαρακτηριστικά</h4>
+                        <div class="fields">
+                            <div class="ui field">
+                                {{ form.title.errors }}
+                                <label>{{ form.title.label }}</label>
+                                {{ form.title }}
+                            </div>
+                            <div class="field">
+                                {{ form.color.errors }}
+                                <label>{{ form.color.label }}</label>
+                                {{ form.color }}
+                            </div>
+                            <div class="field">
+                                {{ form.size.errors }}
+                                <label>{{ form.size.label }}</label>
+                                {{ form.size }}
+                            </div>
+                            <div style="margin-left: 20%" class="field">
+                                {{ form.ware_active.errors }}
+                                <label style="color: red;">{{ form.ware_active.label }}</label>
+                                {{ form.ware_active }}
+                            </div>
+                        </div>
+                        <h4 class="ui dividing header">Βασικές Εικόνες</h4>
+                        <div class="fields">
+                            <div class="ui field">
+                                {% if product.image %}
+                                    <img width="200px" height="200px" src="{{ product.image.url }}">
+                                {% else %}
+                                    <img width="200px" height="200px" src="{% static 'obaju/img/no-photo.jpg' %}">
+                                {% endif %}
+                                {{ form.image.errors }}
+                                <label>{{ form.image.label }}</label>
+                                {{ form.image }}
+                            </div>
+                            <div class="ui field">
+                                {% if product.image_back %}
+                                    <img width="200px" height="200px" src="{{ product.image_back.url }}">
+                                {% else %}
+                                    <img width="200px" height="200px" src="{% static 'obaju/img/no-photo.jpg' %}">
+                                {% endif %}
+                                {{ form.image_back.errors }}
+                                  <label>{{ form.image_back.label }}</label>
+                                  {{ form.image_back }}
+                            </div>
+                        </div>
+                        <h4 class="ui dividing header">Πληροφορίες</h4>
+                        <div class="fields">
+                              <div class="field">
+                                  {{ form.sku.errors }}
+                                      <label>{{ form.sku.label }}</label>
+                                  {{ form.sku }}
+                              </div>
+                              <div class="field">
+                                  {{ form.notes.errors }}
+                                  <label>{{ form.notes.label }}</label>
+                                  {{ form.notes }}
+                              </div>
+                              <div class="field">
+                                  {{ form.measure_unit.errors }}
+                                  <label>{{ form.measure_unit.label }}</label>
+                                  {{ form.measure_unit }}
+                              </div>
+
+                        </div>
+
+                        <h4 class="ui dividing header">Τιμές Πώλησης</h4>
+                        <div class="fields">
+                            <div class="field">
+                                {{ form.price.errors }}
+                                <label>{{ form.price.label }}</label>
+                                {{ form.price }}
+                            </div>
+                            <div class="field">
+                                {{ form.price_discount.errors }}
+                                <label>{{ form.price_discount.label }}</label>
+                                {{ form.price_discount }}
+                            </div>
+                            <div class="field">
+                                {{ form.price_internet.errors }}
+                                <label>{{ form.price_internet.label }}</label>
+                                {{ form.price_internet }}
+                            </div>
+                            <div class="field">
+                                {{ form.carousel.errors }}
+                                <label>{{ form.carousel.label }}</label>
+                                {{ form.carousel }}
+                            </div>
+                            <div class="field">
+                                {{ form.price_b2b.errors }}
+                                <label>{{ form.price_b2b.label }}</label>
+                                {{ form.price_b2b }}
+                            </div>
+                        </div>
+                        <div class="fields">
+                            <div class="field">
+                                {{ form.day_added.errors }}
+                                <label>{{ form.day_added.label }}</label>
+                                {{ form.day_added }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="ui bottom attached tab segment" data-tab="second">
+                    <div class="ui form">
+                        <h4 class="ui dividing header">Στοιχεία Τιμολογίου</h4>
+                        <div class="fields">
+                            <div class="ui field">
+                                {{ form.order_code.errors }}
+                                <label>{{ form.order_code.label }}</label>
+                                {{ form.order_code }}
+                             </div>
+                            <div class="ui field">
+                                {{ form.supplier.errors }}
+                                <label>{{ form.supplier.label }}</label>
+                                {{ form.supplier }}
+                            </div>
+                            <div class="field">
+                                {{ form.price_buy.errors }}
+                                <label>{{ form.price_buy.label }}</label>
+                                {{ form.price_buy }}
+                            </div>
+                            <div class="field">
+                                {{ form.order_discount.errors }}
+                                <label>{{ form.order_discount.label }}</label>
+                                {{ form.order_discount }}
+                            </div>
+                        </div>
+                        <h4 class="ui dividing header">Στοιχεια Αποθήκης</h4>
+                        <div class="fields">
+                            <div class="ui field">
+                                {{ form.category.errors }}
+                                <label>{{ form.category.label }}</label>
+                                {{ form.category }}
+                            </div>
+                            <div class="field">
+                                  {{ form.barcode.errors }}
+                                  <label>{{ form.barcode.label }}</label>
+                                  {{ form.barcode }}
+                            </div>
+                            <div class="field">
+                                {{ form.qty.errors }}
+                                <label>{{ form.qty.label }}</label>
+                                {{ form.qty }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="ui bottom attached tab segment " data-tab="third">
+                    <div class="ui form">
+                        <h4 class="ui dividing header">Στοιχεία Τιμολογίου</h4>
+                        <div class="fields">
+
+                            <div class="field">
+                                {{ form.qty_kilo.errors }}
+                                <label>{{ form.qty_kilo.label }}</label>
+                                {{ form.qty_kilo }}
+                            </div>
+                        </div>
+                        <h4 class="ui dividing header">Απόθεμα</h4>
+                        <div class="fields">
+                            <div class="field">
+                                {{ form.safe_stock.errors }}
+                                <label>{{ form.safe_stock.label }}</label>
+                                {{ form.safe_stock }}
+                            </div>
+                        </div>
+
+                        <h4 class="ui dividing header">Στατιστικά</h4>
+                        <div class="fields">
+                            <div class="field">
+                                {{ form.markup.errors }}
+                                <label>{{ form.markup.label }}</label>
+                                {{ form.markup }}
+                            </div>
+                            <div class="field">
+                                {{ form.margin.errors }}
+                                <label>{{ form.margin.label }}</label>
+                                {{ form.margin }}
+                            </div>
+                        </div>
+                  </div>
+                </div>
+                <div class="ui bottom attached tab segment " data-tab="fourth">
+
+                    <div class="ui form">
+                          <div class="fields">
+                              <div class="field">
+                                  {{ form.status.errors }}
+                                    <label>{{ form.status.label }}</label>
+                                  {{ form.status }}
+                              </div>
+                              <div class="field">
+                                  {{ form.brand.errors }}
+                                  <label>{{ form.brand.label }}</label>
+                                  {{ form.brand }}
+                              </div>
+                              <div class="field">
+                                  {{ form.category_site.errors }}
+                                  <label>{{ form.category_site.label }}</label>
+                                  {{ form.category_site }}
+                              </div>
+                          </div>
+                          <h4 class="ui dividing header">Στοιχεία Eshop</h4>
+                          <div class="fields">
+
+                              <div class="field">
+                                  {{ form.internet_description.errors }}
+                                      <label>{{ form.internet_description.label }}</label>
+                                  {{ form.internet_description }}
+                              </div>
+
+                          </div>
+                          <h4 class="ui dividing header">Στοιχεία Eshop</h4>
+                          <div class="fields">
+                            <div class="field">
+                                {{ form.seo_keyword.errors }}
+                                <label>{{ form.seo_keyword.label }}</label>
+                                {{ form.seo_keyword }}
+                            </div>
+                            <div class="field">
+                                {{ form.meta_description.errors }}
+                                <label>{{ form.meta_description.label }}</label>
+                                {{ form.meta_description }}
+                            </div>
+                            <div class="field">
+                                {{ form.meta_keywords.errors }}
+                                <label>{{ form.meta_keywords.label }}</label>
+                                {{ form.meta_keywords }}
+                            </div>
+                            <div class="field">
+                                {{ form.slug.errors }}
+                                <label>{{ form.slug.label }}</label>
+                                {{ form.slug }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+    </div>
+    {% if switch == 'edit' %}
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="ui segments">
+            <div style="text-align: center;" class="ui blue inverted header segment">
+             Χαρακτηριστικά - Επιπλέον Φωτογραφίες
+            </div>
+            <div class="ui segment">
+            <div class="ui top attached tabular menu">
+                <a class="item active" data-tab="char">Χαρακτηριστικά</a>
+                <a class="item" data-tab="photo">Φωτογραφίες</a>
+            </div>
+                <div class="ui bottom attached tab segment active" data-tab="char">
+                    <div class="ui celled list">
+                        {% for char in product_characteristics %}
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">{{ char.title }} </div>
+                                    {{ char.description }}<br>
+                                     <a href="{% url 'edit_char_from_product' char.id product.id %}" class="ui blue label">Επεξεργασία</a> <a href="{% url 'delete_char_from_product' char.id %}" class="ui red label">Διαγραφή</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="item">
+                            <a href="{% url 'add_char_from_product' product.id 'product' %}" class="ui green button">Προσθήκη Χαρακτηριστικού</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui bottom attached tab segment" data-tab="photo">
+                    <div class="ui divided items">
+                        {% for photo in product_images %}
+                        <div class="item">
+                            <div class="image">
+                                <img src="{{ photo.image.url }}">
+                            </div>
+                            <div class="content">
+                                <a class="header">photo title... {{ photo.title }}</a>
+                                <div class="meta">
+                                    <span class="cinema">alt info...{{ photo.alt }}</span>
+                                </div>
+                                <div class="description">
+                                    <p></p>
+                                </div>
+                                <div class="extra">
+                                    <a href="{% url 'edit_photo_from_product' photo.id %}" class="ui blue label">Επεξεργασία</a>
+                                    <a href="{% url 'delete_photo_from_product' photo.id %}" class="ui red label">Διαγραφή</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="item">
+                        <a href="{% url 'add_photo_to_product' product.id %}" class="ui green button">Προσθήκη Φωτογραφίας</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </form>
+        </div>
+        <div style="margin-bottom: 10%" class="row">
+            <div class="ui segments">
+            <div style="text-align: center;" class="ui blue inverted header segment">
+             Προτεινόμενα Προϊόντα - 'Αλλα χρώματα
+            </div>
+            <div class="ui segment">
+            <div class="ui top attached tabular menu">
+                <a class="item active" data-tab="suggest">Προτενόμενα Προϊόντα</a>
+                <a class="item" data-tab="colors">Άλλα χρώματα</a>
+            </div>
+                <div class="ui bottom attached tab segment active" data-tab="suggest">
+                    <div class="ui celled list">
+                        {% for prod in related_products.related.all %}
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">{{ prod.title }} </div>
+                                    {{ prod.color }}<br>
+                                     <a href="{% url 'ajax_delete_related' prod.id related_products.id %}" class="ui red label">Διαγραφή</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <form method="POST" class="ui search">{% csrf_token %}
+                      <div class="ui icon input">
+                        <input type="text" id="related_pro" name="related_pro" placeholder="Προσθήκη Προϊόντος">
+                        <input type="text" id="dk" name="dk" value="{{ product.id }}" hidden="hidden">
+                        <i class="search icon"></i>
+                      </div>
+                        <ul class="result" id="results_ul"></ul>
+                    </form>
+                </div>
+                <div class="ui bottom attached tab segment" data-tab="colors">
+                   <div class="ui celled list">
+                        {% for prod in product_colors.related.all %}
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header">{{ prod.title }} </div>
+                                    {{ prod.color }}<br>
+                                     <a href="{% url 'ajax_delete_related' prod.id related_products.id %}" class="ui red label">Διαγραφή</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <form method="POST" class="ui search">{% csrf_token %}
+                      <div class="ui icon input">
+                        <input type="text" id="color_pro" name="color_pro" placeholder="Προσθήκη Προϊόντος">
+                        <input type="text" id="dk_" name="dk_" value="{{ product.id }}" hidden="hidden">
+                        <i class="search icon"></i>
+                      </div>
+                        <ul class="result" id="result_ul"></ul>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if product.size %}
+        <div style="margin-bottom: 10%" class="row">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            <div class="ui segments">
+            <div style="text-align: center;" class="ui blue inverted header segment">
+             Ανάλυση Νούμερα
+            </div>
+            <div class="ui segment">
+            <div class="ui top attached tabular menu">
+                <a class="item active" data-tab="nub">Υπάρχων Νούμερα</a>
+            </div>
+                <div class="ui bottom attached tab segment active" data-tab="nub">
+                    <div class="ui celled list">
+                        {% for num in product_sizes %}
+                            <div class="item">
+                                <div class="content">
+                                    <div class="header"><h2>{{ num.title }} </h2></div>
+                                        <label class="ui blue label">Υπόλοιπο {{ num.qty }}</label>
+                                     <a href="{% url 'edit_product_edit_size' num.id %}" class="ui blue label">Επεξεργασία</a>
+                                     <a href="{% url 'edit_product_delete_size' num.id %}" class="ui red label">Διαγραφή</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="item">
+                            <a href="{% url 'edit_product_choose_size' product.id %}" class="ui green button">Προσθήκη N </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+        </form>
+        </div>
+    {% endif %}
+    </div>
+    <div class="three wide column">
+        <div class="ui segments">
+
+        <div class="ui segment">
+            <div class="ui floating labeled icon dropdown button">
+                <i class="add user icon"></i>
+                <span class="text">Προσθήκη</span>
+                <div class="menu">
+                    <div class="header">
+                        Αποθήκη
+                    </div>
+                    {% if order %}
+                    {% else %}
+                        <a href="/αποθήκη/προιόντα/επεξεργασία/vendoras/" style="width: 100%" class="item">Προσθήκη Προμηθευτή</a>
+                    {% endif %}
+                    {% if order %}
+                        <a href="{% url 'order_create_category' order.id %}" style="width: 100%" class="item">Προσθήκη Κατηγορίας</a>
+                    {% else %}
+                        <a href="/αποθήκη/προιόντα/επεξεργασία/category/" style="width: 100%" class="item">Προσθήκη Κατηγορίας</a>
+                    {% endif %}
+                    <div class="header">
+                        Site
+                    </div>
+                    {% if order %}
+                        <a href="{% url 'order_create_brand' order.id %}" style="width: 100%" class="item">Προσθήκη Brand</a>
+                        <a href="" style="width: 100%" class="item">Προσθήκη Κατηγορία Site</a>
+                    {% else %}
+                        {% if product %}
+                            <a href="{% url 'create_brand_id' product.id %}" style="width: 100%" class="item">Προσθήκη Brand</a>
+                            <a href="{% url 'create_cat_site_pro' product.id  %}" style="width: 100%" class="item">Προσθήκη Κατηγορία Site</a>
+                            {% else %}
+                            <a href="{% url 'create_brand'  %}" style="width: 100%" class="item">Προσθήκη Brand</a>
+                            <a href="{% url 'create_cat_site_pro_alt' %}" style="width: 100%" class="item">Προσθήκη Κατηγορία Site</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="ui segment">
+            <a href="/αποθήκη/προιόντα/clear-sessions/" style="margin-top: 3%;margin-right: auto;margin-left: 0%;" class="ui red button">
+                <i class="trash icon"></i>
+                Καθαρισμός Φόρμας
+            </a>
+        </div>
+        <div class="ui segment">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+
+    <div style="margin-bottom: 5%" class="ui row"></div>
+
+
+
+
+{% endblock %}

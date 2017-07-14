@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="{% static 'inventory/inventory_info.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+  <nav>
+    <ul>
+      <li>
+        <a href="/inventory_informations/">Αποθήκη</a>
+      </li>
+      <li>
+        <a href="/inventory_informations/προμηθευτές/">Προμηθευτές</a>
+      </li>
+      <li>
+        <a href="#">Πωλήσεις</a>
+      </li>
+      <li>
+        <a href="#">Πληρωμές</a>
+      </li>
+
+    </ul>
+  </nav>
+</div>
+
+
+{% block content %}
+<section class="strips">
+  <article class="strips__strip">
+    <div class="strip__content">
+      <h1 class="strip__title" data-name="Lorem"><a href="calendar/" style="color:#ffffff">Ημερολόγιο αποθήκης</a> </h1>
+
+
+    </div>
+  </article>
+  <article class="strips__strip">
+    <div class="strip__content">
+      <h1 class="strip__title" data-name="Ipsum"><a href="/inventory_informations/προιόντα"> Πληροφορίες Προιόντων</a></h1>
+      <div class="strip__inner-text">
+
+      </div>
+    </div>
+  </article>
+  <article class="strips__strip">
+    <div class="strip__content">
+      <h1 class="strip__title" data-name="Dolor">Όριο Ασφαλειάς</h1>
+
+    </div>
+  </article>
+  <article class="strips__strip">
+    <div class="strip__content">
+      <h1 class="strip__title" data-name="Sit">Απογραφή</h1>
+
+
+    </div>
+  </article>
+  <article class="strips__strip">
+    <div class="strip__content">
+      <h1 class="strip__title" data-name="Amet"><a href="/">Επιστροφή</a></h1>
+
+
+    </div>
+  </article>
+  <i class="fa fa-close strip__close"></i>
+</section>
+{% endblock %}
+
+</body>
+</html>

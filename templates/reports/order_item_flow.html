@@ -1,0 +1,594 @@
+{% extends 'reports/incomes.html' %}
+
+
+
+
+{% block down_menu %}
+
+<div class="ui six item bottom fixed menu">
+    <a  href="/reports/income/" class="green item">Πωλήσεις</a>
+    <a  href='{% url 'sell_item_flow' %}' class="active item">Ροή Προϊόντων</a>
+    <a  href="{% url 'costumers_reports' %}" class="item">Υπόλοιπα Πελατών</a>
+    <a  href="{% url 'reports' %}" class="item">Επιστροφή στα Reports</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">Manage your account settings and set e-mail preferences.</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+
+    <div class="three wide column">
+        <div class="ui segments">
+            <div style='text-align: center' class="ui inverted green segment">Συνολικά Έσοδα</div>
+            <div class="ui segment">
+                <div class="ui grey statistic">
+                    <div class="value">
+                        <i class="euro green icon"></i> {{ total_reports.0|floatformat:2 }}
+                    </div>
+                </div>
+            </div>
+            <div class="ui divider segment"></div>
+            <div style='text-align: center' class="ui header blue segment">Φίλτρα</div>
+
+        </div>
+        <form class="ui form" method="post">{% csrf_token %}
+            <input  name="date_pick" placeholder="Ημερομηνία" >
+            <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if request.session.pro_ven_fi %}
+                            {% for ele in request.session.pro_ven_fi %}
+                                <label class="ui blue label">{{ ele.title }}</label>
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε Προμηθευτή
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+
+                        {% for ele in vendors %}
+                            {% if ele.title in request.session.pro_ven_fi %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor" value="{{ ele.title }}" checked>
+                                    <label >{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="vendor" value="{{ ele.title }}">
+                                    <label >{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+
+            <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if request.session.pro_cost_fi %}
+                            {% for ele in request.session.pro_cost_fi %}
+                                <label class="ui blue label">{{ ele.title }}</label>
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε Πελάτη
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+
+                        {% for ele in costumers %}
+                            {% if ele.title in request.session.pro_cost_fi %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="costumers" value="{{ ele.title }}" checked>
+                                    <label >{{ ele.full_name }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="costumers" value="{{ ele.title }}">
+                                    <label >{{ ele.full_name }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+
+                        {% endfor %}
+                    </div>
+                </div>
+            <div class="ui accordion segment">
+                <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if request.session.pro_cat_fi %}
+                            {% for ele in request.session.pro_cat_fi %}
+                                <label class="ui blue label">{{ ele.title }}</label>
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε κατηγορία
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+                        {% for ele in warehouse_cate %}
+                            {% if ele.title in request.session.pro_cat_fi %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category" value="{{ ele.title }}" checked>
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category" value="{{ ele.title }}">
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        {% if request.session.pro_cat_site %}
+                            {% for ele in request.session.pro_cat_site %}
+                                <label class="ui blue label">{{ ele.title }}</label>
+                            {% endfor %}
+                        {% else %}
+                            Επέλεξε κατηγορία Site
+                        {% endif %}
+                    </div>
+                    <div style='height: 300px;overflow: scroll' class="content">
+                        {% for ele in categories_sites %}
+                            {% if ele.title in request.session.pro_cat_site %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category_site" value="{{ ele.title }}" checked>
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% else %}
+                                <div class="ui checkbox">
+                                    <input  type="checkbox" name="category_site" value="{{ ele.title }}">
+                                    <label>{{ ele.title }}</label>
+                                </div>
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+            <input type="submit" id="filter_s" name="filter_s" class="ui green button" placeholder="Search">
+        </form>
+        <a href="/clear-sessions/" style="margin-top: 3%;" class="ui red button">
+                <i class="trash icon"></i>
+                Καθαρισμός Φίλτρων
+        </a>
+    </div>
+    <div class="ten wide column">
+    <div class="row">
+            <div style='text-align:center;width: 100%;' class="ui blue inverted header segment"> <h1>{{ request.session.date_range }}</h1></div>
+        </div>
+        <div style="width: 100%" class="row">
+            <table class="ui single line selectable small table">
+                <thead>
+                    <tr>
+                        <th>Ημερομηνία</th>
+                        <th>Προϊόν</th>
+                        <th>Προμηθευτής</th>
+                        <th>Κατηγορία Αποθήκης</th>
+                        <th>Κατηγορία Site</th>
+                        <th>Τιμή Αγοράς</th>
+                        <th>Ποσότητα</th>
+                        <th>Πελάτης</th>
+                        <th>Έσοδα</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                        <tr>
+                            {% if item.order.order_type == 'b' %}
+                                <td class="negative">{{ item.day_added }} </td>
+                                <td class="negative">
+                                    {{ item.title }},
+                                    {{ item.color }}, {{ item.size }}
+                                </td>
+                            {% else %}
+                            <td class="positive">{{ item.day_added }} </td>
+                            <td class="positive">
+                                {{ item.title }},
+                                {{ item.color }}, {{ item.size }}
+                            </td>
+                            {% endif %}
+                            <td>{{ item.title.supplier }}</td>
+                            <td>{{ item.title.category }}</td>
+                            <td>{{ item.title.category_site }}</td>
+                            <td class="warning">{{ item.cost|floatformat:2 }} €</td>
+                            {% if item.is_return %}
+                                <td class="negative">{{ item.qty }} </td>
+                            {% else %}
+                                <td>{{ item.qty }} </td>
+                            {% endif %}
+                            <td>{{ item.order.costumer_account.full_name }}</td>
+                            {% if item.is_return %}
+                                 <td class="negative">{{ item.price|floatformat:2 }} €</td>
+                            {% else %}
+                                <td class="positive">{{ item.price|floatformat:2 }} €</td>
+                            {% endif %}
+
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div style="width: 100%;text-align:center;" class="row">
+            <div style="width: 100%"  class="ui header blue inverted segment">Πελάτες</div>
+            <table class="ui small table">
+                    <thead>
+                        <tr>
+                            <th>Επωνυμία</th>
+                            <th>Αριθμός Παραγγελιών</th>
+                            <th>Μέσος Όρος Εσόδων</th>
+                            <th>Συνολική Αξία Παραστατικών</th>
+                            <th>Συνολικά Έσοδα</th>
+                            <th>Υπόλοιπο</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in costumers_details.items %}
+                            <tr>
+                                <td><a href="{% url 'warehouse_costumers_edit' key.id %}">{{ key.full_name }}</a> </td>
+                                <td>{{ value.0 }} </td>
+                                <td>{{ value.1 }} €</td>
+                                <td>{{ value.2 }} €</td>
+                                <td>{{ value.3 }} €</td>
+                                <td>{{ value.4 }} €</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <div class="three wide column">
+        <div class="ui segments">
+            <div style='text-align: center' class="ui inverted blue segment">Ανάλυση</div>
+            <div class="ui divider segment"></div>
+            <div style='text-align: center' class="ui header blue segment">Στοιχεία</div>
+            <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        <i class="euro green icon"></i> {{ profit|floatformat:2  }}
+                    </div>
+                    <div class="label">
+                        Κέρδος
+                    </div>
+                </div>
+
+            </div>
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                       <i class="euro red icon"></i> {{ total_reports.2|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Φπα Πωλήσεων
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="ui horizontal segments">
+            <div class="ui segment">
+                <div class="ui mini  statistic">
+                    <div class="value">
+                        <i class="euro red icon"></i> {{ total_reports.1|floatformat:2 }}
+                    </div>
+                    <div class="label">
+                        Κόστος Πωληθέντων
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <div class="ui mini grey statistic">
+                    <div class="value">
+                        {{ total_reports.3 }}
+                    </div>
+                    <div class="label">
+                        Ποσότητα
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+    </div>
+    <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    Προμηθευτές
+                    <div class="sub header">Συνολικές Μέρες .. {{ days.days }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+    <div class="three column row">
+        <div class="column">
+            <h3 class="ui header">Τρέχων Διάστημα</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Προμηθευτής</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ./</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in vendors_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.0|floatformat:2 }} €</td>
+                      <td>{{ value.3|floatformat:2 }} €</td>
+                      <td>{{ value.1|floatformat:2 }} €</td>
+                      <td>{{ value.2|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class=" column">
+            <h3 class="ui header">Προηγουμενο διάστημα {{ previous_period }}</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Προμηθευτής</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ./</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in vendors_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.4|floatformat:2 }} €</td>
+                      <td>{{ value.5|floatformat:2 }} €</td>
+                      <td>{{ value.6|floatformat:2 }} €</td>
+                      <td>{{ value.7|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class="column">
+            <h3 class="ui header">Προηγούμενη χρονιά</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Προμηθευτής</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ./</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in vendors_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.8|floatformat:2 }} €</td>
+                      <td>{{ value.9|floatformat:2 }} €</td>
+                      <td>{{ value.10|floatformat:2 }} €</td>
+                      <td>{{ value.11|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    Κατηγοριες Αποθήκης
+                    <div class="sub header">Συνολικές Μέρες .. {{ days }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+    <div class="three column row">
+        <div class="column">
+            <h3 class="ui header">Προηγουμενο διάστημα {{ previous_period }}</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ.</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in ware_cate_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.0|floatformat:2 }} €</td>
+                      <td>{{ value.3|floatformat:2 }} €</td>
+                      <td>{{ value.1|floatformat:2 }} €</td>
+                      <td>{{ value.2|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class="column">
+            <h3 class="ui header">Προηγουμενο διάστημα {{ previous_period }}</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ.</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in ware_cate_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.4|floatformat:2 }} €</td>
+                      <td>{{ value.5|floatformat:2 }} €</td>
+                      <td>{{ value.6|floatformat:2 }} €</td>
+                      <td>{{ value.7|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <h3 class="ui header">Προηγούμενη χρονιά</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ.</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in ware_cate_report.items %}
+                    <tr>
+                      <td>{{ key.title }}</td>
+                      <td>{{ value.8|floatformat:2 }} €</td>
+                      <td>{{ value.9|floatformat:2 }} €</td>
+                      <td>{{ value.10|floatformat:2 }} €</td>
+                      <td>{{ value.11|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="three column row">
+        <div class="column"></div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    Πελάτες
+                    <div class="sub header">Συνολικές Μέρες .. {{ days }}</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column"></div>
+    </div>
+    <div class="three column row">
+
+        <div class="column">
+            <h3 class="ui header">Τρέχων Διάστημα</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Προμηθευτής</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ./</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in costumers_report.items %}
+                    <tr>
+                      <td>{{ key.full_name }}</td>
+                      <td>{{ value.0|floatformat:2 }} €</td>
+                      <td>{{ value.1|floatformat:2 }} €</td>
+                      <td>{{ value.2|floatformat:2 }} €</td>
+                      <td>{{ value.3|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        <div class=" column">
+            <h3 class="ui header">Προηγουμενο διάστημα {{ previous_period }}</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ.</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in costumers_report.items %}
+                    <tr>
+                      <td>{{ key.full_name }}</td>
+                      <td>{{ value.4|floatformat:2 }} €</td>
+                      <td>{{ value.5|floatformat:2 }} €</td>
+                      <td>{{ value.6|floatformat:2 }} €</td>
+                      <td>{{ value.7|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <h3 class="ui header">Προηγούμενη χρονιά</h3>
+            <table class="ui selectable inverted table">
+                <thead>
+                <tr>
+                    <th>Κατηγορία</th>
+                    <th>Πωλήσεις</th>
+                    <th>Ποσότητα</th>
+                    <th>Κοστος Πωληθ.</th>
+                    <th>ΦΠΑ</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in costumers_report.items %}
+                    <tr>
+                      <td>{{ key.full_name }}</td>
+                      <td>{{ value.8|floatformat:2 }} €</td>
+                      <td>{{ value.9|floatformat:2 }} €</td>
+                      <td>{{ value.10|floatformat:2 }} €</td>
+                      <td>{{ value.11|floatformat:2 }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row"></div>
+{% endblock %}

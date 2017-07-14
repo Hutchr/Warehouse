@@ -1,0 +1,72 @@
+{% extends 'inventory/pay_section/pay_homepage.html' %}
+
+{% block down_menu %}
+<div class="ui  three item bottom fixed menu">
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/" class="item">Τιμολόγια απλήρωτα.</a>
+    <a href="/πληρωμές-εισπράξεις/αποπληρωμές-τιμολογίων/αποπληρωμένα/" class="active item">Αποπληρωμένα Τιμολόγια</a>
+    <a href='/πληρωμές-εισπράξεις/'class="item">Επιστροφή</a>
+
+</div>
+{% endblock %}
+
+{% block center %}
+    <div class="one wide column"></div>
+    <div class="twelve wide column">
+        <table class="ui celled structured table">
+        <div class="ui left floated main menu">
+                <div class="header item">
+                    <h2>'Ολα τα τιμολόγια</h2>
+                </div>
+                <div class="item">
+                    <form method="get">
+                        <div class="ui search">
+                            <div class="ui icon input">
+                                <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                                <i class="search icon"></i>
+                            </div>
+                            <div class="results"></div>
+                        </div>
+                    </form>
+                </div>
+
+        </div>
+        <thead>
+            <tr>
+                <th>Ημερομηνία</th>
+                <th>Αριθμός Παραστατικού</th>
+                <th>Προμηθευτής</th>
+				<th>Κατάσταση</th>
+                <th>Πληρωτέο Ποσό</th>
+                <th>Υπόλοιπο Προμηθευτή</th>
+                <th></th>
+			</tr>
+
+        </thead>
+        <tbody>
+        {% for ele in orders %}
+            <tr>
+                <td>{{ ele.date }}</td>
+                <td>{{ ele.code }}</td>
+                <td>{{ ele.vendor.title }}</td>
+                <td>{{ ele.get_status_display }}</td>
+                <td>{{ ele.total_price|floatformat:2 }} €</td>
+                <td>{{ ele.vendor.balance|floatformat:2 }} €</td>
+
+                <td><a href="/reports/orders/{{ ele.id }}/" class="ui blue inverted button " data-content='Ιστορικό'>Ανάλυση</a>
+                </td>
+
+            </tr
+            {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+    <div class="three wide column">
+        {% block right_side %}
+
+        {% endblock %}
+    </div>
+
+
+
+{% endblock %}

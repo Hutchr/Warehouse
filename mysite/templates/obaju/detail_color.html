@@ -1,0 +1,399 @@
+{% extends 'obaju/index.html' %}
+{% block my_static %}
+<script>
+$(document).ready(function(){
+
+    //Add
+    $(".quantity-add").click(function(e){
+        //Vars
+        var count = 1;
+        var newcount = 0;
+
+        //Wert holen + Rechnen
+        var elemID = $(this).parent().attr("id");
+        var countField = $("#"+elemID+'inp');
+        var count = $("#"+elemID+'inp').val();
+        var newcount = parseInt(count) + 1;
+
+        //Neuen Wert setzen
+        $("#"+elemID+'inp').val(newcount);
+    });
+
+    //Remove
+    $(".quantity-remove").click(function(e){
+        //Vars
+        var count = 1;
+        var newcount = 0;
+
+        //Wert holen + Rechnen
+        var elemID = $(this).parent().attr("id");
+        var countField = $("#"+elemID+'inp');
+        var count = $("#"+elemID+'inp').val();
+        var newcount = parseInt(count) - 1;
+
+        //Neuen Wert setzen
+        $("#"+elemID+'inp').val(newcount);
+
+    });
+
+
+    //Delete
+    $(".quantity-delete").click(function(e){
+        //Vars
+        var count = 1;
+        var newcount = 0;
+
+        //Wert holen + Rechnen
+        var elemID = $(this).parent().attr("id");
+        var countField = $("#"+elemID+'inp');
+        var count = $("#"+elemID+'inp').val();
+        var newcount = parseInt(count) - 1;
+
+        //Neuen Wert setzen
+        //$('.item').html('');
+
+       var row = $( ".row" );
+        $(event.target).closest(row).html('');
+    });
+
+
+});
+
+</script>
+{% endblock %}
+{% block content %}
+    {% load staticfiles %}
+    <div id="content">
+        <div class="container">
+            <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a>
+                        </li>
+                        <li><a href="#">{{ product.category_site }}</a>
+                        </li>
+                        <li>{{ product }}</li>
+                    </ul>
+            </div>
+            <div class="col-md-3">
+                     <div class="box same-height">
+                         <a href=""><h3>Δες άλλα χρώματα</h3></a>
+                         {% for color in products_colors %}
+                                <div class="product same-height">
+                                    <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page_with_color' product.slug color.id %}">
+                                                {% if color.image %}
+                                                    <img src="{{ color.image.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="{% url 'product_page_with_color' product.slug color.id %}">
+                                                 {% if color.image_back %}
+                                                    <img src="{{ color.image_back.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <a href="{% url 'product_page_with_color' product.slug color.id %}" class="invisible">
+                                    <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                </a>
+                                    <div class="text">
+                                    <h3>{{ color.title }}</h3>
+                                    <p class="price">{{ color.template_tag_price }}</p>
+                                </div>
+                                </div>
+                                <!-- /.product -->
+
+                        {% endfor %}
+
+                     </div>
+                     {% for product in vendor_products %}
+
+                          <div class="product same-height">
+                              <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page' product.id %}">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="detail.html">
+                                                 {% if product.image_back %}
+                                                    <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <a href="detail.html" class="invisible">
+                                    <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                </a>
+                                    <div class="text">
+                                    <h3>{{ product.title }}</h3>
+                                    <p class="price">$143</p>
+                                </div>
+
+                                <!-- /.product -->
+                          </div>
+                     {% endfor %}
+                     </div>
+                <div class="col-md-9">
+                    <div class="row" id="productMain">
+                        <div class="col-sm-6">
+                            <div id="mainImage">
+                                {% if product_color.image %}
+                                    <img src="{{ product_color.image.url }}" alt="" class="img-responsive">
+                                {% else %}
+                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                {% endif %}
+                            </div>
+                            {% if product_color.price_discount != 0 %}
+                            <div class="ribbon sale">
+                                <div class="theribbon">SALE</div>
+                                <div class="ribbon-background"></div>
+                            </div>
+                            {% else %}
+
+                            {% endif %}
+                            <!-- /.ribbon -->
+
+                            <div class="ribbon new">
+                                <div class="theribbon">NEW</div>
+                                <div class="ribbon-background"></div>
+                            </div>
+                            <!-- /.ribbon -->
+
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="box">
+                                {% if color %}
+                                    <h1 class="text-center">{{ color }}</h1>
+                                {% else %}
+                                    <h1 class="text-center">{{ product.title }}</h1>
+                                {% endif %}
+                                <p class="goToDescription"><a href="#details" class="scroll-to">Πληροφορίες Προϊόντος</a>
+                                </p>
+                                {% if product_color.price_discount != 0 %}
+                                    <p class="price">€{{ product_color.price_discount|floatformat:2 }}</p>
+                                {% else %}
+                                    <p class="price">€{{ product_color.price|floatformat:2 }}</p>
+                                {% endif %}
+                                <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                                    <p class="text-center buttons">
+                                        <div style="margin-bottom: 1%" class="col-md-12">
+                                        <h5>Επέλεξε Μέγεθος</h5>
+                                        {% for size in color.sizeattribute_set.all %}
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-info">
+                                                <input type="radio" value="{{ size.id }}" name="options" id="option2" autocomplete="off">
+                                                {{ size.title }}
+                                            </label>
+                                        </div>
+                                        {% endfor %}
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group form-group-options">
+                                                <div id="1" class="input-group input-group-option quantity-wrapper">
+                                                <span  class="input-group-addon input-group-addon-remove quantity-remove btn">
+                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                </span>
+                                                <input  id="1inp" type="text" value="1"  name="qty" class="form-control quantity-count" placeholder="1">
+                                                <span class="input-group-addon input-group-addon-remove quantity-add btn">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </p>
+                                    <p class="text-center buttons">
+                                        <button type="submit" name="add_item" id="add_item"  class="btn btn-primary"><i class="fa fa-shopping-cart"></i> Προσθήκη στο καλάθι</button>
+                                        <a href="basket.html" class="btn btn-default"><i class="fa fa-heart"></i> Add to wishlist</a>
+                                    </p>
+                                </form>
+
+
+                            </div>
+
+                            <div class="row" id="thumbs">
+                                <div class="col-xs-4">
+                                    {% if product_color.image %}
+                                        <a href="{{ product_color.image.url }}" class="thumb">
+                                        <img src="{{ product_color.image.url }}" alt="" class="img-responsive">
+                                    </a>
+                                    {% else %}
+                                        <a href="{% static 'obaju/img/no-photo.jpg' %}" class="thumb">
+                                        <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-xs-4">
+                                    {% if product_color.image_back %}
+                                        <a href="{{ product_color.image_back.url }}" class="thumb">
+                                        <img src="{{ product_color.image_back.url }}" alt="" class="img-responsive">
+                                    </a>
+                                    {% else %}
+                                        <a href="{% static 'obaju/img/no-photo.jpg' %}" class="thumb">
+                                        <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                <div class="col-xs-4">
+                                    {% for image in more_images %}
+                                       <a href="{{ image.image.url }}" class="thumb">
+                                            <img src="{{ image.image.url }}" alt="{{ image.alt }}" title="{{ image.title }}" class="img-responsive">
+                                       </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="box" id="details">
+                        <p>
+                            <h4>Πληροφορίες προϊόντος</h4>
+                            <p>{{ product.notes }}</p>
+                            <h4>Κύριες Πληροφορίες</h4>
+                            <ul>
+                                <li>Brand  - {{ product.brand.title }}</li>
+                                <li>Κατηγορία - {{ product.category_site.title }}</li>
+                            </ul>
+                            <h4>Χαρακτηριστικά</h4>
+                            <ul>
+                                {% for character in characteristics %}
+                                    <li>{{ character.title }} - {{ character.description }}</li>
+                                {% endfor %}
+
+                            </ul>
+
+
+                            <blockquote>
+                                <p><em>{{ product.notes }}</em>
+                                </p>
+                            </blockquote>
+
+                            <hr>
+                            <div class="social">
+                                <h4>Show it to your friends</h4>
+                                <p>
+                                    <a href="#" class="external facebook" data-animate-hover="pulse"><i class="fa fa-facebook"></i></a>
+                                    <a href="#" class="external gplus" data-animate-hover="pulse"><i class="fa fa-google-plus"></i></a>
+                                    <a href="#" class="external twitter" data-animate-hover="pulse"><i class="fa fa-twitter"></i></a>
+                                    <a href="#" class="email" data-animate-hover="pulse"><i class="fa fa-envelope"></i></a>
+                                </p>
+                            </div>
+                    </div>
+
+                    <div class="row same-height-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="box same-height">
+                                {% if product.category_site %}
+                                <a href="{% url 'category_site' product.category_site.slug %}"><h3>Δες όλα τα προϊόντα της εταιρίας  {{ product.brand.title }}</h3></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% for product in vendor_products %}
+                            <div class="col-md-3 col-sm-6">
+                                <div class="product same-height">
+                                    <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page' product.id %}">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="detail.html">
+                                                 {% if product.image_back %}
+                                                    <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <a href="detail.html" class="invisible">
+                                    <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                </a>
+                                    <div class="text">
+                                    <h3>{{ product.title }}</h3>
+                                    <p class="price">$143</p>
+                                </div>
+                                </div>
+                                <!-- /.product -->
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row same-height-row">
+                        <div class="col-md-3 col-sm-6">
+                            <div class="box same-height">
+                                <h3>Δες όλα τα προϊόντα της κατηγορίας  {{ product.category_site.title }}</h3>
+                            </div>
+                        </div>
+
+                        {% for product in category_products %}
+                            <div class="col-md-3 col-sm-6">
+                                <div class="product same-height">
+                                    <div class="flip-container">
+                                    <div class="flipper">
+                                        <div class="front">
+                                            <a href="{% url 'product_page' product.id %}">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="back">
+                                            <a href="{% url 'product_page' product.id %}">
+                                                 {% if product.image_back %}
+                                                    <img src="{{ product.image_back.url }}" alt="" class="img-responsive">
+                                                {% else %}
+                                                    <img src="{% static 'obaju/img/no-photo.jpg' %}" alt="" class="img-responsive">
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <a href="detail.html" class="invisible">
+                                    <img src="{% static 'obaju/img/product2.jpg' %}" alt="" class="img-responsive">
+                                </a>
+                                    <div class="text">
+                                    <h3>{{ product.title }}</h3>
+                                    <p class="price">$143</p>
+                                </div>
+                                </div>
+                                <!-- /.product -->
+                            </div>
+                        {% endfor %}
+
+
+
+                    </div>
+
+                </div>
+                <!-- /.col-md-9 -->
+            </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends 'inventory/costumers_section.html' %}
+
+{% block my_static %}
+<script type="text/javascript">
+
+   $('.modal')
+  .modal('setting', 'closable', false)
+  .modal('show')
+;
+
+</script>
+{% endblock %}
+
+{% block right_side %}
+    {% if retail_choose %}
+        <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+
+                <div class="header">
+                    {{ title }}
+                </div>
+                <div class="image content">
+                    <div class="ui medium image">
+                        <img src="http://semantic-ui.com/images/avatar2/large/rachel.png">
+                    </div>
+                    <div class="description">
+                        <form method="post" class="ui form">{% csrf_token %}
+                            <table class="ui red table">
+                                <thead>
+                                <tr>
+                                    <td>Νούμερο</td>
+                                    <td>Ποσότητα</td>
+                                    <td>Επιλογή</td>
+                                    <td></td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ele in all_sizes %}
+                                        <tr>
+                                            <td>{{ ele }}</td>
+                                            <td><input name="{{ ele.id }}" placeholder="1" value="1" type="number" step="any"></td>
+                                            <td><input name="check_p" value="{{ ele.id }}"  type="checkbox"></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="ui segments">
+        <div class="ui segment">
+            <button class="ui button yellow create_btn" type="button" id="test">Create</button>
+            <div id='hello' class="ui modal ">
+
+                <div class="header">
+                    {{ title }}
+                </div>
+                <div class="image content">
+                    <div class="ui medium image">
+                        <img src="http://semantic-ui.com/images/avatar2/large/rachel.png">
+                    </div>
+                    <div class="description">
+                        <form method="post" class="ui form">{% csrf_token %}
+                            <div class="field">
+                                <label>Επέλεξε Μέγεθος</label>
+                                <div class="ui selection dropdown">
+                                    <input type="hidden" name="size">
+                                    <div class="default text">Μέγεθος</div>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu">
+                                        {% for size in sizes %}
+                                        <div class="item" data-value="{{ size.id }}">
+                                            <i class="visa icon"></i>
+                                            {{ size.title }}
+                                        </div>
+                                       {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="fields">
+                                <div class="seven wide field">
+                                    <label>Ποσότητα</label>
+                                    <input type="text" name="qty" maxlength="16" placeholder="1">
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <a href="{{ return_page }}" class="ui black deny button">
+                                    Επιστροφή
+                                </a>
+                                <button type="submit" class="ui positive right labeled icon button">
+                                    Αποθήκευση
+                                    <i class="save icon"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

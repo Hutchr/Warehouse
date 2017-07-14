@@ -1,0 +1,171 @@
+{% extends 'inventory/homepageNew.html' %}
+
+
+
+
+{% block down_menu %}
+    <div class="ui seven item bottom fixed menu">
+    <a href='/αποθήκη/'class="item">Home</a>
+    <a href="/αποθήκη/προιόντα/" class="active item">Προιόντα</a>
+    <a href="/αποθήκη/προμηθευτές/" class="item">Προμηθευτές</a>
+    <a href="/αποθήκη/τιμολόγια/" class="item">Τιμολόγια</a>
+    <a href="{% url 'warehouse_costumers' %}" class="item">Πελάτες</a>
+    <a href="{% url 'pre_order_section' %}" class="item">Παραγγελίες</a>
+    <a href="/αποθήκη/εργαλεία/" class="item">Εργαλεία</a>
+</div>
+{% endblock %}
+
+
+
+
+
+{% block content %}
+    <div class="six wide column"></div>
+    <div class="four wide column">
+        <h2 class="ui header">
+            <i class="settings icon"></i>
+            <div class="content">
+                {{ title }}
+                <div class="sub header">Επεξεργασία όλων των προϊόντων</div>
+            </div>
+        </h2>
+    </div>
+    <div class="six wide column">
+
+    </div>
+    <div class="two wide column"></div>
+    <div class="eleven wide column">
+        <div class="ui segments">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            {{ product.title }}
+        </div>
+        <div class="ui horizontal segments">
+            <div class="ui segment">
+                <form class="ui form" method="post">{% csrf_token %}
+                    <div class="ui accordion segment">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            <div style="text-align: center;" class="ui blue inverted header segment">
+                                Επιλογή Χρωμάτων
+                            </div>
+
+                        </div>
+                        <div style='height: 200px;width:300px;overflow: scroll' class=" content">
+                            {% for ele in colors %}
+                                {% if ele.title in colors_selected %}
+
+                                {% else %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="color_name" value="{{ ele.title }}">
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    <input type="submit" class="ui green button" placeholder="Επιλογή">
+                    </div>
+                </form>
+            </div>
+            <div class="ui segment">
+                <div class="ui accordion segment ">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        <div style="text-align: center;" class="ui blue inverted header segment">
+                            Διαθέσιμα Νούμερα
+                        </div>
+                    </div>
+                    <div  class=" active content">
+                        {% for ele in colors_selected %}
+                            <div class="ui label">
+                                {{ ele.title }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui divider segment"></div>
+        <div class="ui segments">
+            <div class="ui accordion segment">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        <div style="text-align: center;" class="ui blue inverted header segment">
+                            Προσθήκη Μεγεθών στα Χρώματα
+                        </div>
+
+                    </div>
+                    <div  class=" content">
+                        {% if colors_selected %}
+                            {% for ele in color_att %}
+                                    <div class="ui segment">
+                                        <a href="/αποθήκη/προιόντα/δημιουργία/add_color/{{ product.id }}/{{ ele.id }}" class="ui  green button" >Προσθήκη στo {{ ele.title }}</a>
+                                            Διαθέσιμα Νούμερα:
+                                        {% for size in ele.sizeattribute_set.all %}
+                                            <a href="/αποθήκη/προιόντα/δημιουργία/delete-size/{{ product.id }}/{{ size.id }}" class="ui red button"> Διαγραφή {{ size.title }}</a>
+                                        {% endfor %}
+                                        <br>
+                                        <a style="margin-left:80% " href="" class="ui  red button" >Διαγραφή Χρώματος</a>
+
+                                    </div>
+                                {% endfor %}
+                        {% endif %}
+                    </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="three wide column">
+        {% if product_color %}
+            <div class="ui segments">
+        <div style="text-align: center;" class="ui blue inverted header segment">
+            {{ product_color.product.title }}, Προσθήκη Μεγέθους στο χρώμα {{ product_color.title.title }}
+        </div>
+        <div class="ui segment">
+                <form class="ui form" method="post">{% csrf_token %}
+                    <div class="ui accordion segment">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            Επέλεξε Μεγέθη
+                        </div>
+                        <div style='height: 200px;width:300px;overflow: scroll' class="active content">
+                            {% for ele in sizes %}
+                                {% if ele.title in size_selected %}
+
+                                {% else %}
+                                    <div class="ui checkbox">
+                                        <input  type="checkbox" name="size_name" value="{{ ele.title }}">
+                                        <label>{{ ele.title }}</label>
+                                    </div>
+                                    <br>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <input type="submit" class="ui green button" placeholder="Επιλογή">
+                </form>
+            </div>
+        <div class="ui divider segment"></div>
+        <div class="segment">
+
+            {% if ok %}
+                <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ ok }}/" class="ui big right blue button">Επιστροφή</a>
+            {% else %}
+                <a href="/αποθήκη/προιόντα/" class="ui big right blue button">Επιστροφή</a>
+            {% endif %}
+        </div>
+
+
+    </div>
+        {% else %}
+            {% if ok %}
+                <a href="/αποθήκη/τιμολόγια/επεξεργασία/{{ ok }}/" class="ui big blue button">Επιστροφή</a>
+            {% else %}
+                <a href="/αποθήκη/προιόντα/" class="ui big blue button">Επιστροφή</a>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,21 @@
+{% extends "inventory/vendors_edit_section_NEW.html" %}
+
+
+{% block content %}
+    {% if query.count > 0 %}
+            {% for ele in query %}
+             <a class="btn" style="text-decoration: none" href="/homepage/edit_all/vendors/{{ ele.id }}"> <li>{{ ele.title }} </li></a>
+            {% endfor %}
+
+
+
+ {% else %}
+    <form action="" enctype="multipart/form-data" method="post">{% csrf_token %}
+    <ul>
+        {{ form.as_ul }}
+    </ul>
+    <input class="btn" name="submit" type="submit" value="ΑποΘήκευση">
+    </form>
+{% endif %}
+
+{% endblock %}

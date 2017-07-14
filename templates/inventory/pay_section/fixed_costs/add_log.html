@@ -1,0 +1,46 @@
+{% extends 'inventory/pay_section/fixed_costs/fixed_order_log_id.html' %}
+
+
+{% block right_side %}
+     <style>
+        #id_date_month{
+            width: 35%;
+            display: inline;
+        }
+        #id_date_year{
+            width: 35%;
+            display: inline;
+            padding-left: 15%;
+        }
+        #id_date_day{
+            width: 25%;
+            display: inline;
+        }
+        label{
+            display: block;
+            margin-top: 2% ;
+            font-size: larger;
+        }
+
+
+
+
+
+
+
+    </style>
+
+    <div class="ui segments">
+        <div style ="text-align: center;" class="ui blue inverted header segment">
+            <h3> Νέος Λογαριασμός -- {{ fixed_orders.title }}</h3>
+        </div>
+        <div class="ui form segment">
+
+            <form style="text-align: center" class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+                {{ form }}
+                <input style="width: 100%" type="submit" name="submit" class="ui green button" value="Προσθήκη"/>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

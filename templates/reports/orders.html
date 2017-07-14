@@ -1,0 +1,218 @@
+{% extends 'reports/warehouse.html' %}
+
+{% block down_menu %}
+
+<div class="ui four item bottom fixed menu">
+    <a href="/reports/products/" class="item">Προιόντα</a>
+    <a href="/reports/category-report/" class=" item">Κατηγορίες</a>
+    <a href="/reports/vendors/" class=" item">Προμηθευτές</a>
+    <a href="/reports/orders/" class="active item">Τιμολόγια</a>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="three column row">
+        <div class="column">
+            <div class="results_ul">
+                <ul class="result_ul" id="results_ul"></ul>
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="ui icon header">
+                <i class="settings icon"></i>
+                <div class="content">
+                    {{ title }}
+                    <div class="sub header">Manage your account settings and set e-mail preferences.</div>
+                </div>
+            </h2>
+        </div>
+        <div class="column">
+            <div class="row">
+            <div  class="ui segments">
+                <div style="text-align: center;" class="ui blue inverted header segment">
+                    Συγκεντρωτικές Πληροφορίες
+                </div>
+                <div class="ui small statistics">
+                    <div class="statistic">
+                        <div class="value">
+                          {{ total_orders }}
+                        </div>
+                        <div class="label">
+                          Συνολικά Τιμολόγια
+                        </div>
+                    </div>
+                    <div class="statistic">
+                        <div class="value">
+                          {{ sum_orders|floatformat:2 }} €
+                        </div>
+                        <div class="label">
+                          Συνολικό Κόστος
+                        </div>
+                    </div>
+                    <div class="statistic">
+                        <div class="value">
+                          {{ avg_orders|floatformat:2 }} €
+                        </div>
+                        <div class="label">
+                            Μέσο Κόστος
+                        </div>
+                      </div>
+                    <div class="statistic">
+                        <div class="value">
+                          {{ taxes|floatformat:2 }} €
+                        </div>
+                        <div class="label">
+                            ΦΠΑ
+                        </div>
+                      </div>
+                    {% if 'd' in choice_name %}
+                    <div class="statistic">
+                        <div class="value">
+                          <section style="color: indianred">{{ remaining|floatformat:2 }} €</section>
+                        </div>
+                        <div class="label">
+                            Υπόλοιπο
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="one wide column"></div>
+    <div class="eleven wide column">
+        <div  class="ui segments">
+        <div class="ui blue inverted  header segment">
+            Τιμολόγια
+        </div>
+        <div class="ui segment">
+            <table class="ui celled structured table">
+        <thead>
+            <tr>
+                <th>Ημερομηνία</th>
+                <th>Παραστατικό</th>
+                <th>Προμηθευτής</th>
+                <th>Αξία μετά την έκπτωση</th>
+                <th>ΦΠΑ</th>
+                <th>Τελική Αξία</th>
+                <th>Υπόλοιπο</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ele in orders %}
+
+                <tr>
+                    <td>{{ ele.date }}</td>
+                    <td>{{ ele.code }} </td>
+                    <td><a href="{% url 'vendor_info' ele.vendor.id %}">{{ ele.vendor }}</a> </td>
+                    <td>{{ ele.total_price_after_discount|floatformat:2 }} €</td>
+                    <td>{{ ele.total_taxes|floatformat:2  }} €</td>
+                    <td>{{ ele.total_price|floatformat:2  }} €</td>
+
+                    {% if ele.status == 'a' %}
+                    <td style="background-color: #00aa50;">{{ ele.get_status_display }}</td>
+                    {% else %}
+                    <td style="background-color: #ea9588;">{{ ele.ipoloipo_xreostiko|floatformat:2  }} €</td>
+                    {% endif %}
+                    <td><a href="/reports/orders/{{ ele.id }}" class="ui green inverted button "><i class=" expand icon"></i></a> </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+    </div>
+
+    </div>
+    <div class="four wide column">
+        <div style="margin-left: 20%;" class="ui segments">
+         <div  class="ui segment">
+        <div class="ui blue inverted button ">
+            <a style="width: 100%;" href="/reports/reports/orders/">Καθαρισμός Φίλτρων</a>
+        </div>
+    </div>
+    <div class="ui segment">
+         <form class="ui form" method="get">{% csrf_token %}
+             <div class="ui search">
+                 <div class="ui icon input">
+                     <input class="prompt" name="search_pro" type="text" placeholder="Αναζήτηση...">
+                     <i class="search icon"></i>
+                 </div>
+                 <div class="results"></div>
+             </div>
+        </form>
+    </div>
+    <div class="ui segment">
+    <form class="ui form" method="post">{% csrf_token %}
+
+    <div class="ui sub header">Προμηθευτές</div>
+        <select multiple="" id='vendor_name' name="vendor_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in vendors %}
+                <option value="{{ ele.title }}">{{ ele.title }}</option>
+            {% endfor %}
+        </select>
+
+    <div class="ui sub header">Τρόπος Πληρωμής</div>
+        <select multiple="" name="payment_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in payment_method %}
+                <option value="{{ ele.title }}">{{ ele.title }}</option>
+            {% endfor %}
+        </select>
+
+    <div class="ui sub header">Κατάσταση</div>
+        <select multiple="" name="status_name" class="ui fluid normal dropdown">
+          <option value="">Επιλογή</option>
+            {% for ele in choices %}
+                <option value="{{ ele.0}}">{{ ele.1 }}</option>
+            {% endfor %}
+        </select>
+
+
+    <div class="ui sub header">Χρονος</div>
+    <input name="date_pick" placeholder="{{ date_pick }}" value="{{ date_pick }}">
+            <input style="width: 100%;" class="ui green inverted button" type="submit">
+        </form>
+    </div>
+
+    </div>
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+{% block right_side %}
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    for (var id in {{ vendor_name }}) {
+        var $option = $("<option value=\"" + id + "\">" + championships[id].name + "</option>");
+            $select.append($option);
+        }
+        $select.dropdown('refresh');
+        if (defaultValueId)
+        setTimeout(function () {
+        $select.dropdown('set selected', defaultValueId);
+        }, 1);
+
+  $('input[name="vendor_name"]').dropdown('set selected',{{ vendor_name }});
+
+
+});
+</script>

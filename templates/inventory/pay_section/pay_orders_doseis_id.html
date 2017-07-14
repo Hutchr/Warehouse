@@ -1,0 +1,15 @@
+{% extends 'inventory/pay_section/pay_orders.html' %}
+
+
+
+{% block right_side %}
+    <div class="ui form">
+
+        <form class="ui form" method="post" action="" enctype="multipart/form-data">{% csrf_token %}
+            {{ form }}
+            <input type="submit" name="submit" class="ui green button" value="Προσθήκη"/>
+        </form>
+    </div>
+
+
+{% endblock %}
