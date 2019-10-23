@@ -7,7 +7,7 @@ whitenoise==3.3.0
 Django>=1.11.21
 django-storages==1.5.2
 olefile==0.44
-Pillow==4.0.0
+Pillow==6.2.0
 psycopg2==2.7
 python-dateutil==2.6.0
 pytz==2016.10
